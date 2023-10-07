@@ -1,0 +1,93 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.util.Vec3
+ *  org.jetbrains.annotations.NotNull
+ *  org.jetbrains.annotations.Nullable
+ */
+package me.report.liquidware.utils;
+
+import kotlin.Metadata;
+import kotlin.jvm.internal.Intrinsics;
+import net.ccbluex.liquidbounce.utils.Rotation;
+import net.minecraft.util.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+@Metadata(mv={1, 1, 16}, bv={1, 0, 3}, k=1, xi=2, d1={"\u0000,\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\t\n\u0002\u0010\u000b\n\u0002\b\u0002\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000e\n\u0000\b\u0086\b\u0018\u00002\u00020\u0001B\u0015\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u00a2\u0006\u0002\u0010\u0006J\t\u0010\u000b\u001a\u00020\u0003H\u00c6\u0003J\t\u0010\f\u001a\u00020\u0005H\u00c6\u0003J\u001d\u0010\r\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u0005H\u00c6\u0001J\u0013\u0010\u000e\u001a\u00020\u000f2\b\u0010\u0010\u001a\u0004\u0018\u00010\u0001H\u00d6\u0003J\t\u0010\u0011\u001a\u00020\u0012H\u00d6\u0001J\t\u0010\u0013\u001a\u00020\u0014H\u00d6\u0001R\u0011\u0010\u0002\u001a\u00020\u0003\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0007\u0010\bR\u0011\u0010\u0004\u001a\u00020\u0005\u00a2\u0006\b\n\u0000\u001a\u0004\b\t\u0010\n\u00a8\u0006\u0015"}, d2={"Lme/report/liquidware/utils/Location;", "", "position", "Lnet/minecraft/util/Vec3;", "rotation", "Lnet/ccbluex/liquidbounce/utils/Rotation;", "(Lnet/minecraft/util/Vec3;Lnet/ccbluex/liquidbounce/utils/Rotation;)V", "getPosition", "()Lnet/minecraft/util/Vec3;", "getRotation", "()Lnet/ccbluex/liquidbounce/utils/Rotation;", "component1", "component2", "copy", "equals", "", "other", "hashCode", "", "toString", "", "KyinoClient"})
+public final class Location {
+    @NotNull
+    private final Vec3 position;
+    @NotNull
+    private final Rotation rotation;
+
+    @NotNull
+    public final Vec3 getPosition() {
+        return this.position;
+    }
+
+    @NotNull
+    public final Rotation getRotation() {
+        return this.rotation;
+    }
+
+    public Location(@NotNull Vec3 position, @NotNull Rotation rotation) {
+        Intrinsics.checkParameterIsNotNull(position, "position");
+        Intrinsics.checkParameterIsNotNull(rotation, "rotation");
+        this.position = position;
+        this.rotation = rotation;
+    }
+
+    @NotNull
+    public final Vec3 component1() {
+        return this.position;
+    }
+
+    @NotNull
+    public final Rotation component2() {
+        return this.rotation;
+    }
+
+    @NotNull
+    public final Location copy(@NotNull Vec3 position, @NotNull Rotation rotation) {
+        Intrinsics.checkParameterIsNotNull(position, "position");
+        Intrinsics.checkParameterIsNotNull(rotation, "rotation");
+        return new Location(position, rotation);
+    }
+
+    public static /* synthetic */ Location copy$default(Location location, Vec3 vec3, Rotation rotation, int n, Object object) {
+        if ((n & 1) != 0) {
+            vec3 = location.position;
+        }
+        if ((n & 2) != 0) {
+            rotation = location.rotation;
+        }
+        return location.copy(vec3, rotation);
+    }
+
+    @NotNull
+    public String toString() {
+        return "Location(position=" + this.position + ", rotation=" + this.rotation + ")";
+    }
+
+    public int hashCode() {
+        Vec3 vec3 = this.position;
+        Rotation rotation = this.rotation;
+        return (vec3 != null ? vec3.hashCode() : 0) * 31 + (rotation != null ? ((Object)rotation).hashCode() : 0);
+    }
+
+    public boolean equals(@Nullable Object object) {
+        block3: {
+            block2: {
+                if (this == object) break block2;
+                if (!(object instanceof Location)) break block3;
+                Location location = (Location)object;
+                if (!Intrinsics.areEqual(this.position, location.position) || !Intrinsics.areEqual(this.rotation, location.rotation)) break block3;
+            }
+            return true;
+        }
+        return false;
+    }
+}
+

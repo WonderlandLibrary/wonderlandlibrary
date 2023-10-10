@@ -13,6 +13,7 @@ People who have helped make this library big:
 ## [Sources](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/sources)
 List of clients:
 - Atani
+- Aquatic
 - Augustus b2.6
 - Autumn 1.0.0
 - AzuraX
@@ -43,6 +44,7 @@ List of clients:
 - Rise 5.90
 - Rise 5.98
 - Rise 5.99
+- RoseGold
 - Sigma 1.6
 - Sigma 2.08
 - Sigma 4.11
@@ -53,6 +55,7 @@ List of clients:
 - TankV4
 - Thea
 - Vestige 2.0
+- Vestige 3.0
 - Xenza B9
 
 ## [Jars](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/jars)

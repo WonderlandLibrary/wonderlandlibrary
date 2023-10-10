@@ -46,6 +46,7 @@ List of clients:
 - Sigma 1.6
 - Sigma 2.08
 - Sigma 4.11
+- Spectrum
 - Straightware
 - Sudo
 - Summer Reborn 5.0

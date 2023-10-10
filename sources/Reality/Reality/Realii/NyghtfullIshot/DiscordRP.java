@@ -1,0 +1,52 @@
+package Reality.Realii.NyghtfullIshot;
+
+
+import net.arikia.dev.drpc.DiscordEventHandlers;
+import net.arikia.dev.drpc.DiscordRPC;
+import net.arikia.dev.drpc.DiscordRichPresence;
+import net.arikia.dev.drpc.DiscordUser;
+import net.arikia.dev.drpc.callbacks.ReadyCallback;
+
+public class DiscordRP {
+	public boolean running = true;
+	private long created = 0;
+	
+	public void start() {
+    	created = System.currentTimeMillis();
+    	//ReadyCallback()
+    	DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().setReadyEventHandler(new ReadyCallback() {
+    		@Override
+    		public void apply(DiscordUser user) {
+    			System.out.println("Welcome " + user.username + "#" + user.discriminator);
+    			//Welcome
+    			update("Loading Reality Client","");
+    			
+    		}
+    	}).build();
+    	DiscordRPC.discordInitialize("1091698845601235095", handlers, true);
+    	new Thread("Discord RPC Callback") {
+    		@Override
+    		public void run() {
+    			while(running) {
+    				DiscordRPC.discordRunCallbacks();
+    			}
+    		}
+    	}.start();
+    }
+    public void shutdown( ) {
+    	running = false;
+    	DiscordRPC.discordShutdown();
+    }
+    
+    public void update(String firstLine, String secondLine) {
+    	DiscordRichPresence.Builder b = new DiscordRichPresence.Builder(secondLine);
+    	b.setBigImage("realityyy1", "");
+    	b.setDetails(firstLine);
+    	b.setStartTimestamps(created);
+    	DiscordRPC.discordUpdatePresence(b.build());
+    }
+    
+   
+    	
+
+}

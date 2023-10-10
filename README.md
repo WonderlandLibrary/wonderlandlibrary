@@ -13,6 +13,7 @@ People who have helped make this library big:
 ## [Sources](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/sources)
 List of clients:
 - Atani
+- Apple
 - Aquatic
 - Augustus b2.6
 - Autumn 1.0.0

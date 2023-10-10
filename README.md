@@ -10,8 +10,7 @@ People who have helped make this library big:
 - tabio1337
 - 000000001_1
 
-## Sources
-Client sources can be found at [Sources](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/sources)
+## [Sources](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/sources)
 List of clients:
 - Atani
 - Augustus b2.6
@@ -55,8 +54,7 @@ List of clients:
 - Vestige 2.0
 - Xenza B9
 
-## Jars
-Client/Mod jars can be found at [Jars](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/jars)
+## [Jars](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/jars)
 List of jars (cracked/free/leaked):
 - Atani
 - BleachHack

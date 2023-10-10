@@ -33,7 +33,7 @@ public class Client {
 
     // Client data
     public static String author = "Arithmo & Omikron";
-    public static String version = "v3.9";
+    public static String version = "v4.11";
     public static String clientName = "Sigma";
     public static ArrayList<String> changelog = new ArrayList<>();
     public static ColorManager cm = new ColorManager();

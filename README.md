@@ -19,6 +19,7 @@ List of sources:
 - Autumn 1.0.0
 - AzuraX
 - Alpha Centauri B6
+- CrossSine b34
 - Echo
 - Exhibition 5.0
 - Flux B39.11

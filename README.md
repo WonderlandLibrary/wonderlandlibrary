@@ -11,7 +11,7 @@ People who have helped make this library big:
 - 000000001_1
 
 ## [Sources](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/sources)
-List of clients:
+List of sources:
 - Atani 0.0.3
 - Apple
 - Aquatic
@@ -22,6 +22,7 @@ List of clients:
 - Echo
 - Exhibition 5.0
 - Flux B39.11
+- Jello 0.1
 - Juul 1.0
 - Ket
 - KoksV4
@@ -63,8 +64,8 @@ List of clients:
 - Xenza B9
 
 ## [Jars](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/jars)
-List of jars (cracked/free/leaked):
-- Atani
+List of clients (cracked/free/leaked):
+- Atani (0.0.1 - 0.0.3)
 - BleachHack
 - Francium
 - LiquidBounce b73

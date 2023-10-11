@@ -12,7 +12,7 @@ People who have helped make this library big:
 
 ## [Sources](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/sources)
 List of clients:
-- Atani
+- Atani 0.0.3
 - Apple
 - Aquatic
 - Augustus b2.6
@@ -35,10 +35,12 @@ List of clients:
 - November
 - Ohareware 6.9
 - Old Novoline
+- Old Raze
 - Pandaware 0.4.3
 - PowerClient
 - Raven BX
 - RavenWeave
+- Raze
 - Reality
 - RektSky b5
 - Rise 5.89
@@ -55,6 +57,7 @@ List of clients:
 - Summer Reborn 5.0
 - TankV4
 - Thea
+- Tomato 0.2
 - Vestige 2.0
 - Vestige 3.0
 - Xenza B9

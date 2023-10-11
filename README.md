@@ -28,6 +28,7 @@ List of sources:
 - Ket
 - KoksV4
 - KyinoSense
+- LiquidBounce++
 - Lirium
 - Lithium
 - LoseBypass

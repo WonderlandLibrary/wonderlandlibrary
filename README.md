@@ -12,12 +12,14 @@ People who have helped make this library big:
 
 ## [Sources](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/sources)
 List of sources:
-- Atani 0.0.3
 - Apple
 - Aquatic
+- Artemis
+- Astomero
+- Atani 0.0.3
 - Augustus b2.6
 - Autumn 1.0.0
-- AzuraX
+- Azura X
 - Alpha Centauri B6
 - CrossSine b34
 - Echo
@@ -63,6 +65,7 @@ List of sources:
 - Tomato 0.2
 - Vestige 2.0
 - Vestige 3.0
+- Vika
 - Xenza B9
 
 ## [Jars](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/jars)

@@ -22,6 +22,7 @@ List of sources:
 - Azura X
 - Alpha Centauri B6
 - CrossSine b34
+- Diablo 2.1
 - Echo
 - Exhibition 5.0
 - Flux B39.11

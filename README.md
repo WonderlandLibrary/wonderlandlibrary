@@ -65,6 +65,7 @@ List of sources:
 - TankV4
 - Thea
 - Tomato 0.2
+- Umbrella 1.3
 - Vestige 2.0
 - Vestige 3.0
 - Vika

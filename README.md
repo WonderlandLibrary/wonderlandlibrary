@@ -77,6 +77,7 @@ List of clients (cracked/free/leaked):
 - BleachHack
 - Francium
 - LiquidBounce b73
+- Monsoon 1.2
 - Monsoon 3.0-A6
 - MoonX
 - NightX b63

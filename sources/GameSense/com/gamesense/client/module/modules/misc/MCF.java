@@ -1,0 +1,32 @@
+package com.gamesense.client.module.modules.misc;
+
+import com.gamesense.api.util.misc.MessageBus;
+import com.gamesense.api.util.player.social.SocialManager;
+import com.gamesense.client.module.Category;
+import com.gamesense.client.module.Module;
+import com.gamesense.client.module.ModuleManager;
+import com.gamesense.client.module.modules.gui.ColorMain;
+import me.zero.alpine.listener.EventHandler;
+import me.zero.alpine.listener.Listener;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
+import org.lwjgl.input.Mouse;
+
+@Module.Declaration(name = "MCF", category = Category.Misc)
+public class MCF extends Module {
+
+    @SuppressWarnings("unused")
+    @EventHandler
+    private final Listener<InputEvent.MouseInputEvent> listener = new Listener<>(event -> {
+        if (mc.objectMouseOver.typeOfHit.equals(RayTraceResult.Type.ENTITY) && mc.objectMouseOver.entityHit instanceof EntityPlayer && Mouse.isButtonDown(2)) {
+            if (SocialManager.isFriend(mc.objectMouseOver.entityHit.getName())) {
+                SocialManager.delFriend(mc.objectMouseOver.entityHit.getName());
+                MessageBus.sendClientPrefixMessage(ModuleManager.getModule(ColorMain.class).getDisabledColor() + "Removed " + mc.objectMouseOver.entityHit.getName() + " from friends list");
+            } else {
+                SocialManager.addFriend(mc.objectMouseOver.entityHit.getName());
+                MessageBus.sendClientPrefixMessage(ModuleManager.getModule(ColorMain.class).getEnabledColor() + "Added " + mc.objectMouseOver.entityHit.getName() + " to friends list");
+            }
+        }
+    });
+}

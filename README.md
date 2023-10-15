@@ -26,6 +26,7 @@ List of sources:
 - Echo
 - Exhibition 5.0
 - Flux B39.11
+- GameSense 2.3.0
 - Jello 0.1
 - Juul 1.0
 - Ket

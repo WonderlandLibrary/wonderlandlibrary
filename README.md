@@ -24,6 +24,8 @@ List of sources:
 - CrossSine b34
 - Diablo 2.1
 - Echo
+- Envy 0.3
+- ETB Reload 0.1
 - Exhibition 5.0
 - Flux B39.11
 - GameSense 2.3.0

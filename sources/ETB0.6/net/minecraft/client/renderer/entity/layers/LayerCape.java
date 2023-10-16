@@ -1,0 +1,134 @@
+package net.minecraft.client.renderer.entity.layers;
+
+import java.awt.Color;
+
+import com.enjoytheban.api.EventBus;
+import com.enjoytheban.api.events.rendering.EventRenderCape;
+import com.enjoytheban.utils.render.ColorUtils;
+
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EnumPlayerModelParts;
+import net.minecraft.util.MathHelper;
+
+public class LayerCape implements LayerRenderer {
+	private final RenderPlayer playerRenderer;
+	private static final String __OBFID = "CL_00002425";
+
+	public LayerCape(RenderPlayer p_i46123_1_) {
+		this.playerRenderer = p_i46123_1_;
+	}
+
+	public void doRenderLayer(final AbstractClientPlayer p_177166_1_, final float p_177166_2_, final float p_177166_3_,
+			final float p_177166_4_, final float p_177166_5_, final float p_177166_6_, final float p_177166_7_,
+			final float p_177166_8_) {
+		EventRenderCape event = new EventRenderCape(p_177166_1_.getLocationCape(), p_177166_1_);
+		EventBus.getInstance().call(event);
+		if (p_177166_1_.getLocationCape() != event.getLocation() && event.getLocation() != null
+				&& p_177166_1_.func_175148_a(EnumPlayerModelParts.CAPE)) {
+			Color color = ColorUtils.rainbow(0L, 1.0f);
+			GlStateManager.color(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, 1.0f);
+			this.playerRenderer.bindTexture(event.getLocation());
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(0.0f, 0.0f, 0.125f);
+			final double var9 = p_177166_1_.field_71091_bM
+					+ (p_177166_1_.field_71094_bP - p_177166_1_.field_71091_bM) * p_177166_4_
+					- (p_177166_1_.prevPosX + (p_177166_1_.posX - p_177166_1_.prevPosX) * p_177166_4_);
+			final double var10 = p_177166_1_.field_71096_bN
+					+ (p_177166_1_.field_71095_bQ - p_177166_1_.field_71096_bN) * p_177166_4_
+					- (p_177166_1_.prevPosY + (p_177166_1_.posY - p_177166_1_.prevPosY) * p_177166_4_);
+			final double var11 = p_177166_1_.field_71097_bO
+					+ (p_177166_1_.field_71085_bR - p_177166_1_.field_71097_bO) * p_177166_4_
+					- (p_177166_1_.prevPosZ + (p_177166_1_.posZ - p_177166_1_.prevPosZ) * p_177166_4_);
+			final float var12 = p_177166_1_.prevRenderYawOffset
+					+ (p_177166_1_.renderYawOffset - p_177166_1_.prevRenderYawOffset) * p_177166_4_;
+			final double var13 = MathHelper.sin(var12 * 3.1415927f / 180.0f);
+			final double var14 = -MathHelper.cos(var12 * 3.1415927f / 180.0f);
+			float var15 = (float) var10 * 10.0f;
+			var15 = MathHelper.clamp_float(var15, -6.0f, 32.0f);
+			float var16 = (float) (var9 * var13 + var11 * var14) * 100.0f;
+			final float var17 = (float) (var9 * var14 - var11 * var13) * 100.0f;
+			if (var16 < 0.0f) {
+				var16 = 0.0f;
+			}
+			if (var16 > 165.0f) {
+				var16 = 165.0f;
+			}
+			final float var18 = p_177166_1_.prevCameraYaw
+					+ (p_177166_1_.cameraYaw - p_177166_1_.prevCameraYaw) * p_177166_4_;
+			var15 += MathHelper.sin((p_177166_1_.prevDistanceWalkedModified
+					+ (p_177166_1_.distanceWalkedModified - p_177166_1_.prevDistanceWalkedModified) * p_177166_4_)
+					* 6.0f) * 32.0f * var18;
+			if (p_177166_1_.isSneaking()) {
+				var15 += 25.0f;
+				GlStateManager.translate(0.0f, 0.142f, -0.0178f);
+			}
+			GlStateManager.rotate(6.0f + var16 / 2.0f + var15, 1.0f, 0.0f, 0.0f);
+			GlStateManager.rotate(var17 / 2.0f, 0.0f, 0.0f, 1.0f);
+			GlStateManager.rotate(-var17 / 2.0f, 0.0f, 1.0f, 0.0f);
+			GlStateManager.rotate(180.0f, 0.0f, 1.0f, 0.0f);
+			this.playerRenderer.func_177136_g().func_178728_c(0.0625f);
+			GlStateManager.popMatrix();
+		}
+		if (event.isCancelled()) {
+			return;
+		}
+		if (p_177166_1_.hasCape() && !p_177166_1_.isInvisible() && p_177166_1_.func_175148_a(EnumPlayerModelParts.CAPE)
+				&& p_177166_1_.getLocationCape() != null) {
+			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+			this.playerRenderer.bindTexture(p_177166_1_.getLocationCape());
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(0.0f, 0.0f, 0.125f);
+			final double var19 = p_177166_1_.field_71091_bM
+					+ (p_177166_1_.field_71094_bP - p_177166_1_.field_71091_bM) * p_177166_4_
+					- (p_177166_1_.prevPosX + (p_177166_1_.posX - p_177166_1_.prevPosX) * p_177166_4_);
+			final double var20 = p_177166_1_.field_71096_bN
+					+ (p_177166_1_.field_71095_bQ - p_177166_1_.field_71096_bN) * p_177166_4_
+					- (p_177166_1_.prevPosY + (p_177166_1_.posY - p_177166_1_.prevPosY) * p_177166_4_);
+			final double var21 = p_177166_1_.field_71097_bO
+					+ (p_177166_1_.field_71085_bR - p_177166_1_.field_71097_bO) * p_177166_4_
+					- (p_177166_1_.prevPosZ + (p_177166_1_.posZ - p_177166_1_.prevPosZ) * p_177166_4_);
+			final float var22 = p_177166_1_.prevRenderYawOffset
+					+ (p_177166_1_.renderYawOffset - p_177166_1_.prevRenderYawOffset) * p_177166_4_;
+			final double var23 = MathHelper.sin(var22 * 3.1415927f / 180.0f);
+			final double var24 = -MathHelper.cos(var22 * 3.1415927f / 180.0f);
+			float var25 = (float) var20 * 10.0f;
+			var25 = MathHelper.clamp_float(var25, -6.0f, 32.0f);
+			float var26 = (float) (var19 * var23 + var21 * var24) * 100.0f;
+			final float var27 = (float) (var19 * var24 - var21 * var23) * 100.0f;
+			if (var26 < 0.0f) {
+				var26 = 0.0f;
+			}
+			if (var26 > 165.0f) {
+				var26 = 165.0f;
+			}
+			final float var28 = p_177166_1_.prevCameraYaw
+					+ (p_177166_1_.cameraYaw - p_177166_1_.prevCameraYaw) * p_177166_4_;
+			var25 += MathHelper.sin((p_177166_1_.prevDistanceWalkedModified
+					+ (p_177166_1_.distanceWalkedModified - p_177166_1_.prevDistanceWalkedModified) * p_177166_4_)
+					* 6.0f) * 32.0f * var28;
+			if (p_177166_1_.isSneaking()) {
+				var25 += 25.0f;
+				GlStateManager.translate(0.0f, 0.142f, -0.0178f);
+			}
+			GlStateManager.rotate(6.0f + var26 / 2.0f + var25, 1.0f, 0.0f, 0.0f);
+			GlStateManager.rotate(var27 / 2.0f, 0.0f, 0.0f, 1.0f);
+			GlStateManager.rotate(-var27 / 2.0f, 0.0f, 1.0f, 0.0f);
+			GlStateManager.rotate(180.0f, 0.0f, 1.0f, 0.0f);
+			this.playerRenderer.func_177136_g().func_178728_c(0.0625f);
+			GlStateManager.popMatrix();
+		}
+	}
+
+	public boolean shouldCombineTextures() {
+		return false;
+	}
+
+	public void doRenderLayer(EntityLivingBase p_177141_1_, float p_177141_2_, float p_177141_3_, float p_177141_4_,
+			float p_177141_5_, float p_177141_6_, float p_177141_7_, float p_177141_8_) {
+		this.doRenderLayer((AbstractClientPlayer) p_177141_1_, p_177141_2_, p_177141_3_, p_177141_4_, p_177141_5_,
+				p_177141_6_, p_177141_7_, p_177141_8_);
+	}
+}

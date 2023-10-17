@@ -10,7 +10,7 @@ People who have helped make this library big:
 - tabio1337
 - 000000001_1
 
-## [Sources](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/sources)
+## [Sources](/sources)
 List of sources:
 - Apple
 - Aquatic
@@ -77,7 +77,7 @@ List of sources:
 - Vika
 - Xenza B9
 
-## [Jars](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/jars)
+## [Jars](/jars)
 List of clients (cracked/free/leaked):
 - Atani (0.0.1 - 0.0.3)
 - Autumn 1.0.0

@@ -88,4 +88,5 @@ List of clients (cracked/free/leaked):
 - NightX b63
 - Raven B-
 - Rise 5.90
+- Summer (Multiple versions)
 - Umbrella 1.3

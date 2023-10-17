@@ -80,6 +80,7 @@ List of sources:
 ## [Jars](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/jars)
 List of clients (cracked/free/leaked):
 - Atani (0.0.1 - 0.0.3)
+- Autumn 1.0.0
 - BleachHack
 - Crass B2
 - Francium

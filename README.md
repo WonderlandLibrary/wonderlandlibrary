@@ -25,11 +25,13 @@ List of sources:
 - Diablo 2.1
 - Echo
 - Envy 0.3
+- ETB 0.6
 - ETB Reload 0.1
 - Exhibition 5.0
 - Flux B39.11
 - GameSense 2.3.0
 - GetBypass alpha 1.0
+- Graphite
 - Jello 0.1
 - Juul 1.0
 - Ket

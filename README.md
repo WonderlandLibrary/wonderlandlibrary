@@ -69,6 +69,7 @@ List of sources:
 - Summer Reborn 5.0
 - TankV4
 - Thea
+- Tired NextGen 18
 - Tomato 0.2
 - Umbrella 1.3
 - Vestige 2.0

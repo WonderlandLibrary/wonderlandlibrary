@@ -81,12 +81,14 @@ List of sources:
 List of clients (cracked/free/leaked):
 - Atani (0.0.1 - 0.0.3)
 - BleachHack
+- Crass B2
 - Francium
 - Hera 14
 - LiquidBounce b73
 - Monsoon 1.2
 - Monsoon 3.0-A6
 - MoonX
+- Myth Recode
 - NightX b63
 - Raven B-
 - Rise 5.90

@@ -61,6 +61,7 @@ List of sources:
 - Rise 5.90
 - Rise 5.98
 - Rise 5.99
+- Rise 6.00
 - RoseGold
 - Sigma 1.6
 - Sigma 2.08

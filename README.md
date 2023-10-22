@@ -10,7 +10,7 @@ People who have helped make this library big:
 - tabio1337
 - 000000001_1
 
-## [Sources](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/sources)
+## [Sources](/sources)
 List of sources:
 - Apple
 - Aquatic
@@ -25,11 +25,13 @@ List of sources:
 - Diablo 2.1
 - Echo
 - Envy 0.3
+- ETB 0.6
 - ETB Reload 0.1
 - Exhibition 5.0
 - Flux B39.11
 - GameSense 2.3.0
 - GetBypass alpha 1.0
+- Graphite
 - Jello 0.1
 - Juul 1.0
 - Ket
@@ -60,6 +62,7 @@ List of sources:
 - Rise 5.90
 - Rise 5.98
 - Rise 5.99
+- Rise 6.00
 - RoseGold
 - Sigma 1.6
 - Sigma 2.08
@@ -78,7 +81,7 @@ List of sources:
 - Vika
 - Xenza B9
 
-## [Jars](https://github.com/MarkGG8181/WonderlandLibrary/tree/main/jars)
+## [Jars](/jars)
 List of clients (cracked/free/leaked):
 - Atani (0.0.1 - 0.0.3)
 - Autumn 1.0.0

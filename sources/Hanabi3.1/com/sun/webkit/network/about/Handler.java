@@ -1,0 +1,11 @@
+package com.sun.webkit.network.about;
+
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
+
+public final class Handler extends URLStreamHandler {
+   protected URLConnection openConnection(URL var1) {
+      return new AboutURLConnection(var1);
+   }
+}

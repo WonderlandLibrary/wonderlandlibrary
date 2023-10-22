@@ -39,6 +39,7 @@ List of sources:
 - Lirium
 - Lithium
 - LoseBypass
+- Mint
 - Monsoon 1.2
 - Monsoon 1.3
 - MoonX

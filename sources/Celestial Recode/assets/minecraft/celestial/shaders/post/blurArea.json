@@ -1,0 +1,75 @@
+{
+    "targets": [
+        "swap"
+    ],
+    "passes": [
+        {
+            "name": "blurArea",
+            "intarget": "minecraft:main",
+            "outtarget": "swap",
+            "uniforms": [
+                {
+                    "name": "radius",
+                    "values": [ 1.0 ]
+                },
+                {
+                    "name": "resolution",
+                    "values": [ 1.0, 1.0 ]
+                },
+	           "name": "in_color",
+                    "values": [ 1.0, 1.0, 1.0, 1.0 ]
+                 },
+                    "name": "p1",
+                    "values": [ 0.0, 0.0 ]
+ 		 },
+ 		    "name": "p2",
+                    "values": [ 0.0, 0.0 ]
+	         },
+	            "name": "shadow_pos",
+                    "values": [ 100.0, 100.0 ]
+ 		 },
+		    
+                     "name": "shadow_blur",
+                    "values": [ 5.0 ]
+                 },
+                     "name": "shadow_color",
+                    "values": [ 1.0, 1.0, 1.0, 1.0 ]
+ 		 }
+            ]
+        },
+        {
+            "name": "blurArea",
+            "intarget": "swap",
+            "outtarget": "minecraft:main",
+            "uniforms": [
+                   {
+                    "name": "radius",
+                    "values": [ 1.0 ]
+                },
+                {
+                    "name": "resolution",
+                    "values": [ 1.0, 1.0 ]
+                },
+	           "name": "in_color",
+                    "values": [ 1.0, 1.0, 1.0, 1.0 ]
+                 },
+                    "name": "p1",
+                    "values": [ 0.0, 0.0 ]
+ 		 },
+ 		    "name": "p2",
+                    "values": [ 0.0, 0.0 ]
+	         },
+	            "name": "shadow_pos",
+                    "values": [ 100.0, 100.0 ]
+ 		 },
+		    
+                     "name": "shadow_blur",
+                    "values": [ 5.0 ]
+                 },
+                     "name": "shadow_color",
+                    "values": [ 1.0, 1.0, 1.0, 1.0 ]
+ 		 }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,13 @@
+/*
+ * Decompiled with CFR 0.150.
+ */
+package com.mojang.authlib.yggdrasil.request;
+
+import java.util.UUID;
+
+public class JoinMinecraftServerRequest {
+    public String accessToken;
+    public UUID selectedProfile;
+    public String serverId;
+}
+

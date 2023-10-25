@@ -1,0 +1,23 @@
+#version 120
+
+uniform vec2 location, rectSize;
+uniform vec4 color1, color2, color3, color4;
+uniform float radius;
+uniform float noiseS;
+
+float calc_length(vec2 p, vec2 b, float r) {
+    return length(max(abs(p) - b , 0)) - r;
+}
+
+vec3 createGradient(vec2 coords, vec3 color1, vec3 color2, vec3 color3, vec3 color4){
+    vec3 color = mix(mix(color1.rgb, color2.rgb, coords.y), mix(color3.rgb, color4.rgb, coords.y), coords.x);
+    color += mix(noiseS / 255., -noiseS / 255., fract(sin(dot(coords.xy, vec2(12.9898, 78.233))) * 43758.5453));
+    return color;
+}
+
+void main() {
+    vec2 halfSize = rectSize * .5;
+
+    float smoothedAlpha =  (1.0-smoothstep(0.0, 2., calc_length(halfSize - (gl_TexCoord[0].st * rectSize), halfSize - radius - 1., radius))) * color1.a;
+    gl_FragColor = vec4(createGradient(gl_TexCoord[0].st, color1.rgb, color2.rgb, color3.rgb, color4.rgb), smoothedAlpha);
+}

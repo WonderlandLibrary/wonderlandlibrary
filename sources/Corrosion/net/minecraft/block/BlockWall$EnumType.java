@@ -1,0 +1,3 @@
+public class BlockWall$EnumType {
+	// Failed to decompile, took too long to decompile: net/minecraft/block/BlockWall$EnumType
+}

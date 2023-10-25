@@ -1,0 +1,24 @@
+{
+    "blend": {
+        "func": "add",
+        "srcrgb": "one",
+        "dstrgb": "zero"
+    },
+    "vertex": "sobel",
+    "fragment": "blurArea",
+    "attributes": [ "Position" ],
+    "samplers": [
+
+    ],
+    "uniforms": [
+        { "name": "ProjMat",     "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "radius",      "type": "float",     "count": 1,  "values": [ 1.0 ] },
+        { "name": "resolution",     "type": "float",     "count": 2,  "values": [ 1.0, 1.0 ] },
+        { "name": "in_color",     "type": "float",     "count": 4,  "values": [ 1.0, 1.0, 1.0, 1.0 ] },
+        { "name": "p1",      "type": "float",     "count": 2,  "values": [ 0.0, 0.0 ] },
+        { "name": "p2",      "type": "float",     "count": 2,  "values": [ 0.0, 0.0 ] },
+        { "name": "shadow_pos",   "type": "float",     "count": 2,  "values": [ 100.0, 100.0 ] },
+        { "name": "shadow_blur",      "type": "float",     "count": 1,  "values": [ 5.0 ] },
+        { "name": "shadow_color",     "type": "float",     "count": 4,  "values": [ 1.0, 1.0, 1.0, 1.0 ] }
+    ]
+} 

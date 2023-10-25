@@ -1,0 +1,3 @@
+public class BlockPressurePlate$1 {
+	// Failed to decompile, took too long to decompile: net/minecraft/block/BlockPressurePlate$1
+}

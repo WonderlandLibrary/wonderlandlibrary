@@ -1,0 +1,16 @@
+package net.minecraft.client.particle;
+
+import net.minecraft.block.Block;
+import net.minecraft.client.particle.Barrier;
+import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.IParticleFactory;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.world.World;
+
+public static class Barrier.Factory
+implements IParticleFactory {
+    public EntityFX getEntityFX(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int ... p_178902_15_) {
+        return new Barrier(worldIn, xCoordIn, yCoordIn, zCoordIn, Item.getItemFromBlock((Block)Blocks.barrier));
+    }
+}

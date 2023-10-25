@@ -1,0 +1,17 @@
+***************
+*** 190,196 ****
+              for(UnmodifiableIterator unmodifiableiterator = iblockstate.func_177228_b().entrySet().iterator(); unmodifiableiterator.hasNext(); list.add(iproperty.func_177701_a() + ": " + s)) {
+                 Entry<IProperty<?>, Comparable<?>> entry = (Entry)unmodifiableiterator.next();
+                 iproperty = (IProperty)entry.getKey();
+-                T t = entry.getValue();
+                 s = iproperty.func_177702_a(t);
+                 if (Boolean.TRUE.equals(t)) {
+                    s = TextFormatting.GREEN + s;
+--- 191,197 ----
+              for(UnmodifiableIterator unmodifiableiterator = iblockstate.func_177228_b().entrySet().iterator(); unmodifiableiterator.hasNext(); list.add(iproperty.func_177701_a() + ": " + s)) {
+                 Entry<IProperty<?>, Comparable<?>> entry = (Entry)unmodifiableiterator.next();
+                 iproperty = (IProperty)entry.getKey();
++                T t = (T)entry.getValue();
+                 s = iproperty.func_177702_a(t);
+                 if (Boolean.TRUE.equals(t)) {
+                    s = TextFormatting.GREEN + s;

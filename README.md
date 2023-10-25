@@ -54,7 +54,7 @@ List of sources:
 - Pandaware 0.4.3
 - PowerClient
 - Pulsive 5.0
-- Raven B4
+- Raven B4 Remake
 - Raven BX
 - RavenWeave
 - Raze

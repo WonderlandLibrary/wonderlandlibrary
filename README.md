@@ -2,7 +2,6 @@
 Wonderland library is a world wide library for minecraft clients and mods.
 
 ## Contributors
-People who have helped make this library big:
 - .zajchu.
 - coccocoahelper
 - kellohyllyy
@@ -11,94 +10,112 @@ People who have helped make this library big:
 - 000000001_1
 
 ## [Sources](/sources)
-List of sources:
 - Apple
+- Aqua
 - Aquatic
 - Artemis
 - Astomero
-- Atani 0.0.3
-- Augustus b2.6
-- Autumn 1.0.0
-- Azura X
-- Alpha Centauri B6
-- CrossSine b34
-- Diablo 2.1
+- Astro 2.2.1
+- Async
+- Atani
+- AugustusB2.6
+- Autumn
+- Azura-X
+- Capybara Premium 1.0
+- Celestial Premium 6.0
+- Celestial Recode
+- CentauriB6
+- CloverHook
+- Clowdy Lite
+- Corrosion
+- CrossSineB34
+- Cupid 0.1
+- Debug 1.2.6
+- Diablo2.1
+- Dortware
+- DrainWalk
+- DreamCore b161021
 - Echo
 - Envy 0.3
-- ETB 0.6
-- ETB Reload 0.1
-- Exhibition 5.0
-- Flux B39.11
-- GameSense 2.3.0
-- GetBypass a1.0
+- Envy0.3
+- ETB0.6
+- ETBReload0.1
+- Eternal 3.0
+- Evolution
+- Exhibition5.0
+- Exodus 5.4
+- Fan v3
+- Fan v4
+- Fanta v13
+- FluxB39.11
+- GameSense
+- GetBypass
 - Graphite
-- Hanabi 3.1
-- Jello 0.1
-- Juul 1.0
+- Hanabi3.1
+- Jello0.1
+- Juul1.0
 - Ket
-- KoksV4
+- Koksv4
 - KyinoSense
-- LiquidBounce++
+- LiquidBouncePlusPlus
 - Lirium
 - Lithium
 - LoseBypass
 - Mint
-- Monsoon 1.2
-- Monsoon 1.3
+- Monsoon1.2
+- Monsoon1.3
 - MoonX
-- NeverHook 1.4
+- NeverHook1.4
 - November
-- Ohareware 6.9
-- Old Novoline
-- Old Raze
-- Pandaware 0.4.3
+- Ohareware6.9
+- Old-Novoline
+- Old-Raze
+- Pandaware0.4.3
 - PowerClient
-- Pulsive 5.0
-- Raven B4
-- Raven BX
+- Pulsive5.0
+- RavenB4
+- RavenBX
 - RavenWeave
 - Raze
 - Reality
-- RektSky b5
-- Rise 5.89
-- Rise 5.90
-- Rise 5.98
-- Rise 5.99
-- Rise 6.00
+- RektSkyB5
+- Rise5.89
+- Rise5.90
+- Rise5.98
+- Rise5.99
+- Rise6.0
 - RoseGold
-- Sigma 1.6
-- Sigma 2.08
-- Sigma 4.11
+- Sigma1.6
+- Sigma2.08
+- Sigma4.11
 - Spectrum
 - Straightware
 - Sudo
-- Summer Reborn 5.0
+- Summer5.0
 - TankV4
 - Thea
-- Tired NextGen 18
-- Tomato 0.2
-- Umbrella 1.3
-- Vestige 2.0
-- Vestige 3.0
-- Vika
-- Xenza B9
+- TiredNextGen
+- Tomato0.2
+- Umbrella1.3
+- Vestige2.0
+- Vestige3.0
+- vika
+- XenzaB9
 
 ## [Jars](/jars)
-List of clients (cracked/free/leaked):
-- Atani (0.0.1 - 0.0.3)
-- Autumn 1.0.0
-- BleachHack
-- Crass B2
-- Francium
-- Hera 14
-- LiquidBounce b73
-- Monsoon 1.2
-- Monsoon 3.0-A6
-- MoonX
-- Myth Recode
-- NightX b63
-- Raven B-
-- Rise 5.90
-- Rise 5.100
-- Summer (Multiple versions)
-- Umbrella 1.3
+- atani
+- autumn
+- bleachhack
+- crassb2
+- francium
+- hera14
+- liquidbounce
+- monsoon
+- moonx
+- mythrecode
+- nightx
+- ravenbminus
+- rise5.100
+- rise5.90
+- summer
+- umbrella

@@ -17,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
 import net.minecraft.network.play.client.C0APacketAnimation;
-import net.minecraft.network.play.server.S18PacketEntityTeleport;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.BlockPos;
@@ -25,14 +24,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
 import rip.autumn.annotations.Label;
 import rip.autumn.core.Autumn;
-import rip.autumn.events.packet.ReceivePacketEvent;
 import rip.autumn.events.player.MotionUpdateEvent;
 import rip.autumn.module.Module;
 import rip.autumn.module.ModuleCategory;
 import rip.autumn.module.annotations.Aliases;
 import rip.autumn.module.annotations.Category;
 import rip.autumn.module.impl.combat.AuraMod;
-import rip.autumn.module.option.Option;
 import rip.autumn.module.option.impl.BoolOption;
 import rip.autumn.module.option.impl.DoubleOption;
 import rip.autumn.utils.Stopwatch;
@@ -41,21 +38,20 @@ import rip.autumn.utils.Stopwatch;
 @Category(ModuleCategory.WORLD)
 @Aliases({"chestaura", "cheststealer"})
 public class ChestAura extends Module {
-   private static final int REMOVE_SIZE = 128;
    public final DoubleOption range = new DoubleOption("Range", 4.0D, 3.0D, 6.0D, 0.05D);
    public final BoolOption autoOpen = new BoolOption("Auto Open", true);
    public final BoolOption autoSteal = new BoolOption("Auto Steal", true);
    public final DoubleOption delay = new DoubleOption("Delay", 150.0D, 0.0D, 500.0D, 5.0D);
-   private final Set openedChests = new HashSet();
+   private final Set openedChests = new HashSet<>();
    private final Stopwatch openStopwatch = new Stopwatch();
    private final Stopwatch itemStealStopwatch = new Stopwatch();
    private AuraMod aura;
 
    public ChestAura() {
-      this.addOptions(new Option[]{this.range, this.autoOpen, this.autoSteal, this.delay});
+      this.addOptions(this.range, this.autoOpen, this.autoSteal, this.delay);
    }
 
-   public void onEnabled() {
+   public void onEnable() {
       if (this.aura == null) {
          this.aura = (AuraMod)Autumn.MANAGER_REGISTRY.moduleManager.getModuleOrNull(AuraMod.class);
       }
@@ -110,14 +106,6 @@ public class ChestAura extends Module {
             }
          }
       }
-
-   }
-
-   @Listener(ReceivePacketEvent.class)
-   public final void onReceivePacket(ReceivePacketEvent event) {
-      if (event.getPacket() instanceof S18PacketEntityTeleport) {
-      }
-
    }
 
    private void andAndEnsureSetSize(Set set, TileEntity chest) {

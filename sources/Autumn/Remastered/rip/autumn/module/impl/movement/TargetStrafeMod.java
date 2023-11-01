@@ -8,17 +8,15 @@ import org.lwjgl.opengl.GL11;
 import rip.autumn.annotations.Label;
 import rip.autumn.core.Autumn;
 import rip.autumn.events.player.MotionUpdateEvent;
-import rip.autumn.events.player.MoveEvent;
 import rip.autumn.events.render.Render3DEvent;
 import rip.autumn.module.Module;
 import rip.autumn.module.ModuleCategory;
 import rip.autumn.module.annotations.Aliases;
 import rip.autumn.module.annotations.Category;
 import rip.autumn.module.impl.combat.AuraMod;
-import rip.autumn.module.option.Option;
 import rip.autumn.module.option.impl.BoolOption;
 import rip.autumn.module.option.impl.DoubleOption;
-import rip.autumn.utils.MovementUtils;
+import rip.autumn.utils.MoveUtil;
 import rip.autumn.utils.RotationUtils;
 import rip.autumn.utils.entity.EntityValidator;
 import rip.autumn.utils.entity.impl.VoidCheck;
@@ -38,21 +36,20 @@ public final class TargetStrafeMod extends Module {
    private int direction = -1;
 
    public TargetStrafeMod() {
-      this.addOptions(new Option[]{this.radius, this.render, this.directionKeys, this.space});
+      this.addOptions(this.radius, this.render, this.directionKeys, this.space);
       this.targetValidator = new EntityValidator();
       this.targetValidator.add(new VoidCheck());
       this.targetValidator.add(new WallCheck());
    }
 
-   public void onEnabled() {
+   public void onEnable() {
       if (this.aura == null) {
          this.aura = (AuraMod)Autumn.MANAGER_REGISTRY.moduleManager.getModuleOrNull(AuraMod.class);
       }
-
    }
 
    @Listener(MotionUpdateEvent.class)
-   public final void onUpdate(MotionUpdateEvent event) {
+   public void onUpdate(MotionUpdateEvent event) {
       if (event.getType() == MotionUpdateEvent.Type.PRE) {
          if (mc.thePlayer.isCollidedHorizontally) {
             this.switchDirection();
@@ -66,7 +63,6 @@ public final class TargetStrafeMod extends Module {
             this.direction = -1;
          }
       }
-
    }
 
    private void switchDirection() {
@@ -75,18 +71,16 @@ public final class TargetStrafeMod extends Module {
       } else {
          this.direction = 1;
       }
-
    }
 
-   public void strafe(MoveEvent event, double moveSpeed) {
+   public void strafe(double moveSpeed) {
       EntityLivingBase target = this.aura.getTarget();
       float[] rotations = RotationUtils.getRotationsEntity(target);
       if ((double)mc.thePlayer.getDistanceToEntity(target) <= (Double)this.radius.getValue()) {
-         MovementUtils.setSpeed(moveSpeed, rotations[0], (double)this.direction, 0.0D);
+         MoveUtil.setSpeed(moveSpeed, rotations[0], this.direction, 0.0D);
       } else {
-         MovementUtils.setSpeed(moveSpeed, rotations[0], (double)this.direction, 1.0D);
+         MoveUtil.setSpeed(moveSpeed, rotations[0], this.direction, 1.0D);
       }
-
    }
 
    @Listener(Render3DEvent.class)
@@ -94,7 +88,6 @@ public final class TargetStrafeMod extends Module {
       if (this.canStrafe() && this.render.getValue()) {
          this.drawCircle(this.aura.getTarget(), event.getPartialTicks(), (Double)this.radius.getValue());
       }
-
    }
 
    private void drawCircle(Entity entity, float partialTicks, double rad) {
@@ -111,7 +104,6 @@ public final class TargetStrafeMod extends Module {
       float r = 0.003921569F * (float)Color.WHITE.getRed();
       float g = 0.003921569F * (float)Color.WHITE.getGreen();
       float b = 0.003921569F * (float)Color.WHITE.getBlue();
-      double pix2 = 6.283185307179586D;
 
       for(int i = 0; i <= 90; ++i) {
          GL11.glColor3f(r, g, b);

@@ -813,15 +813,15 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         }
     }
 
-    public void addToSendQueue(Packet p_147297_1_) {
-        SendPacketEvent event = new SendPacketEvent(p_147297_1_);
+    public void addToSendQueue(Packet packetIn) {
+        SendPacketEvent event = new SendPacketEvent(packetIn);
         Autumn.EVENT_BUS_REGISTRY.eventBus.post(event);
         if (!event.isCancelled()) {
-            this.netManager.sendPacket(p_147297_1_);
+            this.netManager.sendPacket(packetIn);
         }
     }
-    public void addToSendQueueSilent(Packet p_147297_1_) {
-        this.netManager.sendPacket(p_147297_1_);
+    public void addToSendQueueSilent(Packet packetIn) {
+        this.netManager.sendPacket(packetIn);
     }
 
     public void handleCollectItem(S0DPacketCollectItem packetIn)
@@ -1627,9 +1627,9 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
     {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
 
-        for (S38PacketPlayerListItem.AddPlayerData s38packetplayerlistitem$addplayerdata : packetIn.func_179767_a())
+        for (S38PacketPlayerListItem.AddPlayerData s38packetplayerlistitem$addplayerdata : packetIn.getEntries())
         {
-            if (packetIn.func_179768_b() == S38PacketPlayerListItem.Action.REMOVE_PLAYER)
+            if (packetIn.getAction() == S38PacketPlayerListItem.Action.REMOVE_PLAYER)
             {
                 this.playerInfoMap.remove(s38packetplayerlistitem$addplayerdata.getProfile().getId());
             }
@@ -1637,7 +1637,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
             {
                 NetworkPlayerInfo networkplayerinfo = (NetworkPlayerInfo)this.playerInfoMap.get(s38packetplayerlistitem$addplayerdata.getProfile().getId());
 
-                if (packetIn.func_179768_b() == S38PacketPlayerListItem.Action.ADD_PLAYER)
+                if (packetIn.getAction() == S38PacketPlayerListItem.Action.ADD_PLAYER)
                 {
                     networkplayerinfo = new NetworkPlayerInfo(s38packetplayerlistitem$addplayerdata);
                     this.playerInfoMap.put(networkplayerinfo.getGameProfile().getId(), networkplayerinfo);
@@ -1645,7 +1645,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
 
                 if (networkplayerinfo != null)
                 {
-                    switch (packetIn.func_179768_b())
+                    switch (packetIn.getAction())
                     {
                         case ADD_PLAYER:
                             networkplayerinfo.setGameType(s38packetplayerlistitem$addplayerdata.getGameMode());

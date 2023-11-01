@@ -29,7 +29,6 @@ public final class GuiAltManager extends GuiScreen {
          if (this.selected != null) {
          }
       }
-
    }
 
    public void drawScreen(int x, int y, float z) {

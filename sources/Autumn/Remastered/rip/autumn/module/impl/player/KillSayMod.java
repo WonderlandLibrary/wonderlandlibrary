@@ -17,13 +17,10 @@ public final class KillSayMod extends Module {
    private static final String[] MESSAGES = new String[]{"%s go eat estrogen femtard", "%s, KANKER AAP", "how did %s even hit the launch game button", "report me %s im really scared", "why is this fat retard %s begging me to turn off my hacks", "sorry %s, this bypass value is exclusive", "%s seriously? go back to cubecraft monkey brain", "Stop crying %s or ill put you back in your cage", "%s how big are your balls? bet they aren't as big as recons"};
 
    @Listener(ReceivePacketEvent.class)
-   public final void onReceivePacket(ReceivePacketEvent event) {
+   public void onReceivePacket(ReceivePacketEvent event) {
       if (event.getPacket() instanceof S02PacketChat) {
          S02PacketChat packet = (S02PacketChat)event.getPacket();
          String text = packet.getChatComponent().getUnformattedText();
-         if (mc.getCurrentServerData().serverIP.contains("mineplex")) {
-            text = text.substring(text.indexOf(" "));
-         }
 
          if (text.contains("by " + mc.thePlayer.getName())) {
             if (this.messageIndex >= MESSAGES.length) {
@@ -34,6 +31,5 @@ public final class KillSayMod extends Module {
             ++this.messageIndex;
          }
       }
-
    }
 }

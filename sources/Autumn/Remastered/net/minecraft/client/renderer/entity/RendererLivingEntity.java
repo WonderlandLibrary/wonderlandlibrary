@@ -1,9 +1,12 @@
 package net.minecraft.client.renderer.entity;
 
 import com.google.common.collect.Lists;
+
+import java.awt.*;
 import java.nio.FloatBuffer;
 import java.util.List;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBase;
@@ -27,6 +30,11 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import rip.autumn.core.Autumn;
 import rip.autumn.events.render.RenderNametagEvent;
+import rip.autumn.module.impl.visuals.ChamsMod;
+import rip.autumn.module.impl.visuals.GlowMod;
+import rip.autumn.utils.render.FrameBufferUtils;
+import rip.autumn.utils.render.Palette;
+import rip.autumn.utils.render.StencilUtils;
 
 public abstract class RendererLivingEntity<T extends EntityLivingBase> extends Render<T>
 {
@@ -248,20 +256,23 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
     /**
      * Renders the model in RenderLiving
      */
-    protected void renderModel(T entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float p_77036_7_)
-    {
+    protected void renderModel(T entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float p_77036_7_) {
         boolean flag = !entitylivingbaseIn.isInvisible();
         boolean flag1 = !flag && !entitylivingbaseIn.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer);
 
-        if (flag || flag1)
-        {
-            if (!this.bindEntityTexture(entitylivingbaseIn))
-            {
+        ChamsMod chams = (ChamsMod)Autumn.MANAGER_REGISTRY.moduleManager.getModuleOrNull(ChamsMod.class);
+
+        boolean flag2 = chams.isEnabled() && entitylivingbaseIn instanceof EntityPlayer;
+        boolean flag3 = ((GlowMod)Autumn.MANAGER_REGISTRY.moduleManager.getModuleOrNull(GlowMod.class)).isEnabled() && entitylivingbaseIn instanceof EntityOtherPlayerMP;
+
+        if (flag || flag1) {
+            if (!this.bindEntityTexture(entitylivingbaseIn)) {
                 return;
             }
 
-            if (flag1)
-            {
+            boolean textured = chams.mode.getValue() == ChamsMod.Mode.TEXTURED;
+
+            if (flag1) {
                 GlStateManager.pushMatrix();
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 0.15F);
                 GlStateManager.depthMask(false);
@@ -270,10 +281,73 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 GlStateManager.alphaFunc(516, 0.003921569F);
             }
 
+            Color chamsColor;
+            if (flag3) {
+                chamsColor = (Color)GlowMod.enemyColor.getValue();
+                FrameBufferUtils.checkSetupFBO();
+                this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
+                StencilUtils.renderOne();
+                GL11.glLineWidth(((Double)GlowMod.lineWidth.getValue()).floatValue());
+                GL11.glBlendFunc(770, 771);
+                GL11.glEnable(3042);
+                GL11.glEnable(2848);
+                GL11.glHint(3154, 4354);
+                GlStateManager.enableAlpha();
+                GL11.glEnable(3024);
+                GL11.glColor4f((float)chamsColor.getRed() / 255.0F, (float)chamsColor.getGreen() / 255.0F, (float)chamsColor.getBlue() / 255.0F, (float)chamsColor.getAlpha() / 255.0F);
+                this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
+                StencilUtils.renderTwo();
+                this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
+                StencilUtils.renderThree();
+                this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
+                StencilUtils.renderFour();
+                this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
+                StencilUtils.renderFive();
+                GL11.glDisable(3024);
+            }
+
+            if (flag2) {
+                chamsColor = Palette.fade(((Palette)chams.playerBehindWalls.getValue()).getColor());
+                GL11.glPushMatrix();
+                GL11.glEnable(10754);
+                GL11.glPolygonOffset(1.0F, 1000000.0F);
+                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
+                if (!textured) {
+                    GL11.glEnable(3042);
+                    GL11.glDisable(3553);
+                    GL11.glDisable(2896);
+                    GL11.glBlendFunc(770, 771);
+                    GL11.glColor4f((float)chamsColor.getRed() / 255.0F, (float)chamsColor.getGreen() / 255.0F, (float)chamsColor.getBlue() / 255.0F, (float)chamsColor.getAlpha() / 255.0F);
+                }
+
+                GL11.glDisable(2929);
+                GL11.glDepthMask(false);
+            }
+
             this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
 
-            if (flag1)
-            {
+            if (flag2) {
+                GL11.glEnable(2929);
+                GL11.glDepthMask(true);
+                if (!textured) {
+                    chamsColor = ((Palette)chams.player.getValue()).getColor();
+                    GL11.glColor4f((float)chamsColor.getRed() / 255.0F, (float)chamsColor.getGreen() / 255.0F, (float)chamsColor.getBlue() / 255.0F, (float)chamsColor.getAlpha() / 255.0F);
+                }
+
+                this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
+                if (!textured) {
+                    GL11.glEnable(3553);
+                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                    GL11.glDisable(3042);
+                    GL11.glEnable(2896);
+                }
+
+                GL11.glPolygonOffset(1.0F, -1000000.0F);
+                GL11.glDisable(10754);
+                GL11.glPopMatrix();
+            }
+
+            if (flag1) {
                 GlStateManager.disableBlend();
                 GlStateManager.alphaFunc(516, 0.1F);
                 GlStateManager.popMatrix();

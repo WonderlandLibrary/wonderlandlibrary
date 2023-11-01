@@ -20,7 +20,7 @@ public final class RegenMod extends Module {
 
    public RegenMod() {
       this.setMode(mode);
-      this.addOptions(new Option[]{mode, packets});
+      this.addOptions(mode, packets);
    }
 
    @Listener(TickEvent.class)
@@ -34,7 +34,6 @@ public final class RegenMod extends Module {
             this.packetRegen((int)((Double)packets.getValue() / 2.0D * (double)mc.thePlayer.getActivePotionEffect(Potion.regeneration).getAmplifier()));
          }
       }
-
    }
 
    private void packetRegen(int packets) {
@@ -43,7 +42,6 @@ public final class RegenMod extends Module {
             mc.getNetHandler().addToSendQueueSilent(new C03PacketPlayer(true));
          }
       }
-
    }
 
    static {

@@ -33,7 +33,7 @@ public final class Panel {
    private boolean dragging;
 
    public Panel(ModuleCategory category, int x, int y) {
-      this.fr = Minecraft.getMinecraft().fontRendererObj;
+      this.fr = Minecraft.getMinecraft().fontRenderer;
       this.components = new ArrayList();
       this.state = AnimationState.STATIC;
       this.category = category;

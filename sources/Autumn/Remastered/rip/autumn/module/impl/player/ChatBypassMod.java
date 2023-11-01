@@ -13,8 +13,9 @@ import rip.autumn.module.annotations.Category;
 @Category(ModuleCategory.PLAYER)
 @Aliases({"chatbypass"})
 public final class ChatBypassMod extends Module {
+
    @Listener(SendPacketEvent.class)
-   public final void onSendPacket(SendPacketEvent event) {
+   public void onSendPacket(SendPacketEvent event) {
       if (event.getPacket() instanceof C01PacketChatMessage) {
          C01PacketChatMessage packetChatMessage = (C01PacketChatMessage)event.getPacket();
          if (packetChatMessage.getMessage().startsWith("/")) {
@@ -23,16 +24,16 @@ public final class ChatBypassMod extends Module {
 
          event.setCancelled();
          StringBuilder msg = new StringBuilder();
-         char[] var4 = packetChatMessage.getMessage().toCharArray();
-         int var5 = var4.length;
+         char[] charArray = packetChatMessage.getMessage().toCharArray();
+         int charLength = charArray.length;
 
-         for(int var6 = 0; var6 < var5; ++var6) {
-            char character = var4[var6];
+         for(int i = 0; i < charLength; ++i) {
+            char character = charArray[i];
             msg.append(character + "\u061c");
          }
 
          mc.getNetHandler().addToSendQueueSilent(new C01PacketChatMessage(msg.toString().replaceFirst("%", "")));
       }
-
    }
+
 }

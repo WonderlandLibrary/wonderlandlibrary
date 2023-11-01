@@ -29,20 +29,17 @@ public final class TargetHUDMod extends Module {
    private double hudHeight;
 
    @Listener(RenderGuiEvent.class)
-   public final void onRenderGui(RenderGuiEvent event) {
+   public void onRenderGui(RenderGuiEvent event) {
       AuraMod aura = (AuraMod)Autumn.MANAGER_REGISTRY.moduleManager.getModuleOrNull(AuraMod.class);
       float scaledWidth = (float)event.getScaledResolution().getScaledWidth();
       float scaledHeight = (float)event.getScaledResolution().getScaledHeight();
       if (aura.getTarget() != null && aura.isEnabled()) {
          if (aura.getTarget() instanceof EntityOtherPlayerMP) {
             this.target = (EntityOtherPlayerMP)aura.getTarget();
-            float width = 140.0F;
-            float height = 40.0F;
-            float xOffset = 40.0F;
             float x = scaledWidth / 2.0F - 70.0F;
             float y = scaledHeight / 2.0F + 80.0F;
             float health = this.target.getHealth();
-            double hpPercentage = (double)(health / this.target.getMaxHealth());
+            double hpPercentage = health / this.target.getMaxHealth();
             hpPercentage = MathHelper.clamp_double(hpPercentage, 0.0D, 1.0D);
             double hpWidth = 92.0D * hpPercentage;
             int healthColor = ColorUtils.getHealthColor(this.target.getHealth(), this.target.getMaxHealth()).getRGB();
@@ -55,8 +52,8 @@ public final class TargetHUDMod extends Module {
 
             GL11.glEnable(3089);
             RenderUtils.prepareScissorBox(x, y, x + 140.0F, (float)((double)y + this.hudHeight));
-            Gui.drawRect((double)x, (double)y, (double)(x + 140.0F), (double)(y + 40.0F), COLOR.getRGB());
-            Gui.drawRect((double)(x + 40.0F), (double)(y + 15.0F), (double)(x + 40.0F) + this.healthBarWidth, (double)(y + 25.0F), healthColor);
+            Gui.drawRect(x, y, x + 140.0F, y + 40.0F, COLOR.getRGB());
+            Gui.drawRect(x + 40.0F, y + 15.0F, (double)(x + 40.0F) + this.healthBarWidth, y + 25.0F, healthColor);
             mc.fontRendererObj.drawStringWithShadow(healthStr, x + 40.0F + 46.0F - (float)mc.fontRendererObj.getStringWidth(healthStr) / 2.0F, y + 16.0F, -1);
             mc.fontRendererObj.drawStringWithShadow(this.target.getName(), x + 40.0F, y + 2.0F, -1);
             GuiInventory.drawEntityOnScreen((int)(x + 13.333333F), (int)(y + 40.0F), 20, this.target.rotationYaw, this.target.rotationPitch, this.target);
@@ -67,6 +64,5 @@ public final class TargetHUDMod extends Module {
          this.hudHeight = 0.0D;
          this.target = null;
       }
-
    }
 }

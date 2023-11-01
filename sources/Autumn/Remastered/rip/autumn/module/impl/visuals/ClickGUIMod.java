@@ -13,11 +13,12 @@ import rip.autumn.module.annotations.Category;
 @Category(ModuleCategory.VISUALS)
 @Aliases({"clickgui", "gui"})
 public final class ClickGUIMod extends Module {
+
    public ClickGUIMod() {
       this.setHidden(true);
    }
 
-   public void onEnabled() {
+   public void onEnable() {
       mc.displayGuiScreen(ClickGuiScreen.getInstance());
       this.setEnabled(false);
    }

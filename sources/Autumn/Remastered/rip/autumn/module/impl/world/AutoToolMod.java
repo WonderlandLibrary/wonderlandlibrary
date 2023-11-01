@@ -14,7 +14,6 @@ import rip.autumn.module.ModuleCategory;
 import rip.autumn.module.annotations.Aliases;
 import rip.autumn.module.annotations.Category;
 import rip.autumn.module.impl.combat.AuraMod;
-import rip.autumn.module.option.Option;
 import rip.autumn.module.option.impl.BoolOption;
 import rip.autumn.utils.InventoryUtils;
 
@@ -27,14 +26,13 @@ public final class AutoToolMod extends Module {
    private AuraMod aura;
 
    public AutoToolMod() {
-      this.addOptions(new Option[]{this.swords, this.tools});
+      this.addOptions(this.swords, this.tools);
    }
 
-   public void onEnabled() {
+   public void onEnable() {
       if (this.aura == null) {
          this.aura = (AuraMod)Autumn.MANAGER_REGISTRY.moduleManager.getModuleOrNull(AuraMod.class);
       }
-
    }
 
    @Listener(MotionUpdateEvent.class)
@@ -81,6 +79,5 @@ public final class AutoToolMod extends Module {
             }
          }
       }
-
    }
 }

@@ -13,6 +13,7 @@ import rip.autumn.module.annotations.Category;
 @Category(ModuleCategory.PLAYER)
 @Aliases({"antidesync", "norotations"})
 public final class AntiDesyncMod extends Module {
+
    @Listener(ReceivePacketEvent.class)
    public void onEvent(ReceivePacketEvent event) {
       if (event.getPacket() instanceof S08PacketPlayerPosLook) {
@@ -20,6 +21,6 @@ public final class AntiDesyncMod extends Module {
          packet.setYaw(mc.thePlayer.rotationYaw);
          packet.setPitch(mc.thePlayer.rotationPitch);
       }
-
    }
+
 }

@@ -1,18 +1,17 @@
 package rip.autumn.module;
 
-import net.minecraft.client.Minecraft;
 import rip.autumn.annotations.Label;
 import rip.autumn.core.Autumn;
 import rip.autumn.module.annotations.Category;
 import rip.autumn.module.keybinds.KeyboardKey;
 import rip.autumn.module.option.Configurable;
 import rip.autumn.module.option.impl.EnumOption;
+import rip.autumn.utils.Methods;
 import rip.autumn.utils.render.Translate;
 
-public class Module extends Configurable {
-   protected static final Minecraft mc = Minecraft.getMinecraft();
-   private final String label = ((Label)this.getClass().getAnnotation(Label.class)).value();
-   private final ModuleCategory category = ((Category)this.getClass().getAnnotation(Category.class)).value();
+public class Module extends Configurable implements Methods {
+   private final String label = this.getClass().getAnnotation(Label.class).value();
+   private final ModuleCategory category = this.getClass().getAnnotation(Category.class).value();
    private final Translate translate = new Translate(0.0F, 0.0F);
    private final KeyboardKey keyBind = new KeyboardKey("");
    private String[] aliases;
@@ -59,11 +58,11 @@ public class Module extends Configurable {
       if (this.enabled != enabled) {
          this.enabled = enabled;
          if (enabled) {
-            this.onEnabled();
+            this.onEnable();
             Autumn.EVENT_BUS_REGISTRY.eventBus.subscribe(this);
          } else {
             Autumn.EVENT_BUS_REGISTRY.eventBus.unsubscribe(this);
-            this.onDisabled();
+            this.onDisable();
          }
       }
 
@@ -92,9 +91,7 @@ public class Module extends Configurable {
       this.setEnabled(!this.enabled);
    }
 
-   public void onEnabled() {
-   }
+   public void onEnable() {}
 
-   public void onDisabled() {
-   }
+   public void onDisable() {}
 }

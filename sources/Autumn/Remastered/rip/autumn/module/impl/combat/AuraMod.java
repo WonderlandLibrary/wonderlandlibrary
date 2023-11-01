@@ -118,11 +118,11 @@ public final class AuraMod extends Module {
       this.blockValidator.add(teamsCheck);
    }
 
-   public void onDisabled() {
+   public void onDisable() {
       this.unblock();
    }
 
-   public void onEnabled() {
+   public void onEnable() {
       this.updateStopwatch.reset();
       this.critStopwatch.reset();
       this.targetIndex = 0;

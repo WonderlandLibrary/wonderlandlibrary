@@ -11,7 +11,6 @@ import rip.autumn.events.render.RenderCrosshairEvent;
 import rip.autumn.module.Module;
 import rip.autumn.module.ModuleCategory;
 import rip.autumn.module.annotations.Category;
-import rip.autumn.module.option.Option;
 import rip.autumn.module.option.impl.BoolOption;
 import rip.autumn.module.option.impl.ColorOption;
 import rip.autumn.module.option.impl.DoubleOption;
@@ -28,11 +27,11 @@ public final class CrosshairMod extends Module {
    public static final ColorOption color;
 
    public CrosshairMod() {
-      this.addOptions(new Option[]{dot, thickness, length, gap, outline, outlineThickness, color});
+      this.addOptions(dot, thickness, length, gap, outline, outlineThickness, color);
    }
 
    @Listener(RenderCrosshairEvent.class)
-   public final void onRenderCrosshair(RenderCrosshairEvent event) {
+   public void onRenderCrosshair(RenderCrosshairEvent event) {
       GL11.glPushMatrix();
       event.setCancelled();
       ScaledResolution sr = event.getScaledRes();

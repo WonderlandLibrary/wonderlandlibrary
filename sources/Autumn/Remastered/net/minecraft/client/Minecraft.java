@@ -506,10 +506,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.mcSoundHandler = new SoundHandler(this.mcResourceManager, this.gameSettings);
         this.mcResourceManager.registerReloadListener(this.mcSoundHandler);
         this.mcMusicTicker = new MusicTicker(this);
+
         this.fontRendererObj = new FontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii.png"), this.renderEngine, false);
-        this.fontRenderer = new FontRendererHook(FontUtils.getFontFromTTF(new ResourceLocation("autumn/sf_ui_display_regular.ttf"), 18.0F, 0), true, true);
-        this.fontRendererSmall = new FontRendererHook(FontUtils.getFontFromTTF(new ResourceLocation("autumn/sf_ui_display_regular.ttf"), 12.0F, 0), true, true);
-        this.fontRendererTiny = new FontRendererHook(FontUtils.getFontFromTTF(new ResourceLocation("autumn/sf_ui_display_regular.ttf"), 6.0F, 0), true, true);
+        this.fontRenderer = new FontRendererHook(FontUtils.getFontFromTTF(new ResourceLocation("autumn/sf_ui_display_regular.ttf"), 18, 0), true, true);
+        this.fontRendererSmall = new FontRendererHook(FontUtils.getFontFromTTF(new ResourceLocation("autumn/sf_ui_display_regular.ttf"), 12, 0), true, true);
+        this.fontRendererTiny = new FontRendererHook(FontUtils.getFontFromTTF(new ResourceLocation("autumn/sf_ui_display_regular.ttf"), 6, 0), true, true);
 
         if (this.gameSettings.language != null) {
             this.fontRendererObj.setUnicodeFlag(this.isUnicode());
@@ -522,7 +523,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             this.fontRendererTiny.setBidiFlag(this.mcLanguageManager.isCurrentLanguageBidirectional());
         }
 
-
         this.standardGalacticFontRenderer = new FontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii_sga.png"), this.renderEngine, false);
         this.mcResourceManager.registerReloadListener(this.fontRendererObj);
         this.mcResourceManager.registerReloadListener(this.fontRenderer);
@@ -530,18 +530,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.mcResourceManager.registerReloadListener(this.standardGalacticFontRenderer);
         this.mcResourceManager.registerReloadListener(new GrassColorReloadListener());
         this.mcResourceManager.registerReloadListener(new FoliageColorReloadListener());
-        AchievementList.openInventory.setStatStringFormatter(new IStatStringFormat()
-        {
-            public String formatString(String p_74535_1_)
+        AchievementList.openInventory.setStatStringFormatter(p_74535_1_ -> {
+            try
             {
-                try
-                {
-                    return String.format(p_74535_1_, new Object[] {GameSettings.getKeyDisplayString(Minecraft.this.gameSettings.keyBindInventory.getKeyCode())});
-                }
-                catch (Exception exception)
-                {
-                    return "Error: " + exception.getLocalizedMessage();
-                }
+                return String.format(p_74535_1_, GameSettings.getKeyDisplayString(Minecraft.this.gameSettings.keyBindInventory.getKeyCode()));
+            }
+            catch (Exception exception)
+            {
+                return "Error: " + exception.getLocalizedMessage();
             }
         });
         this.mouseHelper = new MouseHelper();

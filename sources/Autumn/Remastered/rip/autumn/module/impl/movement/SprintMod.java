@@ -11,12 +11,13 @@ import rip.autumn.module.annotations.Category;
 @Label("Sprint")
 @Category(ModuleCategory.MOVEMENT)
 public final class SprintMod extends Module {
+
    @Listener(MoveEvent.class)
    public void onMove() {
       EntityPlayerSP player = mc.thePlayer;
       if (player.isMoving() && player.getFoodStats().getFoodLevel() > 6) {
          player.setSprinting(true);
       }
-
    }
+
 }

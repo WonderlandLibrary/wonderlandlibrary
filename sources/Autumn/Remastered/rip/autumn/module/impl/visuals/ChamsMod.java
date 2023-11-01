@@ -14,16 +14,15 @@ public final class ChamsMod extends Module {
    public final EnumOption mode;
    public final EnumOption player;
    public final EnumOption playerBehindWalls;
-   public static final int HANDCOL = -1253464587;
 
    public ChamsMod() {
       this.mode = new EnumOption("Mode", ChamsMod.Mode.COLOR);
       this.player = new EnumOption("Player", Palette.PURPLE);
       this.playerBehindWalls = new EnumOption("Player behind walls", Palette.PURPLE);
-      this.addOptions(new Option[]{this.mode, this.player, this.playerBehindWalls});
+      this.addOptions(this.mode, this.player, this.playerBehindWalls);
    }
 
-   public static enum Mode {
+   public enum Mode {
       COLOR,
       TEXTURED;
    }

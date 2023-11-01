@@ -14,7 +14,6 @@ import rip.autumn.module.Module;
 import rip.autumn.module.ModuleCategory;
 import rip.autumn.module.annotations.Aliases;
 import rip.autumn.module.annotations.Category;
-import rip.autumn.module.option.Option;
 import rip.autumn.module.option.impl.EnumOption;
 
 @Label("Anti Bot")
@@ -27,7 +26,7 @@ public final class AntiBotMod extends Module {
    public AntiBotMod() {
       this.mode = new EnumOption("Mode", AntiBotMod.Mode.HYPIXEL);
       this.bots = new HashSet();
-      this.addOptions(new Option[]{this.mode});
+      this.addOptions(this.mode);
       this.setMode(this.mode);
    }
 
@@ -47,20 +46,7 @@ public final class AntiBotMod extends Module {
             }
          }
          break;
-      case "MINEPLEX":
-         Iterator var2 = mc.theWorld.getLoadedEntityList().iterator();
-
-         while(var2.hasNext()) {
-            Entity e = (Entity)var2.next();
-            if (e instanceof EntityPlayer) {
-               EntityPlayer bot = (EntityPlayer)e;
-               if (e.ticksExisted < 2 && bot.getHealth() < 20.0F && bot.getHealth() > 0.0F && e != mc.thePlayer) {
-                  mc.theWorld.removeEntity(e);
-               }
-            }
-         }
       }
-
    }
 
    private boolean isEntityBot(Entity entity) {
@@ -74,22 +60,21 @@ public final class AntiBotMod extends Module {
    }
 
    private boolean isOnTab(Entity entity) {
-      Iterator var2 = mc.getNetHandler().getPlayerInfoMap().iterator();
+      Iterator playerInfoIterator = mc.getNetHandler().getPlayerInfoMap().iterator();
 
       NetworkPlayerInfo info;
       do {
-         if (!var2.hasNext()) {
+         if (!playerInfoIterator.hasNext()) {
             return false;
          }
 
-         info = (NetworkPlayerInfo)var2.next();
+         info = (NetworkPlayerInfo)playerInfoIterator.next();
       } while(!info.getGameProfile().getName().equals(entity.getName()));
 
       return true;
    }
 
    private enum Mode {
-      HYPIXEL,
-      MINEPLEX;
+      HYPIXEL;
    }
 }

@@ -9,7 +9,6 @@ import rip.autumn.module.Module;
 import rip.autumn.module.ModuleCategory;
 import rip.autumn.module.annotations.Aliases;
 import rip.autumn.module.annotations.Category;
-import rip.autumn.module.option.Option;
 import rip.autumn.module.option.impl.DoubleOption;
 import rip.autumn.utils.PlayerUtils;
 import rip.autumn.utils.Stopwatch;
@@ -22,14 +21,13 @@ public final class AntiFallMod extends Module {
    public final DoubleOption distance = new DoubleOption("Distance", 5.0D, 3.0D, 10.0D, 0.5D);
 
    public AntiFallMod() {
-      this.addOptions(new Option[]{this.distance});
+      this.addOptions(this.distance);
    }
 
    @Listener(MotionUpdateEvent.class)
    public void onMotionUpdate(MotionUpdateEvent event) {
-      EntityPlayerSP player = mc.thePlayer;
-      if ((double)player.fallDistance > (Double)this.distance.getValue() && !player.capabilities.isFlying && this.fallStopwatch.elapsed(250L) && !PlayerUtils.isBlockUnder()) {
-         mc.getNetHandler().addToSendQueueSilent(new C03PacketPlayer.C04PacketPlayerPosition(player.posX, player.posY + (Double)this.distance.getValue() + 1.0D, player.posZ, false));
+      if (mc.thePlayer.fallDistance > (Double)this.distance.getValue() && !mc.thePlayer.capabilities.isFlying && this.fallStopwatch.elapsed(250L) && !PlayerUtils.isBlockUnder()) {
+         mc.getNetHandler().addToSendQueueSilent(new C03PacketPlayer.C04PacketPlayerPosition(getX(), getY() + (Double)this.distance.getValue() + 1.0D, getZ(), false));
          this.fallStopwatch.reset();
       }
    }

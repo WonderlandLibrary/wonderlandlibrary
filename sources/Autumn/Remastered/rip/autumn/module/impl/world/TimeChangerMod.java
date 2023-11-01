@@ -15,6 +15,6 @@ public final class TimeChangerMod extends Module {
    public final DoubleOption time = new DoubleOption("Time", 16000.0D, 1.0D, 24000.0D, 100.0D);
 
    public TimeChangerMod() {
-      this.addOptions(new Option[]{this.time});
+      this.addOptions(this.time);
    }
 }

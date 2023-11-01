@@ -14,12 +14,13 @@ import rip.autumn.module.annotations.Category;
 @Category(ModuleCategory.VISUALS)
 @Aliases({"fullbright", "brightness"})
 public final class FullBrightMod extends Module {
+
    @Listener(TickEvent.class)
    public final void onTick() {
       mc.thePlayer.addPotionEffect(new PotionEffect(Potion.nightVision.getId(), 1000000, 2));
    }
 
-   public void onDisabled() {
+   public void onDisable() {
       mc.thePlayer.removePotionEffect(Potion.nightVision.getId());
    }
 }

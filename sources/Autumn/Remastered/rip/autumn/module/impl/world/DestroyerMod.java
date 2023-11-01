@@ -26,12 +26,12 @@ public final class DestroyerMod extends Module {
    public DestroyerMod() {
       this.mode = new EnumOption("Mode", DestroyerMod.Mode.CAKE);
       this.radius = new DoubleOption("Radius", 5.0D, 3.0D, 6.0D, 1.0D);
-      this.addOptions(new Option[]{this.mode, this.radius});
+      this.addOptions(this.mode, this.radius);
       this.setMode(this.mode);
    }
 
    @Listener(ReceivePacketEvent.class)
-   public final void onReceivePacket(ReceivePacketEvent event) {
+   public void onReceivePacket(ReceivePacketEvent event) {
       if (this.mode.getValue() == DestroyerMod.Mode.CAKE && event.getPacket() instanceof S02PacketChat) {
          S02PacketChat packetChat = (S02PacketChat)event.getPacket();
          String text = packetChat.getChatComponent().getUnformattedText();
@@ -39,11 +39,10 @@ public final class DestroyerMod extends Module {
             event.setCancelled();
          }
       }
-
    }
 
    @Listener(TickEvent.class)
-   public final void onTick(TickEvent event) {
+   public void onTick(TickEvent event) {
       int range = ((Double)this.radius.getValue()).intValue();
 
       for(int x = -range; x < range; ++x) {
@@ -62,10 +61,9 @@ public final class DestroyerMod extends Module {
             }
          }
       }
-
    }
 
-   private final int getId() {
+   private int getId() {
       switch((DestroyerMod.Mode)this.mode.getValue()) {
       case CAKE:
          return 92;
@@ -76,7 +74,7 @@ public final class DestroyerMod extends Module {
       }
    }
 
-   private static enum Mode {
+   private enum Mode {
       CAKE,
       BED;
    }

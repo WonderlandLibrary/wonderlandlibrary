@@ -19,7 +19,6 @@ import rip.autumn.module.Module;
 import rip.autumn.module.ModuleCategory;
 import rip.autumn.module.annotations.Aliases;
 import rip.autumn.module.annotations.Category;
-import rip.autumn.module.option.Option;
 import rip.autumn.module.option.impl.DoubleOption;
 import rip.autumn.utils.InventoryUtils;
 import rip.autumn.utils.Stopwatch;
@@ -28,18 +27,20 @@ import rip.autumn.utils.Stopwatch;
 @Category(ModuleCategory.PLAYER)
 @Aliases({"inventorymanager", "invmanager"})
 public final class InventoryManagerMod extends Module {
+
    public static final Stopwatch INV_STOPWATCH = new Stopwatch();
-   private List allSwords = new ArrayList();
-   private List[] allArmors = new List[4];
-   private List trash = new ArrayList();
+   private final List allSwords = new ArrayList<>();
+   private final List[] allArmors = new List[4];
+   private final List trash = new ArrayList<>();
    private boolean cleaning;
    private int[] bestArmorSlot;
    private int bestSwordSlot;
+
    private final DoubleOption swordSlot = new DoubleOption("Sword Slot", 1.0D, 1.0D, 9.0D, 1.0D);
    private final DoubleOption delay = new DoubleOption("Delay", 250.0D, 0.0D, 1000.0D, 50.0D);
 
    public InventoryManagerMod() {
-      this.addOptions(new Option[]{this.swordSlot, this.delay});
+      this.addOptions(this.swordSlot, this.delay);
    }
 
    @Listener(MotionUpdateEvent.class)
@@ -103,7 +104,6 @@ public final class InventoryManagerMod extends Module {
             }
          }
       }
-
    }
 
    private void collectBestArmor() {
@@ -118,7 +118,7 @@ public final class InventoryManagerMod extends Module {
       int armorType;
       for(i = 0; i < this.bestArmorSlot.length; ++i) {
          itemStack = mc.thePlayer.inventory.armorItemInSlot(i);
-         this.allArmors[i] = new ArrayList();
+         this.allArmors[i] = new ArrayList<>();
          if (itemStack != null && itemStack.getItem() != null && itemStack.getItem() instanceof ItemArmor) {
             armor = (ItemArmor)itemStack.getItem();
             armorType = armor.damageReduceAmount + EnchantmentHelper.getEnchantmentModifierDamage(new ItemStack[]{itemStack}, DamageSource.generic);
@@ -139,7 +139,6 @@ public final class InventoryManagerMod extends Module {
             }
          }
       }
-
    }
 
    private void collectTrash() {
@@ -176,6 +175,5 @@ public final class InventoryManagerMod extends Module {
             integers.add(slot);
          }
       }
-
    }
 }

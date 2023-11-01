@@ -42,7 +42,6 @@ import rip.autumn.module.Module;
 import rip.autumn.module.ModuleCategory;
 import rip.autumn.module.annotations.Aliases;
 import rip.autumn.module.annotations.Category;
-import rip.autumn.module.option.Option;
 import rip.autumn.module.option.impl.BoolOption;
 import rip.autumn.module.option.impl.EnumOption;
 import rip.autumn.utils.ColorUtils;
@@ -75,11 +74,10 @@ public final class ESP2DMod extends Module {
    private final int black;
    private StreamerMod streamerMode;
 
-   public void onEnabled() {
+   public void onEnable() {
       if (this.streamerMode == null) {
          this.streamerMode = (StreamerMod)Autumn.MANAGER_REGISTRY.moduleManager.getModuleOrNull(StreamerMod.class);
       }
-
    }
 
    public ESP2DMod() {
@@ -97,7 +95,7 @@ public final class ESP2DMod extends Module {
       this.animals = new BoolOption("Animals", false);
       this.chests = new BoolOption("Chests", true);
       this.droppedItems = new BoolOption("Dropped Items", false);
-      this.collectedEntities = new ArrayList();
+      this.collectedEntities = new ArrayList<>();
       this.viewport = GLAllocation.createDirectIntBuffer(16);
       this.modelview = GLAllocation.createDirectFloatBuffer(16);
       this.projection = GLAllocation.createDirectFloatBuffer(16);
@@ -106,7 +104,7 @@ public final class ESP2DMod extends Module {
       this.backgroundColor = (new Color(0, 0, 0, 120)).getRGB();
       this.black = Color.BLACK.getRGB();
       this.streamerMode = null;
-      this.addOptions(new Option[]{this.outline, this.boxMode, this.tag, this.healthBar, this.armorBar, this.localPlayer, this.players, this.invisibles, this.mobs, this.animals, this.chests, this.droppedItems});
+      this.addOptions(this.outline, this.boxMode, this.tag, this.healthBar, this.armorBar, this.localPlayer, this.players, this.invisibles, this.mobs, this.animals, this.chests, this.droppedItems);
    }
 
    @Listener(RenderNametagEvent.class)
@@ -114,7 +112,6 @@ public final class ESP2DMod extends Module {
       if (this.isValid(event.getEntity()) && this.tag.getValue()) {
          event.setCancelled();
       }
-
    }
 
    @Listener(RenderGuiEvent.class)
@@ -317,7 +314,6 @@ public final class ESP2DMod extends Module {
             this.collectedEntities.add(entity);
          }
       }
-
    }
 
    private Vector3d project2D(int scaleFactor, double x, double y, double z) {
@@ -347,12 +343,12 @@ public final class ESP2DMod extends Module {
       }
    }
 
-   public static enum BoxColor {
+   public enum BoxColor {
       WHITE,
       RED;
    }
 
-   public static enum BoxMode {
+   public enum BoxMode {
       BOX,
       CORNERS;
    }

@@ -19,7 +19,7 @@ public final class StorageESPMod extends Module {
       this.mode = new EnumOption("Mode", StorageESPMod.Mode.BOX);
    }
 
-   public static enum Mode {
+   public enum Mode {
       BOX;
    }
 }

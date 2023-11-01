@@ -17,13 +17,14 @@ public final class LicensingMenu extends GuiScreen {
 
    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
       if (this.stopwatch.elapsed(10L)) {
-         this.p = (float)AnimationUtils.animate((double)this.height, (double)this.p, 0.25D);
+         this.p = (float)AnimationUtils.animate(this.height, this.p, 0.25D);
          this.stopwatch.reset();
       }
 
-      drawRect(0.0D, 0.0D, (double)this.width, (double)this.height, -1);
+      drawRect(0.0D, 0.0D, this.width, this.height, -1);
+      drawRect(0.0D, 0.0D, this.width, this.p, -13878632);
+
       RenderUtils.drawImg(locationMojangPng, (double)this.width / 5.0D, 0.0D, (double)this.width - (double)this.width / 2.5D, (double)this.height);
-      drawRect(0.0D, 0.0D, (double)this.width, (double)this.p, -13878632);
       super.drawScreen(mouseX, mouseY, partialTicks);
    }
 }

@@ -18,20 +18,20 @@ import rip.autumn.module.Module;
 import rip.autumn.module.ModuleCategory;
 import rip.autumn.module.annotations.Aliases;
 import rip.autumn.module.annotations.Category;
-import rip.autumn.module.option.Option;
 import rip.autumn.module.option.impl.DoubleOption;
 
 @Label("Auto Armor")
 @Category(ModuleCategory.PLAYER)
 @Aliases({"autoarmor"})
 public final class AutoArmorMod extends Module {
-   private List[] allArmors = new List[4];
+
+   private final List[] allArmors = new List[4];
    private boolean equipping;
    private int[] bestArmorSlot;
    private final DoubleOption delay = new DoubleOption("Delay", 250.0D, 0.0D, 1000.0D, 50.0D);
 
    public AutoArmorMod() {
-      this.addOptions(new Option[]{this.delay});
+      this.addOptions(this.delay);
    }
 
    @Listener(MotionUpdateEvent.class)
@@ -73,7 +73,6 @@ public final class AutoArmorMod extends Module {
             }
          }
       }
-
    }
 
    private boolean checkDelay() {
@@ -92,7 +91,7 @@ public final class AutoArmorMod extends Module {
       int armorType;
       for(i = 0; i < this.bestArmorSlot.length; ++i) {
          itemStack = mc.thePlayer.inventory.armorItemInSlot(i);
-         this.allArmors[i] = new ArrayList();
+         this.allArmors[i] = new ArrayList<>();
          if (itemStack != null && itemStack.getItem() != null) {
             armor = (ItemArmor)itemStack.getItem();
             armorType = armor.damageReduceAmount + EnchantmentHelper.getEnchantmentModifierDamage(new ItemStack[]{itemStack}, DamageSource.generic);
@@ -113,6 +112,5 @@ public final class AutoArmorMod extends Module {
             }
          }
       }
-
    }
 }

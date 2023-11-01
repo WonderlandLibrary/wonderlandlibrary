@@ -7,7 +7,6 @@ import rip.autumn.module.Module;
 import rip.autumn.module.ModuleCategory;
 import rip.autumn.module.annotations.Aliases;
 import rip.autumn.module.annotations.Category;
-import rip.autumn.module.option.Option;
 import rip.autumn.module.option.impl.EnumOption;
 
 @Label("Anti Aim")
@@ -22,7 +21,7 @@ public final class AntiAimMod extends Module {
    public AntiAimMod() {
       this.yawMode = new EnumOption("Yaw mode", AntiAimMod.YawMode.JITTER);
       this.pitchMode = new EnumOption("Pitch mode", AntiAimMod.PitchMode.DOWN);
-      this.addOptions(new Option[]{this.pitchMode, this.yawMode});
+      this.addOptions(this.pitchMode, this.yawMode);
    }
 
    @Listener(MotionUpdateEvent.class)

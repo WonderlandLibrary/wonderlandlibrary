@@ -36,7 +36,6 @@ public final class ScaffoldMod extends Module {
    private final Stopwatch towerStopwatch;
    private final Random rng;
    private float[] angles;
-   private boolean rotating;
    private int slot;
 
    public ScaffoldMod() {
@@ -49,19 +48,19 @@ public final class ScaffoldMod extends Module {
       this.angles = new float[2];
    }
 
-   public void onEnabled() {
+   public void onEnable() {
       this.angles[0] = 999.0F;
       this.angles[1] = 999.0F;
       this.towerStopwatch.reset();
       this.slot = mc.thePlayer.inventory.currentItem;
    }
 
-   public void onDisabled() {
+   public void onDisable() {
       mc.thePlayer.inventory.currentItem = this.slot;
    }
 
    @Listener(MotionUpdateEvent.class)
-   public final void onMotionUpdate(MotionUpdateEvent event) {
+   public void onMotionUpdate(MotionUpdateEvent event) {
       EntityPlayerSP player = mc.thePlayer;
       WorldClient world = mc.theWorld;
       double yDif = 1.0D;
@@ -90,9 +89,6 @@ public final class ScaffoldMod extends Module {
                slot = i;
             }
          }
-      }
-
-      if (slot == -1) {
       }
 
       if (data != null && slot != -1) {
@@ -130,12 +126,10 @@ public final class ScaffoldMod extends Module {
             player.inventory.currentItem = last;
          }
       }
-
    }
 
    private boolean isBlockUnder(double yOffset) {
-      EntityPlayerSP player = mc.thePlayer;
-      return !this.validBlocks.contains(mc.theWorld.getBlockState(new BlockPos(player.posX, player.posY - yOffset, player.posZ)).getBlock());
+      return !this.validBlocks.contains(mc.theWorld.getBlockState(new BlockPos(getX(), getY() - yOffset, getZ())).getBlock());
    }
 
    private Vec3 getVec3(ScaffoldMod.BlockData data) {

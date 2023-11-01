@@ -5,6 +5,10 @@ import com.mojang.authlib.exceptions.AuthenticationException;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
 import java.net.Proxy;
+
+import fr.litarvan.openauth.microsoft.MicrosoftAuthResult;
+import fr.litarvan.openauth.microsoft.MicrosoftAuthenticationException;
+import fr.litarvan.openauth.microsoft.MicrosoftAuthenticator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Session;
@@ -25,16 +29,12 @@ public final class AltLoginService extends Thread {
    }
 
    private Session createSession(String username, String password) {
-      YggdrasilAuthenticationService service = new YggdrasilAuthenticationService(Proxy.NO_PROXY, "");
-      YggdrasilUserAuthentication auth = (YggdrasilUserAuthentication)service.createUserAuthentication(Agent.MINECRAFT);
-      auth.setUsername(username);
-      auth.setPassword(password);
-
+      MicrosoftAuthenticator authenticator = new MicrosoftAuthenticator();
       try {
-         auth.logIn();
-         return new Session(auth.getSelectedProfile().getName(), auth.getSelectedProfile().getId().toString(), auth.getAuthenticatedToken(), "mojang");
-      } catch (AuthenticationException var6) {
-         var6.printStackTrace();
+         MicrosoftAuthResult result = authenticator.loginWithCredentials(username, password);
+         return new Session(result.getProfile().getName(), result.getProfile().getId(), result.getAccessToken(), "mojang");
+      } catch (MicrosoftAuthenticationException e) {
+         e.printStackTrace();
          return null;
       }
    }

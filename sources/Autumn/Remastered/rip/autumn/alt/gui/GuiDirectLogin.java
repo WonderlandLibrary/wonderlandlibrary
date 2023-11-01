@@ -30,7 +30,6 @@ public final class GuiDirectLogin extends GuiScreen {
       case 1:
          this.mc.displayGuiScreen(this.previousScreen);
       }
-
    }
 
    public void drawScreen(int x, int y, float z) {

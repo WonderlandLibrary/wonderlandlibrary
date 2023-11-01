@@ -10,7 +10,7 @@ public final class SimpleButton extends GuiButton {
    private double animation = 0.0D;
 
    public SimpleButton(int buttonId, int x, int y, String buttonText) {
-      super(buttonId, x - (int)((double)Minecraft.getMinecraft().fontRendererObj.getStringWidth(buttonText) / 2.0D), y, Minecraft.getMinecraft().fontRendererObj.getStringWidth(buttonText), 10, buttonText);
+      super(buttonId, x - (int)((double)Minecraft.getMinecraft().fontRenderer.getStringWidth(buttonText) / 2.0D), y, Minecraft.getMinecraft().fontRenderer.getStringWidth(buttonText), 10, buttonText);
    }
 
    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
@@ -34,7 +34,7 @@ public final class SimpleButton extends GuiButton {
          }
       }
 
-      drawRect((double)this.xPosition + (double)this.width / 2.0D - this.animation, (double)(this.yPosition + this.height + 2), (double)this.xPosition + (double)this.width / 2.0D + this.animation, (double)(this.yPosition + this.height + 3), (new Color(this.color, this.color, this.color)).getRGB());
-      mc.fontRendererObj.drawCenteredString(this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, (new Color(this.color, this.color, this.color)).getRGB());
+      drawRect((double)this.xPosition + (double)this.width / 2.0D - this.animation, this.yPosition + this.height + 2, (double)this.xPosition + (double)this.width / 2.0D + this.animation, this.yPosition + this.height + 3, (new Color(this.color, this.color, this.color)).getRGB());
+      mc.fontRenderer.drawCenteredString(this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, (new Color(this.color, this.color, this.color)).getRGB());
    }
 }

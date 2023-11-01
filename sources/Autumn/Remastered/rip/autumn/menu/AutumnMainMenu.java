@@ -11,7 +11,7 @@ import rip.autumn.menu.buttons.SimpleButton;
 import rip.autumn.utils.render.RenderUtils;
 
 public final class AutumnMainMenu extends GuiScreen {
-   private ResourceLocation background = new ResourceLocation("autumn/menu/background.png");
+   private final ResourceLocation background = new ResourceLocation("autumn/menu/background.png");
 
    public void initGui() {
       super.initGui();
@@ -39,11 +39,10 @@ public final class AutumnMainMenu extends GuiScreen {
       case 4:
          System.exit(0);
       }
-
    }
 
    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-      RenderUtils.drawImg(this.background, 0.0D, 0.0D, (double)this.width, (double)this.height);
+      RenderUtils.drawImg(this.background, 0.0D, 0.0D, this.width, this.height);
       super.drawScreen(mouseX, mouseY, partialTicks);
    }
 }

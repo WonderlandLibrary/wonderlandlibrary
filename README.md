@@ -57,6 +57,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Ket
 - Koksv4
 - KyinoSense
+- LiquidBase
 - LiquidBouncePlusPlus
 - Lirium
 - Lithium

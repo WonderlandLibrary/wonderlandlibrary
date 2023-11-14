@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "net.ccbluex.LiquidBase.injection.mixins",
+  "refmap": "mixins.LiquidBase.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinMinecraft",
+    "MixinGuiIngame",
+    "MixinGuiSpectator",
+    "MixinEntityPlayerSP",
+    "MixinGuiScreen",
+    "MixinNetworkManager",
+    "MixinRenderer",
+    "MixinRendererLivingEntity"
+  ]
+}

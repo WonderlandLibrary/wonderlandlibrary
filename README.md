@@ -75,6 +75,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - PowerClient
 - Pulsive5.0
 - RavenB4Remake
+- RavenBPlus
 - RavenBX
 - RavenWeave
 - Raze
@@ -110,6 +111,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - bleachhack
 - crassb2
 - francium
+- gothaj
 - hera14
 - liquidbounce
 - monsoon
@@ -117,6 +119,8 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - mythrecode
 - nightx
 - ravenbminus
+- ravenbplus
+- raze1.4.4
 - rise5.100
 - rise5.90
 - summer

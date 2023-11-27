@@ -113,6 +113,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - francium
 - gothaj
 - hera14
+- hydrogen
 - liquidbounce
 - monsoon
 - moonx

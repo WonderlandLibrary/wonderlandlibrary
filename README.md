@@ -100,6 +100,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - RoseGold
 - Sigma1.6
 - Sigma2.08
+- Sigma3.9
 - Sigma4.11
 - Spectrum
 - Straightware

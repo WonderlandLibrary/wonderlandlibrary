@@ -34,6 +34,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - CrossSineB34
 - Cupid 0.1
 - Debug 1.2.6
+- Deluge 0.23
 - Diablo2.1
 - Dortware
 - DrainWalk
@@ -43,7 +44,9 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - ETB0.6
 - ETBReload0.1
 - Eternal 3.0
+- Euphoria B7
 - Evolution
+- Execution
 - Exhibition5.0
 - Exodus 5.4
 - Fan v3

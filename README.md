@@ -26,8 +26,10 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Celestial Premium 6.0
 - Celestial Recode
 - CentauriB6
+- Cheatware
 - CloverHook
 - Clowdy Lite
+- Cookie
 - Corrosion
 - CrossSineB34
 - Cupid 0.1

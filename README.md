@@ -29,7 +29,8 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Cheatware
 - CloverHook
 - Clowdy Lite
-- Cookie
+- Cookie1.01
+- Cookie1.04
 - Corrosion
 - CrossSineB34
 - Cupid 0.1
@@ -121,6 +122,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - bleachhack
 - blossom
 - clientware1.0
+- cookie
 - crassb2
 - eject4.3.1
 - ejectrecode0.0.8

@@ -55,6 +55,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Jello0.1
 - Juul1.0
 - Ket
+- Koksv3
 - Koksv4
 - KyinoSense
 - LiquidBase
@@ -110,6 +111,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - autumn
 - bleachhack
 - crassb2
+- ejectrecode0.0.8
 - francium
 - gothaj
 - hera14

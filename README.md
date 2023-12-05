@@ -63,6 +63,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - GetBypass
 - Graphite
 - Hanabi3.1
+- Helium
 - Jello0.1
 - Juul1.0
 - Ket

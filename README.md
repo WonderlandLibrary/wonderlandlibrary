@@ -111,11 +111,14 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - autumn
 - bleachhack
 - crassb2
+- eject4.3.1
 - ejectrecode0.0.8
 - francium
 - gothaj
 - hera14
 - hydrogen
+- icarusxb5
+- klientus
 - liquidbounce
 - monsoon
 - moonx

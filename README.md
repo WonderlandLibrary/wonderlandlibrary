@@ -124,5 +124,6 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - raze1.4.4
 - rise5.100
 - rise5.90
+- sigma1.45
 - summer
 - umbrella

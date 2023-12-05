@@ -55,6 +55,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Fanta v13
 - Faurax
 - Flush0.9
+- Flux B5
 - FluxB39.11
 - GameSense
 - GetBypass

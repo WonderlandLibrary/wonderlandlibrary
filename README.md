@@ -21,6 +21,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - AugustusB2.6
 - Autumn
 - Azura-X
+- Blizzard b1
 - Capybara Premium 1.0
 - Celestial Premium 6.0
 - Celestial Recode

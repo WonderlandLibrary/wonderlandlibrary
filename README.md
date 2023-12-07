@@ -64,7 +64,13 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Graphite
 - Hanabi3.1
 - Helium
+- HushB4
+- Ice B10
+- Invasion
 - Jello0.1
+- Jigsaw 0.24
+- Jigsaw 0.26
+- Jigsaw-OLD 0.26
 - Juul1.0
 - Ket
 - Koksv3

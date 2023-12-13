@@ -78,11 +78,14 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Koksv3
 - Koksv4
 - KyinoSense
+- Lavish
+- Legacy
 - LiquidBase
 - LiquidBouncePlusPlus
 - Lirium
 - Lithium
 - LoseBypass
+- Lucid 0.89
 - Mint
 - Monsoon1.2
 - Monsoon1.3

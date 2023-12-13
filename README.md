@@ -73,7 +73,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Jigsaw 0.26
 - Jigsaw 1.01
 - Jigsaw OLD 0.26
-- Juul1.0
+- Juul 1.0
 - Kami Blue
 - Ket
 - Ketamine Public

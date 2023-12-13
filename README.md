@@ -101,6 +101,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Old-Novoline
 - Old-Raze
 - Pandaware0.4.3
+- Phobos 1.9.0
 - PowerClient
 - Pulsive5.0
 - Radium-Public
@@ -111,6 +112,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Raze
 - Reality
 - RektSkyB5
+- Resolute
 - Rise5.89
 - Rise5.90
 - Rise5.98

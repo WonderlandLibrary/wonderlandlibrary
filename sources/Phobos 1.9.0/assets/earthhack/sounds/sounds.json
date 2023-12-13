@@ -1,0 +1,22 @@
+{
+  "csgo_hitmarker": {
+    "category": "player",
+    "subtitle": "csgo_hitmarker",
+    "sounds": [
+      {
+        "name": "earthhack:hitmarker.ogg",
+        "stream": false
+      }
+    ]
+  },
+  "cod_hitmarker": {
+    "category": "player",
+    "subtitle": "cod_hitmarker",
+    "sounds": [
+      {
+        "name": "earthhack:hitmarker.ogg",
+        "stream": false
+      }
+    ]
+  }
+}

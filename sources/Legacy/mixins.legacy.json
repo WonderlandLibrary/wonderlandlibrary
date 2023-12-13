@@ -1,0 +1,30 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "me.dev.legacy.mixin.mixins",
+  "refmap": "mixins.legacy.refmap.json",
+  "mixins": [
+    "IEntity",
+    "IEntityLivingBase",
+    "MixinBlockLiquid",
+    "MixinEntityPlayer",
+    "MixinEntityPlayerSP",
+    "MixinFontRenderer",
+    "MixinLayerArmorBase",
+    "MixinLayerBipedArmor",
+    "MixinGuiIngame",
+    "MixinModelPlayer",
+    "MixinModelBiped",
+    "MixinEntityRenderer",
+    "MixinGuiScreen",
+    "MixinItemRenderer",
+    "MixinMinecraft",
+    "MixinNetworkManager",
+    "MixinPlayerControllerMP",
+    "MixinRendererLivingEntity",
+    "MixinWorld",
+    "accessors.IC00Handshake",
+    "accessors.IServerAddress",
+    "accessors.AccessorCPacketUseEntity"
+  ]
+}

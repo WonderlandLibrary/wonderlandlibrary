@@ -5,13 +5,16 @@ def delete_unwanted_files(folder_path):
     found_count = 0
     deleted_count = 0
 
+    # Undesired directory names
+    undesired_dirs = ["javax", "shadersmod", "viamcp", "META-INF", "google", "joptsimple", "tv", "oshi", "ibm", "sun", "iaversion", "mojang", "jcraft", "jhlabs"]
+
     # Walk through the directory tree
     for root, dirs, files in os.walk(folder_path):
         for file in files:
             file_path = os.path.join(root, file)
 
             # Check if the file matches the criteria
-            if file in ["Start.java", "pack.png", ".DS_Store", "log4j2.xml"]:
+            if file in ["Start.java", "pack.png", ".DS_Store", "log4j2.xml", "InjectionAPI.java"]:
                 print(f"Found file: {file_path}")
                 found_count += 1
 
@@ -27,8 +30,8 @@ def delete_unwanted_files(folder_path):
         for dir_name in dirs:
             dir_path = os.path.join(root, dir_name)
 
-            # Check if the directory matches the criteria
-            if dir_name in ["javax", "shadersmod", "viamcp", "META-INF", "joptsimple", "oshi", "tv", "mojang-translations"]:
+            # Check if the entire directory name is in the undesired directory names
+            if dir_name in undesired_dirs:
                 print(f"Found directory: {dir_path}")
                 found_count += 1
 

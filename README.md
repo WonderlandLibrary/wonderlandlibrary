@@ -95,6 +95,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - MoonX
 - Mystra
 - NeverHook1.4
+- Nivia B3
 - November
 - Ohareware6.9
 - Old-Novoline

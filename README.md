@@ -75,6 +75,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Juul1.0
 - Kami Blue
 - Ket
+- Ketamine-Public
 - Koksv3
 - Koksv4
 - KyinoSense
@@ -91,6 +92,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Monsoon1.3
 - MoonX
 - NeverHook1.4
+- New folder
 - November
 - Ohareware6.9
 - Old-Novoline

@@ -1,4 +1,5 @@
 import os
+from colorama import Fore, Style
 
 def delete_unwanted_files(folder_path):
     # Initialize counters
@@ -15,39 +16,50 @@ def delete_unwanted_files(folder_path):
 
             # Check if the file matches the criteria
             if file in ["Start.java", "pack.png", ".DS_Store", "log4j2.xml", "InjectionAPI.java"]:
-                print(f"Found file: {file_path}")
+                print(f"{Fore.YELLOW}Found file: {file_path}{Style.RESET_ALL}")
                 found_count += 1
 
                 # Ask for user confirmation before deletion
-                user_input = input("Do you want to delete this file? (y/n): ").lower()
+                user_input = input(f"{Fore.CYAN}Do you want to delete this file? (y/n): {Style.RESET_ALL}").lower()
                 if user_input == "y":
                     os.remove(file_path)
                     deleted_count += 1
-                    print(f"Deleted file: {file_path}")
+                    print(f"{Fore.GREEN}Deleted file: {file_path}{Style.RESET_ALL}")
                 else:
-                    print(f"Skipped file: {file_path}")
+                    print(f"{Fore.BLUE}Skipped file: {file_path}{Style.RESET_ALL}")
 
         for dir_name in dirs:
             dir_path = os.path.join(root, dir_name)
 
             # Check if the entire directory name is in the undesired directory names
             if dir_name in undesired_dirs:
-                print(f"Found directory: {dir_path}")
+                print(f"{Fore.YELLOW}Found directory: {dir_path}{Style.RESET_ALL}")
                 found_count += 1
 
-                # Ask for user confirmation before deletion
-                user_input = input("Do you want to delete this directory and its contents? (y/n): ").lower()
-                if user_input == "y":
-                    for root_dir, _, files in os.walk(dir_path, topdown=False):
-                        for file_name in files:
-                            file_path = os.path.join(root_dir, file_name)
-                            os.remove(file_path)
-                            print(f"Deleted file: {file_path}")
-                        os.rmdir(root_dir)
-                        print(f"Deleted directory: {root_dir}")
-                    deleted_count += 1
+                # Check if the directory is empty
+                if not os.listdir(dir_path):
+                    # Ask for user confirmation before deletion
+                    user_input = input(f"{Fore.MAGENTA}Do you want to delete this empty directory? (y/n): {Style.RESET_ALL}").lower()
+                    if user_input == "y":
+                        os.rmdir(dir_path)
+                        print(f"{Fore.GREEN}Deleted empty directory: {dir_path}{Style.RESET_ALL}")
+                        deleted_count += 1
+                    else:
+                        print(f"{Fore.BLUE}Skipped empty directory: {dir_path}{Style.RESET_ALL}")
                 else:
-                    print(f"Skipped directory: {dir_path}")
+                    # Ask for user confirmation before deletion
+                    user_input = input(f"{Fore.CYAN}Do you want to delete this directory and its contents? (y/n): {Style.RESET_ALL}").lower()
+                    if user_input == "y":
+                        for root_dir, _, files in os.walk(dir_path, topdown=False):
+                            for file_name in files:
+                                file_path = os.path.join(root_dir, file_name)
+                                os.remove(file_path)
+                                print(f"{Fore.GREEN}Deleted file: {file_path}{Style.RESET_ALL}")
+                            os.rmdir(root_dir)
+                            print(f"{Fore.GREEN}Deleted directory: {root_dir}{Style.RESET_ALL}")
+                        deleted_count += 1
+                    else:
+                        print(f"{Fore.BLUE}Skipped directory: {dir_path}{Style.RESET_ALL}")
 
     print(f"\nFound {found_count} files and directories matching the criteria.")
     print(f"Deleted {deleted_count} files and directories.")

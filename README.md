@@ -138,6 +138,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Sudo
 - Summer Reborn 3.0
 - Summer5.0
+- T3n4c1ty 5.1
 - TankV4
 - Thea
 - TiredNextGen

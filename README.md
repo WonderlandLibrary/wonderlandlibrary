@@ -102,9 +102,12 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Old-Raze
 - Pandaware0.4.3
 - Phobos 1.9.0
+- PingBypass
+- Polaris B14
 - PowerClient
 - Pulsive5.0
 - Radium-Public
+- Rainbow
 - RavenB4Remake
 - RavenBPlus
 - RavenBX
@@ -119,6 +122,8 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Rise5.99
 - Rise6.0
 - RoseGold
+- Saint 2.3
+- Scov
 - Sigma1.6
 - Sigma2.08
 - Sigma3.9

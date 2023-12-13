@@ -1,0 +1,27 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "me.earth.earthhack.impl.core.mixins",
+  "refmap": "mixins.earth.refmap.json",
+  "priority": 2147483647,
+  "mixinPriority": 2147483647,
+  "mixins": [
+    "minecraft.MixinMinecraft",
+    "minecraft.MixinWorld",
+    "minecraft.entity.MixinEntity",
+    "minecraft.entity.living.MixinEntityLivingBase",
+    "minecraft.entity.living.player.IPlayerControllerMP",
+    "minecraft.entity.living.player.MixinAbstractClientPlayer",
+    "minecraft.entity.living.player.MixinEntityPlayer",
+    "minecraft.entity.living.player.MixinEntityPlayerSP",
+    "minecraft.gui.IContainer",
+    "minecraft.gui.MixinGuiChat",
+    "minecraft.gui.MixinGuiMultiPlayer",
+    "minecraft.gui.MixinGuiSubtitleOverlay",
+    "minecraft.network.MixinNetworkManager",
+    "minecraft.network.client.MixinC00Handshake",
+    "minecraft.network.server.ISPacketSetSlot",
+    "minecraft.render.entity.MixinEntityRenderer",
+    "minecraft.util.MixinKeyBinding"
+  ]
+}

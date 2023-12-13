@@ -92,7 +92,6 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Monsoon1.3
 - MoonX
 - NeverHook1.4
-- New folder
 - November
 - Ohareware6.9
 - Old-Novoline
@@ -100,6 +99,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Pandaware0.4.3
 - PowerClient
 - Pulsive5.0
+- Radium-Public
 - RavenB4Remake
 - RavenBPlus
 - RavenBX

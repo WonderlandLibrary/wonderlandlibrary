@@ -136,16 +136,26 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Splash
 - Straightware
 - Sudo
+- Summer Reborn 3.0
 - Summer5.0
 - TankV4
 - Thea
 - TiredNextGen
 - Tomato0.2
+- Trivia
 - Umbrella1.3
+- Venus Recode 0.2.0
 - Vestige2.0
 - Vestige3.0
 - vika
+- Virtue
+- Vulture
+- WeepCraft 0.2
+- WintWare
+- Wurst+2
+- Xatz 0.9b1
 - XenzaB9
+- Xulu 1.5.2
 
 ## [Jars](/jars)
 - ascension

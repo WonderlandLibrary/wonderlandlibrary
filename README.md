@@ -124,11 +124,16 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - RoseGold
 - Saint 2.3
 - Scov
+- Seppuku
 - Sigma1.6
 - Sigma2.08
 - Sigma3.9
 - Sigma4.11
+- SkyLine B28
+- Slowly b12.3
 - Spectrum
+- Spicy
+- Splash
 - Straightware
 - Sudo
 - Summer5.0

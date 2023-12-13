@@ -1,13 +1,34 @@
 import os
 from colorama import Fore, Style
 
+def is_directory_empty(directory):
+    try:
+        return not any(os.listdir(directory))
+    except (PermissionError, FileNotFoundError):
+        return False
+
+def save_skipped_file(file_name):
+    with open("skipped_files.txt", "a") as file:
+        file.write(file_name + "\n")
+
+def load_skipped_files():
+    skipped_files = set()
+    if os.path.exists("skipped_files.txt"):
+        with open("skipped_files.txt", "r") as file:
+            skipped_files = set(line.strip() for line in file)
+    return skipped_files
+
 def delete_unwanted_files(folder_path):
     # Initialize counters
     found_count = 0
     deleted_count = 0
 
-    # Undesired directory names
+    # Undesired directory names and files
     undesired_dirs = ["javax", "shadersmod", "viamcp", "META-INF", "google", "joptsimple", "tv", "oshi", "ibm", "sun", "iaversion", "mojang", "jcraft", "jhlabs", "apache", "json", "lwjgl", "yaml", "netty"]
+    undesired_files = ["Start.java", "pack.png", ".DS_Store", "log4j2.xml", "InjectionAPI.java", "desktop.ini"]
+
+    # Load skipped files from the text file
+    skipped_files = load_skipped_files()
 
     # Walk through the directory tree
     for root, dirs, files in os.walk(folder_path):
@@ -15,17 +36,18 @@ def delete_unwanted_files(folder_path):
             file_path = os.path.join(root, file)
 
             # Check if the file matches the criteria
-            if file in ["Start.java", "pack.png", ".DS_Store", "log4j2.xml", "InjectionAPI.java"]:
+            if file in undesired_files and file not in skipped_files:
                 print(f"{Fore.YELLOW}Found file: {file_path}{Style.RESET_ALL}")
                 found_count += 1
 
                 # Ask for user confirmation before deletion
-                user_input = input(f"{Fore.CYAN}Do you want to delete this file? (y/n): {Style.RESET_ALL}").lower()
+                user_input = input(f"{Fore.LIGHTGREEN_EX}Do you want to delete this file? (y/n): {Style.RESET_ALL}").lower()
                 if user_input == "y":
                     os.remove(file_path)
                     deleted_count += 1
                     print(f"{Fore.GREEN}Deleted file: {file_path}{Style.RESET_ALL}")
-                else:
+                elif user_input == "n":
+                    save_skipped_file(file)
                     print(f"{Fore.BLUE}Skipped file: {file_path}{Style.RESET_ALL}")
 
         for dir_name in dirs:
@@ -37,7 +59,7 @@ def delete_unwanted_files(folder_path):
                 found_count += 1
 
                 # Check if the directory is empty
-                if not os.listdir(dir_path):
+                if is_directory_empty(dir_path):
                     # Ask for user confirmation before deletion
                     user_input = input(f"{Fore.MAGENTA}Do you want to delete this empty directory? (y/n): {Style.RESET_ALL}").lower()
                     if user_input == "y":

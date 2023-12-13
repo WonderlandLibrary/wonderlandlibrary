@@ -11,7 +11,6 @@ import vip.Resolute.ui.notification.Notification;
 import vip.Resolute.ui.notification.NotificationType;
 import vip.Resolute.Resolute;
 import vip.Resolute.auth.util.Security;
-import a.a.a.a.a.a.a.a.a.a.a.Mvncentral;
 import net.minecraft.client.Minecraft;
 
 public class Authentication extends Thread
@@ -31,7 +30,6 @@ public class Authentication extends Thread
     @Override
     public void run() {
         try {
-            Mvncentral.a();
             if (Mvncentral.f(getEncryptedAuthString(Authentication.username, Authentication.password, Authentication.key)) && !Security.wiresharkRunning()) {
                 Resolute.instance.setAuthorized(true);
                 Resolute.instance.setResoluteName(Authentication.username);

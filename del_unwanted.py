@@ -28,7 +28,7 @@ def delete_unwanted_files(folder_path):
             dir_path = os.path.join(root, dir_name)
 
             # Check if the directory matches the criteria
-            if dir_name in ["javax", "shadersmod", "viamcp", "META-INF"]:
+            if dir_name in ["javax", "shadersmod", "viamcp", "META-INF", "joptsimple", "oshi", "tv", "mojang-translations"]:
                 print(f"Found directory: {dir_path}")
                 found_count += 1
 

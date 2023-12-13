@@ -6,7 +6,7 @@ def delete_unwanted_files(folder_path):
     deleted_count = 0
 
     # Undesired directory names
-    undesired_dirs = ["javax", "shadersmod", "viamcp", "META-INF", "google", "joptsimple", "tv", "oshi", "ibm", "sun", "iaversion", "mojang", "jcraft", "jhlabs"]
+    undesired_dirs = ["javax", "shadersmod", "viamcp", "META-INF", "google", "joptsimple", "tv", "oshi", "ibm", "sun", "iaversion", "mojang", "jcraft", "jhlabs", "apache", "json", "lwjgl", "yaml", "netty"]
 
     # Walk through the directory tree
     for root, dirs, files in os.walk(folder_path):

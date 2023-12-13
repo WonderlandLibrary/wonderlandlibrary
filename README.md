@@ -19,66 +19,66 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Astro 2.2.1
 - Async
 - Atani
-- AugustusB2.6
+- Augustus b2.6
 - Autumn
-- Azura-X
+- Azura X
 - Blizzard b1
 - Capybara Premium 1.0
 - Celestial Premium 6.0
 - Celestial Recode
-- CentauriB6
+- Centauri B6
 - Cheatware
 - CloverHook
 - Clowdy Lite
-- Cookie1.01
-- Cookie1.04
+- Cookie 1.01
+- Cookie 1.04
 - Corrosion
-- CrossSineB34
+- CrossSine B34
 - Cupid 0.1
 - Debug 1.2.6
 - Deluge 0.23
-- Diablo2.1
+- Diablo 2.1
 - Dortware
 - DrainWalk
 - DreamCore b161021
 - Echo
-- Envy0.3
-- ETB0.6
-- ETBReload0.1
+- Envy 0.3
+- ETB 0.6
+- ETB Reload 0.1
 - Eternal 3.0
 - Euphoria B7
 - Evolution
 - Execution
-- Exhibition5.0
+- Exhibition 5.0
 - Exist 0.71
 - Exodus 5.4
 - Fan v3
 - Fan v4
 - Fanta v13
 - Faurax
-- Flush0.9
+- Flush 0.9
+- Flux B39.11
 - Flux B5
-- FluxB39.11
 - FusionX 2.0
 - GameSense
 - GetBypass
 - Graphite
-- Hanabi3.1
+- Hanabi 3.1
 - Helium
-- HushB4
+- Hush B4
 - Ice B10
 - Invasion
-- Jello0.1
+- Jello 0.1
 - Jigsaw 0.24
 - Jigsaw 0.26
 - Jigsaw 1.01
-- Jigsaw-OLD 0.26
+- Jigsaw OLD 0.26
 - Juul1.0
 - Kami Blue
 - Ket
-- Ketamine-Public
-- Koksv3
-- Koksv4
+- Ketamine Public
+- Koks v3
+- Koks v4
 - KyinoSense
 - Lavish
 - Legacy
@@ -90,45 +90,45 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Lucid 0.89
 - Massacre
 - Mint
-- Monsoon1.2
-- Monsoon1.3
+- Monsoon 1.2
+- Monsoon 1.3
 - MoonX
 - Mystra
-- NeverHook1.4
+- NeverHook 1.4
 - Nivia B3
 - November
-- Ohareware6.9
+- Ohareware 6.9
 - Old-Novoline
 - Old-Raze
-- Pandaware0.4.3
+- Pandaware 0.4.3
 - Phobos 1.9.0
 - PingBypass
 - Polaris B14
 - PowerClient
-- Pulsive5.0
-- Radium-Public
+- Pulsive 5.0
+- Radium Public
 - Rainbow
-- RavenB4Remake
-- RavenBPlus
-- RavenBX
+- Raven B4 Remake
+- Raven BPlus
+- Raven BX
 - RavenWeave
 - Raze
 - Reality
-- RektSkyB5
+- RektSky B5
 - Resolute
-- Rise5.89
-- Rise5.90
-- Rise5.98
-- Rise5.99
-- Rise6.0
+- Rise 5.89
+- Rise 5.90
+- Rise 5.98
+- Rise 5.99
+- Rise 6.0
 - RoseGold
 - Saint 2.3
 - Scov
 - Seppuku
-- Sigma1.6
-- Sigma2.08
-- Sigma3.9
-- Sigma4.11
+- Sigma 1.6
+- Sigma 2.08
+- Sigma 3.9
+- Sigma 4.11
 - SkyLine B28
 - Slowly b12.3
 - Spectrum
@@ -136,26 +136,26 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Splash
 - Straightware
 - Sudo
+- Summer 5.0
 - Summer Reborn 3.0
-- Summer5.0
 - T3n4c1ty 5.1
-- TankV4
+- Tank V4
 - Thea
-- TiredNextGen
-- Tomato0.2
+- Tired NextGen
+- Tomato 0.2
 - Trivia
-- Umbrella1.3
+- Umbrella 1.3
 - Venus Recode 0.2.0
-- Vestige2.0
-- Vestige3.0
+- Vestige 2.0
+- Vestige 3.0
 - vika
 - Virtue
 - Vulture
 - WeepCraft 0.2
 - WintWare
-- Wurst+2
+- Wurst Plus 2
 - Xatz 0.9b1
-- XenzaB9
+- Xenza B9
 - Xulu 1.5.2
 
 ## [Jars](/jars)

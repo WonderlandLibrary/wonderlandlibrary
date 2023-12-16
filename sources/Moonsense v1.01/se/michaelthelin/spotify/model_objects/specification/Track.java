@@ -1,0 +1,293 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
+package se.michaelthelin.spotify.model_objects.specification;
+
+import com.google.gson.JsonElement;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import se.michaelthelin.spotify.model_objects.IModelObject;
+import java.util.Arrays;
+import se.michaelthelin.spotify.enums.ModelObjectType;
+import se.michaelthelin.spotify.model_objects.miscellaneous.Restrictions;
+import com.neovisionaries.i18n.CountryCode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import se.michaelthelin.spotify.model_objects.IPlaylistItem;
+import se.michaelthelin.spotify.requests.data.search.interfaces.ISearchModelObject;
+import se.michaelthelin.spotify.requests.data.personalization.interfaces.IArtistTrackModelObject;
+import se.michaelthelin.spotify.model_objects.AbstractModelObject;
+
+@JsonDeserialize(builder = Builder.class)
+public class Track extends AbstractModelObject implements IArtistTrackModelObject, ISearchModelObject, IPlaylistItem
+{
+    private final AlbumSimplified album;
+    private final ArtistSimplified[] artists;
+    private final CountryCode[] availableMarkets;
+    private final Integer discNumber;
+    private final Integer durationMs;
+    private final Boolean explicit;
+    private final ExternalId externalIds;
+    private final ExternalUrl externalUrls;
+    private final String href;
+    private final String id;
+    private final Boolean isPlayable;
+    private final TrackLink linkedFrom;
+    private final Restrictions restrictions;
+    private final String name;
+    private final Integer popularity;
+    private final String previewUrl;
+    private final Integer trackNumber;
+    private final ModelObjectType type;
+    private final String uri;
+    
+    private Track(final Builder builder) {
+        super(builder);
+        this.album = builder.album;
+        this.artists = builder.artists;
+        this.availableMarkets = builder.availableMarkets;
+        this.discNumber = builder.discNumber;
+        this.durationMs = builder.durationMs;
+        this.explicit = builder.explicit;
+        this.externalIds = builder.externalIds;
+        this.externalUrls = builder.externalUrls;
+        this.href = builder.href;
+        this.id = builder.id;
+        this.isPlayable = builder.isPlayable;
+        this.linkedFrom = builder.linkedFrom;
+        this.restrictions = builder.restrictions;
+        this.name = builder.name;
+        this.popularity = builder.popularity;
+        this.previewUrl = builder.previewUrl;
+        this.trackNumber = builder.trackNumber;
+        this.type = builder.type;
+        this.uri = builder.uri;
+    }
+    
+    public AlbumSimplified getAlbum() {
+        return this.album;
+    }
+    
+    public ArtistSimplified[] getArtists() {
+        return this.artists;
+    }
+    
+    public CountryCode[] getAvailableMarkets() {
+        return this.availableMarkets;
+    }
+    
+    public Integer getDiscNumber() {
+        return this.discNumber;
+    }
+    
+    @Override
+    public Integer getDurationMs() {
+        return this.durationMs;
+    }
+    
+    public Boolean getIsExplicit() {
+        return this.explicit;
+    }
+    
+    public ExternalId getExternalIds() {
+        return this.externalIds;
+    }
+    
+    @Override
+    public ExternalUrl getExternalUrls() {
+        return this.externalUrls;
+    }
+    
+    @Override
+    public String getHref() {
+        return this.href;
+    }
+    
+    @Override
+    public String getId() {
+        return this.id;
+    }
+    
+    public Boolean getIsPlayable() {
+        return this.isPlayable;
+    }
+    
+    public TrackLink getLinkedFrom() {
+        return this.linkedFrom;
+    }
+    
+    public Restrictions getRestrictions() {
+        return this.restrictions;
+    }
+    
+    @Override
+    public String getName() {
+        return this.name;
+    }
+    
+    public Integer getPopularity() {
+        return this.popularity;
+    }
+    
+    public String getPreviewUrl() {
+        return this.previewUrl;
+    }
+    
+    public Integer getTrackNumber() {
+        return this.trackNumber;
+    }
+    
+    @Override
+    public ModelObjectType getType() {
+        return this.type;
+    }
+    
+    @Override
+    public String getUri() {
+        return this.uri;
+    }
+    
+    @Override
+    public String toString() {
+        return invokedynamic(makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;Lse/michaelthelin/spotify/model_objects/specification/AlbumSimplified;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Boolean;Lse/michaelthelin/spotify/model_objects/specification/ExternalId;Lse/michaelthelin/spotify/model_objects/specification/ExternalUrl;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Lse/michaelthelin/spotify/model_objects/specification/TrackLink;Lse/michaelthelin/spotify/model_objects/miscellaneous/Restrictions;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/Integer;Lse/michaelthelin/spotify/enums/ModelObjectType;Ljava/lang/String;)Ljava/lang/String;, this.name, Arrays.toString(this.artists), this.album, Arrays.toString(this.availableMarkets), this.discNumber, this.durationMs, this.explicit, this.externalIds, this.externalUrls, this.href, this.id, this.isPlayable, this.linkedFrom, this.restrictions, this.popularity, this.previewUrl, this.trackNumber, this.type, this.uri);
+    }
+    
+    @Override
+    public Builder builder() {
+        return new Builder();
+    }
+    
+    public static final class Builder extends AbstractModelObject.Builder
+    {
+        private AlbumSimplified album;
+        private ArtistSimplified[] artists;
+        private CountryCode[] availableMarkets;
+        private Integer discNumber;
+        private Integer durationMs;
+        private Boolean explicit;
+        private ExternalId externalIds;
+        private ExternalUrl externalUrls;
+        private String href;
+        private String id;
+        private Boolean isPlayable;
+        private TrackLink linkedFrom;
+        private Restrictions restrictions;
+        private String name;
+        private Integer popularity;
+        private String previewUrl;
+        private Integer trackNumber;
+        private ModelObjectType type;
+        private String uri;
+        
+        public Builder setAlbum(final AlbumSimplified album) {
+            this.album = album;
+            return this;
+        }
+        
+        public Builder setArtists(final ArtistSimplified... artists) {
+            this.artists = artists;
+            return this;
+        }
+        
+        public Builder setAvailableMarkets(final CountryCode... availableMarkets) {
+            this.availableMarkets = availableMarkets;
+            return this;
+        }
+        
+        public Builder setDiscNumber(final Integer discNumber) {
+            this.discNumber = discNumber;
+            return this;
+        }
+        
+        public Builder setDurationMs(final Integer durationMs) {
+            this.durationMs = durationMs;
+            return this;
+        }
+        
+        public Builder setExplicit(final Boolean explicit) {
+            this.explicit = explicit;
+            return this;
+        }
+        
+        public Builder setExternalIds(final ExternalId externalIds) {
+            this.externalIds = externalIds;
+            return this;
+        }
+        
+        public Builder setExternalUrls(final ExternalUrl externalUrls) {
+            this.externalUrls = externalUrls;
+            return this;
+        }
+        
+        public Builder setHref(final String href) {
+            this.href = href;
+            return this;
+        }
+        
+        public Builder setId(final String id) {
+            this.id = id;
+            return this;
+        }
+        
+        public Builder setIsPlayable(final Boolean isPlayable) {
+            this.isPlayable = isPlayable;
+            return this;
+        }
+        
+        public Builder setLinkedFrom(final TrackLink linkedFrom) {
+            this.linkedFrom = linkedFrom;
+            return this;
+        }
+        
+        public Builder setRestrictions(final Restrictions restrictions) {
+            this.restrictions = restrictions;
+            return this;
+        }
+        
+        public Builder setName(final String name) {
+            this.name = name;
+            return this;
+        }
+        
+        public Builder setPopularity(final Integer popularity) {
+            this.popularity = popularity;
+            return this;
+        }
+        
+        public Builder setPreviewUrl(final String previewUrl) {
+            this.previewUrl = previewUrl;
+            return this;
+        }
+        
+        public Builder setTrackNumber(final Integer trackNumber) {
+            this.trackNumber = trackNumber;
+            return this;
+        }
+        
+        public Builder setType(final ModelObjectType type) {
+            this.type = type;
+            return this;
+        }
+        
+        public Builder setUri(final String uri) {
+            this.uri = uri;
+            return this;
+        }
+        
+        @Override
+        public Track build() {
+            return new Track(this, null);
+        }
+    }
+    
+    public static final class JsonUtil extends AbstractModelObject.JsonUtil<Track>
+    {
+        @Override
+        public Track createModelObject(final JsonObject jsonObject) {
+            if (jsonObject == null || jsonObject.isJsonNull()) {
+                return null;
+            }
+            return new Track.Builder().setAlbum(this.hasAndNotNull(jsonObject, "album") ? new AlbumSimplified.JsonUtil().createModelObject(jsonObject.getAsJsonObject("album")) : null).setArtists((ArtistSimplified[])(this.hasAndNotNull(jsonObject, "artists") ? ((ArtistSimplified[])new ArtistSimplified.JsonUtil().createModelObjectArray(jsonObject.getAsJsonArray("artists"))) : null)).setAvailableMarkets((CountryCode[])(this.hasAndNotNull(jsonObject, "available_markets") ? ((CountryCode[])new Gson().fromJson(jsonObject.getAsJsonArray("available_markets"), CountryCode[].class)) : null)).setDiscNumber(this.hasAndNotNull(jsonObject, "disc_number") ? Integer.valueOf(jsonObject.get("disc_number").getAsInt()) : null).setDurationMs(this.hasAndNotNull(jsonObject, "duration_ms") ? Integer.valueOf(jsonObject.get("duration_ms").getAsInt()) : null).setExplicit(this.hasAndNotNull(jsonObject, "explicit") ? Boolean.valueOf(jsonObject.get("explicit").getAsBoolean()) : null).setExternalIds(this.hasAndNotNull(jsonObject, "external_ids") ? new ExternalId.JsonUtil().createModelObject(jsonObject.getAsJsonObject("external_ids")) : null).setExternalUrls(this.hasAndNotNull(jsonObject, "external_urls") ? new ExternalUrl.JsonUtil().createModelObject(jsonObject.getAsJsonObject("external_urls")) : null).setHref(this.hasAndNotNull(jsonObject, "href") ? jsonObject.get("href").getAsString() : null).setId(this.hasAndNotNull(jsonObject, "id") ? jsonObject.get("id").getAsString() : null).setIsPlayable(this.hasAndNotNull(jsonObject, "is_playable") ? Boolean.valueOf(jsonObject.get("is_playable").getAsBoolean()) : null).setLinkedFrom(this.hasAndNotNull(jsonObject, "linked_from") ? new TrackLink.JsonUtil().createModelObject(jsonObject.get("linked_from").getAsJsonObject()) : null).setRestrictions(this.hasAndNotNull(jsonObject, "restrictions") ? new Restrictions.JsonUtil().createModelObject(jsonObject.get("restrictions").getAsJsonObject()) : null).setName(this.hasAndNotNull(jsonObject, "name") ? jsonObject.get("name").getAsString() : null).setPopularity(this.hasAndNotNull(jsonObject, "popularity") ? Integer.valueOf(jsonObject.get("popularity").getAsInt()) : null).setPreviewUrl(this.hasAndNotNull(jsonObject, "preview_url") ? jsonObject.get("preview_url").getAsString() : null).setTrackNumber(this.hasAndNotNull(jsonObject, "track_number") ? Integer.valueOf(jsonObject.get("track_number").getAsInt()) : null).setType(this.hasAndNotNull(jsonObject, "type") ? ModelObjectType.keyOf(jsonObject.get("type").getAsString().toLowerCase()) : null).setUri(this.hasAndNotNull(jsonObject, "uri") ? jsonObject.get("uri").getAsString() : null).build();
+        }
+    }
+}

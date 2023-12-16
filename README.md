@@ -52,6 +52,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Exhibition 5.0
 - Exist 0.71
 - Exodus 5.4
+- Expensive 2.0
 - Fan v3
 - Fan v4
 - Fanta v13

@@ -25,7 +25,7 @@ def delete_unwanted_files(folder_path):
 
     # Undesired directory names and files
     undesired_dirs = ["javax", "shadersmod", "viamcp", "META-INF", "google", "joptsimple", "tv", "oshi", "ibm", "sun", "iaversion", "mojang", "jcraft", "jhlabs", "apache", "json", "lwjgl", "yaml", "netty", "mcp", "ibxm", "javafx", "netscape", "mcupdater", "i", "spongepowered"]
-    undesired_files = ["Start.java", "pack.png", ".DS_Store", "log4j2.xml", "InjectionAPI.java", "desktop.ini", "ShaderBackgroundApi3.java", "TestShader.ls"]
+    undesired_files = ["Start.java", "pack.png", ".DS_Store", "log4j2.xml", "InjectionAPI.java", "desktop.ini", "ShaderBackgroundApi3.java", "TestShader.ls", "pack.mcmeta", "version.json", ".mcassetsroot"]
 
     # Load skipped items from the text file
     skipped_items = load_skipped_items()

@@ -7,9 +7,9 @@ def is_directory_empty(directory):
     except (PermissionError, FileNotFoundError):
         return False
 
-def save_skipped_item(item_name):
+def save_skipped_item(item_path):
     with open("skipped_files.txt", "a") as file:
-        file.write(item_name + "\n")
+        file.write(item_path + "\n")
 
 def load_skipped_items():
     skipped_items = set()
@@ -36,7 +36,7 @@ def delete_unwanted_files(folder_path):
             file_path = os.path.join(root, file)
 
             # Check if the file matches the criteria
-            if file in undesired_files and file not in skipped_items:
+            if file in undesired_files and file_path not in skipped_items:
                 print(f"{Fore.YELLOW}Found file: {file_path}{Style.RESET_ALL}")
                 found_count += 1
 
@@ -47,7 +47,7 @@ def delete_unwanted_files(folder_path):
                     deleted_count += 1
                     print(f"{Fore.GREEN}Deleted file: {file_path}{Style.RESET_ALL}")
                 elif user_input == "n":
-                    save_skipped_item(file)
+                    save_skipped_item(file_path)
                     print(f"{Fore.BLUE}Skipped file: {file_path}{Style.RESET_ALL}")
 
         for dir_name in dirs:

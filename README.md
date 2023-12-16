@@ -57,6 +57,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Fan v4
 - Fanta v13
 - Faurax
+- Fluid
 - Flush 0.9
 - Flux B39.11
 - Flux B5
@@ -93,6 +94,8 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Mint
 - Monsoon 1.2
 - Monsoon 1.3
+- Moonense v1.00
+- Moonsense v1.01
 - MoonX
 - Mystra
 - NeverHook 1.4

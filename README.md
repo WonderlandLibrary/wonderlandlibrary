@@ -91,6 +91,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - LoseBypass
 - Lucid 0.89
 - Massacre
+- Minced
 - Mint
 - Monsoon 1.2
 - Monsoon 1.3

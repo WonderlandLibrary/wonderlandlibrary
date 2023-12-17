@@ -164,10 +164,10 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Xulu 1.5.2
 
 ## [Jars](/jars)
-- air
+- Air Client
 - ascension
 - atani
-- autumn
+- Autumn
 - bleachhack
 - blossom
 - clientware1.0
@@ -185,6 +185,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - lavabounce
 - lime
 - liquidbounceb73
+- liquidbounceplusplus
 - monsoon
 - moonx
 - mythrecode

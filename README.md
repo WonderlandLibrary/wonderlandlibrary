@@ -85,7 +85,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Lavish
 - Legacy
 - LiquidBase
-- LiquidBouncePlusPlus
+- LiquidBounce++
 - Lirium
 - Lithium
 - LoseBypass

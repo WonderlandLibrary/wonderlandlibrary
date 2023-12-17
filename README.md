@@ -165,41 +165,40 @@ Wonderland library is a world wide library for minecraft clients and mods.
 
 ## [Jars](/jars)
 - Air Client
-- ascension
-- atani
+- Ascension
+- Atani
 - Autumn
-- bleachhack
-- blossom
-- clientware1.0
-- cookie
-- crassb2
-- eject4.3.1
-- ejectrecode0.0.8
-- francium
-- gothaj
-- hera14
-- hydrogen
-- icarusxb5
-- isyncb17
-- klientus
-- lavabounce
-- lime
-- liquidbounceb73
-- liquidbounceplusplus
-- monsoon
-- moonx
-- mythrecode
-- nightx
-- ravenbminus
-- ravenbplus
-- raze1.4.4
-- rise5.100
-- rise5.90
-- rise5.98
-- sigma1.45
-- summer
-- t3n4c1ty2.0
-- t3n4c1ty5.1
-- uberware1.1
-- uberware1.2
-- umbrella
+- Bleachhack
+- Blossom
+- ClientWare 1.0
+- Cookie Client
+- Crass B2
+- Eject 4.3.1
+- Eject Recode 0.0.8
+- Francium Crack
+- Gothaj 3.0
+- Hera 14
+- Hydrogen
+- Icarus X b5
+- iSync b17
+- Klientus
+- Lavabounce b11
+- LiquidBounce b73
+- LiquidBounce++
+- Monsoon
+- MoonX
+- Myth Recode
+- Night X
+- Raven B+
+- Raven B-
+- Raze 1.4.4
+- Rise 5.100
+- Rise 5.90
+- Rise 5.98
+- Sigma 1.45
+- Summer
+- T3n4c1ty 2.0
+- T3n4c1ty 5.1
+- Uberware 1.1
+- Uberware 1.2
+- Umbrella 1.3

@@ -22,3 +22,4 @@ C:\Users\marku\Desktop\WonderlandLibrary\sources\Sigma 3.9\info\sigmaclient\json
 C:\Users\marku\Desktop\WonderlandLibrary\sources\Sigma 4.11\info\sigmaclient\json
 C:\Users\marku\Desktop\WonderlandLibrary\sources\Straightware\de\florianmichael\vialoadingbase\netty
 C:\Users\marku\Desktop\WonderlandLibrary\sources\Xenza B9\de\gerrygames\viarewind\netty
+C:\Users\marku\Desktop\WonderlandLibrary\sources\MythicX 1.1\de\theBest\MythicX\utils\auth\mojang

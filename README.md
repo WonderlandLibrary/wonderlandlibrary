@@ -99,6 +99,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Moonsense v1.01
 - MoonX
 - Mystra
+- MythicX 1.1
 - NeverHook 1.4
 - Nivia B3
 - November
@@ -166,10 +167,10 @@ Wonderland library is a world wide library for minecraft clients and mods.
 ## [Jars](/jars)
 - Air Client
 - Ascension
-- Atani
-- Autumn
-- Bleachhack
-- Blossom
+- Atani 0.0.3
+- Autumn 1.0.0
+- BleachHack 1.2.6
+- Blossom Crack
 - ClientWare 1.0
 - Cookie Client
 - Crass B2
@@ -178,15 +179,15 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Francium Crack
 - Gothaj 3.0
 - Hera 14
-- Hydrogen
+- Hydrogen 1.12.5
 - Icarus X b5
 - iSync b17
-- Klientus
+- Klientus 1.0
 - Lavabounce b11
 - LiquidBounce b73
 - LiquidBounce++
 - Monsoon
-- MoonX
+- Moon X
 - Myth Recode
 - Night X
 - Raven B+
@@ -196,7 +197,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Rise 5.90
 - Rise 5.98
 - Sigma 1.45
-- Summer
+- Summer 4.0 - 10.0
 - T3n4c1ty 2.0
 - T3n4c1ty 5.1
 - Uberware 1.1

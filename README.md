@@ -23,6 +23,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Autumn
 - Azura X
 - Blizzard b1
+- Cake
 - Capybara Premium 1.0
 - Celestial Premium 6.0
 - Celestial Recode
@@ -57,6 +58,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Fan v4
 - Fanta v13
 - Faurax
+- Felix
 - Fluid
 - Flush 0.9
 - Flux B39.11
@@ -174,6 +176,8 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - BleachHack 1.2.6
 - Blossom Crack
 - BlueZenith
+- Checkz 1.7.10
+- Checkz 1.8.9
 - ClientWare 1.0
 - Cookie Client
 - Crass B2
@@ -188,6 +192,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - iSync b17
 - Klientus 1.0
 - Lavabounce b11
+- Lightning
 - LiquidBounce b73
 - LiquidBounce++
 - Matix B1.5.2
@@ -206,11 +211,13 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Rise 5.98
 - Sigma 1.45
 - Skid 12.11
+- Skilled v3
 - Summer 10.0
 - Summer 4.0
 - Summer 7.0
 - Summer 8.0
 - Summer 9.0
+- Sumo
 - Tenacity 2.0
 - Tenacity 5.1
 - Uberware 1.1

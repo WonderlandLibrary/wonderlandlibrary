@@ -1,13 +1,9 @@
 {
-  "id": "Gothaj",
-  "family": "unknown",
-  "time": "2023-11-16T18:33:10.300Z",
-  "releaseTime": "2014-09-02T08:24:35Z",
+  "id": "Summer 4.0",
+  "time": "2014-09-02T04:24:35-04:00",
+  "releaseTime": "2014-09-02T04:24:35-04:00",
   "type": "release",
   "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type}",
-  "mainClass": "net.minecraft.client.main.Main",
-  "minimumLauncherVersion": 14,
-  "tlauncherVersion": 0,
   "libraries": [
     {
       "name": "java3d:vecmath:1.5.2"
@@ -37,7 +33,7 @@
       "name": "com.paulscode:soundsystem:20120107"
     },
     {
-      "name": "io.netty:netty-all:4.0.23.Final"
+      "name": "io.netty:netty-all:4.0.15.Final"
     },
     {
       "name": "com.google.guava:guava:17.0"
@@ -61,10 +57,10 @@
       "name": "com.google.code.gson:gson:2.2.4"
     },
     {
-      "name": "com.mojang:authlib:1.5.17"
+      "name": "com.mojang:authlib:1.5.21"
     },
     {
-      "name": "com.mojang:realms:1.5.5"
+      "name": "com.mojang:realms:1.6.1"
     },
     {
       "name": "org.apache.commons:commons-compress:1.8.1"
@@ -239,25 +235,8 @@
       }
     }
   ],
-  "downloads": {},
-  "assetIndex": {
-    "totalSize": 0,
-    "id": "1.8",
-    "known": false,
-    "url": "https://s3.amazonaws.com/Minecraft.Download/indexes/1.8.json",
-    "size": 0
-  },
+  "mainClass": "net.minecraft.client.main.Main",
+  "minimumLauncherVersion": 14,
   "assets": "1.8",
-  "logging": {
-    "client": {
-      "argument": "-Dlog4j.configurationFile\u003d${path}",
-      "file": {
-        "id": "client-1.7.xml",
-        "url": "https://launcher.mojang.com/v1/objects/14fedd49897b3f6160975bdf3a53e1e7eab71d29/client-1.7.xml",
-        "sha1": "14fedd49897b3f6160975bdf3a53e1e7eab71d29",
-        "size": 962
-      },
-      "type": "log4j2-xml"
-    }
-  }
+  "downloads": {}
 }

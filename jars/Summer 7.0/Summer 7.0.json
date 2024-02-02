@@ -1,13 +1,7 @@
 {
-  "id": "Skid12.11",
-  "family": "unknown",
-  "time": "2022-05-01T07:51:53.179Z",
-  "releaseTime": "2014-09-02T08:24:35Z",
-  "type": "release",
-  "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type}",
-  "mainClass": "MCLauncher",
-  "minimumLauncherVersion": 14,
-  "tlauncherVersion": 0,
+  "assets": "1.8",
+  "downloads": {},
+  "id": "Summer 7.0",
   "libraries": [
     {
       "name": "java3d:vecmath:1.5.2"
@@ -113,7 +107,17 @@
       ]
     },
     {
+      "extract": {
+        "exclude": [
+          "META-INF/"
+        ]
+      },
       "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.1",
+      "natives": {
+        "linux": "natives-linux",
+        "osx": "natives-osx",
+        "windows": "natives-windows"
+      },
       "rules": [
         {
           "action": "allow"
@@ -124,17 +128,7 @@
             "name": "osx"
           }
         }
-      ],
-      "natives": {
-        "linux": "natives-linux",
-        "osx": "natives-osx",
-        "windows": "natives-windows"
-      },
-      "extract": {
-        "exclude": [
-          "META-INF/"
-        ]
-      }
+      ]
     },
     {
       "name": "org.lwjgl.lwjgl:lwjgl:2.9.2-nightly-20140822",
@@ -159,7 +153,17 @@
       ]
     },
     {
+      "extract": {
+        "exclude": [
+          "META-INF/"
+        ]
+      },
       "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.2-nightly-20140822",
+      "natives": {
+        "linux": "natives-linux",
+        "osx": "natives-osx",
+        "windows": "natives-windows"
+      },
       "rules": [
         {
           "action": "allow",
@@ -167,36 +171,36 @@
             "name": "osx"
           }
         }
-      ],
-      "natives": {
-        "linux": "natives-linux",
-        "osx": "natives-osx",
-        "windows": "natives-windows"
-      },
+      ]
+    },
+    {
       "extract": {
         "exclude": [
           "META-INF/"
         ]
-      }
-    },
-    {
+      },
       "name": "net.java.jinput:jinput-platform:2.0.5",
       "natives": {
         "linux": "natives-linux",
         "osx": "natives-osx",
         "windows": "natives-windows"
-      },
-      "extract": {
-        "exclude": [
-          "META-INF/"
-        ]
       }
     },
     {
       "name": "tv.twitch:twitch:6.5"
     },
     {
+      "extract": {
+        "exclude": [
+          "META-INF/"
+        ]
+      },
       "name": "tv.twitch:twitch-platform:6.5",
+      "natives": {
+        "linux": "natives-linux",
+        "osx": "natives-osx",
+        "windows": "natives-windows-${arch}"
+      },
       "rules": [
         {
           "action": "allow"
@@ -207,20 +211,18 @@
             "name": "linux"
           }
         }
-      ],
-      "natives": {
-        "linux": "natives-linux",
-        "osx": "natives-osx",
-        "windows": "natives-windows-${arch}"
-      },
+      ]
+    },
+    {
       "extract": {
         "exclude": [
           "META-INF/"
         ]
-      }
-    },
-    {
+      },
       "name": "tv.twitch:twitch-external-platform:4.5",
+      "natives": {
+        "windows": "natives-windows-${arch}"
+      },
       "rules": [
         {
           "action": "allow",
@@ -228,17 +230,13 @@
             "name": "windows"
           }
         }
-      ],
-      "natives": {
-        "windows": "natives-windows-${arch}"
-      },
-      "extract": {
-        "exclude": [
-          "META-INF/"
-        ]
-      }
+      ]
     }
   ],
-  "downloads": {},
-  "assets": "1.8"
+  "mainClass": "net.minecraft.client.main.Main",
+  "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type}",
+  "minimumLauncherVersion": 14,
+  "releaseTime": "2014-09-02T04:24:35-04:00",
+  "time": "2014-09-02T04:24:35-04:00",
+  "type": "release"
 }

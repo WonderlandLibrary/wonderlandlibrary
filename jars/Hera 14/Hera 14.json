@@ -1,11 +1,7 @@
 {
-  "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type}",
-  "minimumLauncherVersion": 14,
-  "time": "2014-09-02T04:24:35-04:00",
-  "mainClass": "net.minecraft.client.main.Main",
-  "type": "release",
-  "id": "iSync",
   "assets": "1.8",
+  "downloads": {},
+  "id": "Hera 14",
   "libraries": [
     {
       "name": "java3d:vecmath:1.5.2"
@@ -80,14 +76,7 @@
       "name": "org.apache.logging.log4j:log4j-api:2.0-beta9"
     },
     {
-      "downloads": {
-        "artifact": {
-          "sha1": "7835ab92f34f1280466aac4596b1dcd7a609f365",
-          "size": 688799,
-          "url": "https://intent.store/resources/org/apache/logging/log4j/log4j-core/2.0-beta9/log4j-core-2.0-beta9-fixed.jar"
-        }
-      },
-      "name": "org.apache.logging.log4j:log4j-core:2.0-beta9-fixed"
+      "name": "org.apache.logging.log4j:log4j-core:2.0-beta9"
     },
     {
       "name": "org.lwjgl.lwjgl:lwjgl:2.9.1",
@@ -118,17 +107,17 @@
       ]
     },
     {
-      "natives": {
-        "linux": "natives-linux",
-        "osx": "natives-osx",
-        "windows": "natives-windows"
-      },
       "extract": {
         "exclude": [
           "META-INF/"
         ]
       },
       "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.1",
+      "natives": {
+        "linux": "natives-linux",
+        "osx": "natives-osx",
+        "windows": "natives-windows"
+      },
       "rules": [
         {
           "action": "allow"
@@ -164,17 +153,17 @@
       ]
     },
     {
-      "natives": {
-        "linux": "natives-linux",
-        "osx": "natives-osx",
-        "windows": "natives-windows"
-      },
       "extract": {
         "exclude": [
           "META-INF/"
         ]
       },
       "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.2-nightly-20140822",
+      "natives": {
+        "linux": "natives-linux",
+        "osx": "natives-osx",
+        "windows": "natives-windows"
+      },
       "rules": [
         {
           "action": "allow",
@@ -185,33 +174,33 @@
       ]
     },
     {
-      "natives": {
-        "linux": "natives-linux",
-        "osx": "natives-osx",
-        "windows": "natives-windows"
-      },
       "extract": {
         "exclude": [
           "META-INF/"
         ]
       },
-      "name": "net.java.jinput:jinput-platform:2.0.5"
+      "name": "net.java.jinput:jinput-platform:2.0.5",
+      "natives": {
+        "linux": "natives-linux",
+        "osx": "natives-osx",
+        "windows": "natives-windows"
+      }
     },
     {
       "name": "tv.twitch:twitch:6.5"
     },
     {
-      "natives": {
-        "linux": "natives-linux",
-        "osx": "natives-osx",
-        "windows": "natives-windows-${arch}"
-      },
       "extract": {
         "exclude": [
           "META-INF/"
         ]
       },
       "name": "tv.twitch:twitch-platform:6.5",
+      "natives": {
+        "linux": "natives-linux",
+        "osx": "natives-osx",
+        "windows": "natives-windows-${arch}"
+      },
       "rules": [
         {
           "action": "allow"
@@ -225,15 +214,15 @@
       ]
     },
     {
-      "natives": {
-        "windows": "natives-windows-${arch}"
-      },
       "extract": {
         "exclude": [
           "META-INF/"
         ]
       },
       "name": "tv.twitch:twitch-external-platform:4.5",
+      "natives": {
+        "windows": "natives-windows-${arch}"
+      },
       "rules": [
         {
           "action": "allow",
@@ -244,6 +233,10 @@
       ]
     }
   ],
-  "releaseTime": "2014-09-02T04:24:35-04:00",
-  "downloads": {}
+  "mainClass": "net.minecraft.client.main.Main",
+  "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type}",
+  "minimumLauncherVersion": 14,
+  "releaseTime": "2014-09-02T10:24:35+02:00",
+  "time": "2014-09-02T10:24:35+02:00",
+  "type": "release"
 }

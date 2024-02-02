@@ -1,27 +1,18 @@
 {
-  "id": "Nexus",
-  "time": "2015-07-27T15:31:28+05:00",
-  "releaseTime": "2015-07-27T15:31:28+05:00",
+  "id": "Gothaj 3.0",
+  "family": "unknown",
+  "time": "2023-11-16T18:33:10.300Z",
+  "releaseTime": "2014-09-02T08:24:35Z",
   "type": "release",
   "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type}",
   "mainClass": "net.minecraft.client.main.Main",
   "minimumLauncherVersion": 14,
-  "assets": "1.8",
   "libraries": [
-    {
-      "name": "oshi-project:oshi-core:1.1"
-    },
-    {
-      "name": "net.sf.trove4j:trove4j:3.0.3"
-    },
     {
       "name": "java3d:vecmath:1.5.2"
     },
     {
-      "name": "net.java.dev.jna:jna:3.4.0"
-    },
-    {
-      "name": "net.java.dev.jna:platform:3.4.0"
+      "name": "net.sf.trove4j:trove4j:3.0.3"
     },
     {
       "name": "com.ibm.icu:icu4j-core-mojang:51.2"
@@ -69,10 +60,10 @@
       "name": "com.google.code.gson:gson:2.2.4"
     },
     {
-      "name": "com.mojang:authlib:1.5.21"
+      "name": "com.mojang:authlib:1.5.17"
     },
     {
-      "name": "com.mojang:realms:1.7.39"
+      "name": "com.mojang:realms:1.5.5"
     },
     {
       "name": "org.apache.commons:commons-compress:1.8.1"
@@ -93,7 +84,7 @@
       "name": "org.apache.logging.log4j:log4j-core:2.0-beta9"
     },
     {
-      "name": "org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209",
+      "name": "org.lwjgl.lwjgl:lwjgl:2.9.1",
       "rules": [
         {
           "action": "allow"
@@ -107,7 +98,7 @@
       ]
     },
     {
-      "name": "org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209",
+      "name": "org.lwjgl.lwjgl:lwjgl_util:2.9.1",
       "rules": [
         {
           "action": "allow"
@@ -121,7 +112,7 @@
       ]
     },
     {
-      "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209",
+      "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.1",
       "rules": [
         {
           "action": "allow"
@@ -135,8 +126,8 @@
       ],
       "natives": {
         "linux": "natives-linux",
-        "osx": "natives-osx",
-        "windows": "natives-windows"
+        "windows": "natives-windows",
+        "osx": "natives-osx"
       },
       "extract": {
         "exclude": [
@@ -178,8 +169,8 @@
       ],
       "natives": {
         "linux": "natives-linux",
-        "osx": "natives-osx",
-        "windows": "natives-windows"
+        "windows": "natives-windows",
+        "osx": "natives-osx"
       },
       "extract": {
         "exclude": [
@@ -191,8 +182,8 @@
       "name": "net.java.jinput:jinput-platform:2.0.5",
       "natives": {
         "linux": "natives-linux",
-        "osx": "natives-osx",
-        "windows": "natives-windows"
+        "windows": "natives-windows",
+        "osx": "natives-osx"
       },
       "extract": {
         "exclude": [
@@ -218,8 +209,8 @@
       ],
       "natives": {
         "linux": "natives-linux",
-        "osx": "natives-osx",
-        "windows": "natives-windows-${arch}"
+        "windows": "natives-windows-${arch}",
+        "osx": "natives-osx"
       },
       "extract": {
         "exclude": [
@@ -245,7 +236,27 @@
           "META-INF/"
         ]
       }
-    },
+    }
   ],
-  "downloads": {}
+  "downloads": {},
+  "assetIndex": {
+    "totalSize": 0,
+    "id": "1.8",
+    "known": false,
+    "url": "https://s3.amazonaws.com/Minecraft.Download/indexes/1.8.json",
+    "size": 0
+  },
+  "assets": "1.8",
+  "logging": {
+    "client": {
+      "argument": "-Dlog4j.configurationFile\u003d${path}",
+      "file": {
+        "id": "client-1.7.xml",
+        "url": "https://launcher.mojang.com/v1/objects/14fedd49897b3f6160975bdf3a53e1e7eab71d29/client-1.7.xml",
+        "sha1": "14fedd49897b3f6160975bdf3a53e1e7eab71d29",
+        "size": 962
+      },
+      "type": "log4j2-xml"
+    }
+  }
 }

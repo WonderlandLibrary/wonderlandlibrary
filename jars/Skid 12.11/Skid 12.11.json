@@ -1,17 +1,13 @@
 {
-  "id": "Eject4.3.1",
+  "id": "Skid 12.11",
   "family": "unknown",
-  "time": "2023-04-06T21:12:40.280Z",
+  "time": "2022-05-01T07:51:53.179Z",
   "releaseTime": "2014-09-02T08:24:35Z",
   "type": "release",
   "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type}",
-  "mainClass": "god.buddy.Crack",
+  "mainClass": "MCLauncher",
   "minimumLauncherVersion": 14,
-  "tlauncherVersion": 0,
   "libraries": [
-    {
-      "name": "com.mojang:netty:1.6"
-    },
     {
       "name": "java3d:vecmath:1.5.2"
     },
@@ -68,9 +64,6 @@
     },
     {
       "name": "com.mojang:realms:1.6.1"
-    },
-    {
-      "name": "com.mojang:netty:1.6"
     },
     {
       "name": "org.apache.commons:commons-compress:1.8.1"
@@ -133,8 +126,8 @@
       ],
       "natives": {
         "linux": "natives-linux",
-        "windows": "natives-windows",
-        "osx": "natives-osx"
+        "osx": "natives-osx",
+        "windows": "natives-windows"
       },
       "extract": {
         "exclude": [
@@ -176,8 +169,8 @@
       ],
       "natives": {
         "linux": "natives-linux",
-        "windows": "natives-windows",
-        "osx": "natives-osx"
+        "osx": "natives-osx",
+        "windows": "natives-windows"
       },
       "extract": {
         "exclude": [
@@ -189,8 +182,8 @@
       "name": "net.java.jinput:jinput-platform:2.0.5",
       "natives": {
         "linux": "natives-linux",
-        "windows": "natives-windows",
-        "osx": "natives-osx"
+        "osx": "natives-osx",
+        "windows": "natives-windows"
       },
       "extract": {
         "exclude": [
@@ -216,8 +209,8 @@
       ],
       "natives": {
         "linux": "natives-linux",
-        "windows": "natives-windows-${arch}",
-        "osx": "natives-osx"
+        "osx": "natives-osx",
+        "windows": "natives-windows-${arch}"
       },
       "extract": {
         "exclude": [

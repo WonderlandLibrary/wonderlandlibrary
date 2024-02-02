@@ -1,5 +1,5 @@
 {
-  "id": "T3n4c1ty2.0",
+  "id": "T3n4c1ty 2.0",
   "family": "unknown",
   "time": "2022-07-06T11:15:04.839Z",
   "releaseTime": "2020-10-17T10:31:28Z",
@@ -7,7 +7,6 @@
   "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type}",
   "mainClass": "net.minecraft.client.main.Main",
   "minimumLauncherVersion": 14,
-  "tlauncherVersion": 0,
   "libraries": [
     {
       "name": "com.mojang:netty:1.6",

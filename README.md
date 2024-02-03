@@ -171,8 +171,11 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Air Client
 - Aqua
 - Ascension beta 1.0
+- Astomero
+- Astroline
 - Atani 0.0.3
 - Autumn 1.0.0
+- Azura X 1.3.1
 - BleachHack 1.2.6
 - Blossom Crack
 - BlueZenith
@@ -181,15 +184,23 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - ClientWare 1.0
 - Cookie Client
 - Crass B2
+- Crystalware b10
+- Crystalware Reloaded b8
+- Depression v1.6
 - Eject 4.3.1
 - Eject Recode 0.0.8
 - Eternal 2.2.6
+- Flare 3.7
 - Francium Crack
+- FusionX
 - Gothaj 3.0
 - Hera 14
 - Hydrogen 1.12.5
 - Icarus X b5
 - iSync b17
+- Juul 1.0
+- Kawaii Crack
+- Ketamine Free
 - Klientus 1.0
 - Lavabounce b11
 - Lightning
@@ -202,13 +213,17 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Myth Recode
 - Nexus
 - Night X
+- Peter
 - Protocol b18
 - Raven B+
 - Raven B-
 - Raze 1.4.4
+- Remix 1.4
 - Rise 5.100
 - Rise 5.90
 - Rise 5.98
+- Serenity b21
+- Sight b191
 - Sigma 1.45
 - Skid 12.11
 - Skilled v3
@@ -223,3 +238,4 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Uberware 1.1
 - Uberware 1.2
 - Umbrella 1.3
+- Winter 7.2

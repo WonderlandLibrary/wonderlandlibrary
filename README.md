@@ -193,6 +193,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Flare 3.7
 - Francium Crack
 - FusionX
+- Glorium
 - Gothaj 3.0
 - Hera 14
 - Hydrogen 1.12.5

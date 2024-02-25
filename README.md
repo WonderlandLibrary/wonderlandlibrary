@@ -236,6 +236,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Sumo
 - Tenacity 2.0
 - Tenacity 5.1
+- Tifality
 - Uberware 1.1
 - Uberware 1.2
 - Umbrella 1.3

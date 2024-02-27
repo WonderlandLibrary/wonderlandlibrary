@@ -220,6 +220,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Raven B-
 - Raze 1.4.4
 - Remix 1.4
+- Rich Free 1.3
 - Rise 5.100
 - Rise 5.90
 - Rise 5.98

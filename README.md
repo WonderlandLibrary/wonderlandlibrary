@@ -195,6 +195,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - FusionX
 - Glorium
 - Gothaj 3.0
+- Gothaj 3.01b-Alpha
 - Hera 14
 - Hydrogen 1.12.5
 - Icarus X b5

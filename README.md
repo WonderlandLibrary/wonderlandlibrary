@@ -191,6 +191,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Eject Recode 0.0.8
 - Eternal 2.2.6
 - Flare 3.7
+- Flux B13
 - Francium Crack
 - FusionX
 - Glorium

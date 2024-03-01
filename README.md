@@ -217,6 +217,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Night X
 - Peter
 - Protocol b18
+- Radium v1.4.0
 - Raven B+
 - Raven B-
 - Raze 1.4.4

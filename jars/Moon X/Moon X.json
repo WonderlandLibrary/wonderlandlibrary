@@ -563,14 +563,6 @@
       }
     }
   ],
-  "assetIndex": {
-    "totalSize": 114885064,
-    "id": "1.8",
-    "known": true,
-    "url": "https://launchermeta.mojang.com/v1/packages/f6ad102bcaa53b1a58358f16e376d548d44933ec/1.8.json",
-    "sha1": "f6ad102bcaa53b1a58358f16e376d548d44933ec",
-    "size": 78494
-  },
   "assets": "1.8",
   "javaVersion": {
     "component": "jre-legacy",

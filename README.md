@@ -66,6 +66,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - FusionX 2.0
 - GameSense
 - GetBypass
+- Gothaj
 - Graphite
 - Hanabi 3.1
 - Helium
@@ -198,6 +199,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Gothaj 3.0
 - Gothaj 3.01b-Alpha
 - Hera 14
+- Huzuni 3.5 VIP
 - Hydrogen 1.12.5
 - Icarus X b5
 - iSync b17
@@ -207,15 +209,20 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Klientus 1.0
 - Lavabounce b11
 - Lightning
+- Lime Reborn
 - LiquidBounce b73
+- LiquidBounce+
 - LiquidBounce++
 - Matix B1.5.2
 - Monsoon 1.2
 - Monsoon 3.0-A6
 - Moon X
 - Myth Recode
+- MythicX
+- MythicX Beta
 - Nexus
 - Night X
+- Pandora b9
 - Peter
 - Protocol b18
 - Radium v1.4.0
@@ -245,3 +252,4 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Uberware 1.2
 - Umbrella 1.3
 - Winter 7.2
+- Xenza Recode B2

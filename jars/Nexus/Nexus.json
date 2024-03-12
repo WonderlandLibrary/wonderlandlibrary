@@ -1,12 +1,7 @@
 {
-  "id": "Nexus",
-  "time": "2015-07-27T15:31:28+05:00",
-  "releaseTime": "2015-07-27T15:31:28+05:00",
-  "type": "release",
-  "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type}",
-  "mainClass": "net.minecraft.client.main.Main",
-  "minimumLauncherVersion": 14,
   "assets": "1.8",
+  "downloads": {},
+  "id": "Nexus",
   "libraries": [
     {
       "name": "oshi-project:oshi-core:1.1"
@@ -121,7 +116,17 @@
       ]
     },
     {
+      "extract": {
+        "exclude": [
+          "META-INF/"
+        ]
+      },
       "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209",
+      "natives": {
+        "linux": "natives-linux",
+        "osx": "natives-osx",
+        "windows": "natives-windows"
+      },
       "rules": [
         {
           "action": "allow"
@@ -132,17 +137,7 @@
             "name": "osx"
           }
         }
-      ],
-      "natives": {
-        "linux": "natives-linux",
-        "osx": "natives-osx",
-        "windows": "natives-windows"
-      },
-      "extract": {
-        "exclude": [
-          "META-INF/"
-        ]
-      }
+      ]
     },
     {
       "name": "org.lwjgl.lwjgl:lwjgl:2.9.2-nightly-20140822",
@@ -167,7 +162,17 @@
       ]
     },
     {
+      "extract": {
+        "exclude": [
+          "META-INF/"
+        ]
+      },
       "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.2-nightly-20140822",
+      "natives": {
+        "linux": "natives-linux",
+        "osx": "natives-osx",
+        "windows": "natives-windows"
+      },
       "rules": [
         {
           "action": "allow",
@@ -175,36 +180,36 @@
             "name": "osx"
           }
         }
-      ],
-      "natives": {
-        "linux": "natives-linux",
-        "osx": "natives-osx",
-        "windows": "natives-windows"
-      },
+      ]
+    },
+    {
       "extract": {
         "exclude": [
           "META-INF/"
         ]
-      }
-    },
-    {
+      },
       "name": "net.java.jinput:jinput-platform:2.0.5",
       "natives": {
         "linux": "natives-linux",
         "osx": "natives-osx",
         "windows": "natives-windows"
-      },
-      "extract": {
-        "exclude": [
-          "META-INF/"
-        ]
       }
     },
     {
       "name": "tv.twitch:twitch:6.5"
     },
     {
+      "extract": {
+        "exclude": [
+          "META-INF/"
+        ]
+      },
       "name": "tv.twitch:twitch-platform:6.5",
+      "natives": {
+        "linux": "natives-linux",
+        "osx": "natives-osx",
+        "windows": "natives-windows-${arch}"
+      },
       "rules": [
         {
           "action": "allow"
@@ -215,20 +220,18 @@
             "name": "linux"
           }
         }
-      ],
-      "natives": {
-        "linux": "natives-linux",
-        "osx": "natives-osx",
-        "windows": "natives-windows-${arch}"
-      },
+      ]
+    },
+    {
       "extract": {
         "exclude": [
           "META-INF/"
         ]
-      }
-    },
-    {
+      },
       "name": "tv.twitch:twitch-external-platform:4.5",
+      "natives": {
+        "windows": "natives-windows-${arch}"
+      },
       "rules": [
         {
           "action": "allow",
@@ -236,16 +239,13 @@
             "name": "windows"
           }
         }
-      ],
-      "natives": {
-        "windows": "natives-windows-${arch}"
-      },
-      "extract": {
-        "exclude": [
-          "META-INF/"
-        ]
-      }
-    },
+      ]
+    }
   ],
-  "downloads": {}
+  "mainClass": "net.minecraft.client.main.Main",
+  "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type}",
+  "minimumLauncherVersion": 14,
+  "releaseTime": "2015-07-27T12:31:28+02:00",
+  "time": "2015-07-27T12:31:28+02:00",
+  "type": "release"
 }

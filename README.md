@@ -191,7 +191,9 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Depression v1.6
 - Eject 4.3.1
 - Eject Recode 0.0.8
+- Envy
 - Eternal 2.2.6
+- Exhibition
 - Flare 3.7
 - Flux B13
 - Francium Crack
@@ -199,17 +201,20 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Glorium
 - Gothaj 3.0
 - Gothaj 3.01b-Alpha
+- Hallucination 2.1
 - Hera 14
 - Huzuni 3.5 VIP
 - Hydrogen 1.12.5
 - Icarus X b5
 - iSync b17
+- Jigsaw
 - Juul 1.0
 - Kawaii Crack
 - Ketamine Free
 - Klientus 1.0
 - Lavabounce b11
 - Lightning
+- Lime
 - Lime Reborn
 - LiquidBounce b73
 - LiquidBounce+
@@ -238,6 +243,9 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Serenity b21
 - Sight b191
 - Sigma 1.45
+- Sigma 4.11
+- Sigma NextGen b7
+- Sigma Remake
 - Skid 12.11
 - Skilled v3
 - Summer 10.0

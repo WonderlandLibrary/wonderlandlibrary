@@ -9,7 +9,7 @@ out += "\n"
 # Contributors
 out += "## Contributors\n";
 
-contributorsInput = ".zajchu.;coccocoahelper;kellohyllyy;.stormingmoon;tabio1337;000000001_1;3000IQPlay"
+contributorsInput = "parkopes;jDev;.idk1.;.stormingmoon;coccocoahelper;kellohyllyy;TrilliumHQ;HCU (Former)"
 contributors = contributorsInput.split(";")
 for contributor in contributors:
     out += "- " + contributor + "\n";

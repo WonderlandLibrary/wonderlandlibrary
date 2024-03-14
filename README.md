@@ -2,13 +2,14 @@
 Wonderland library is a world wide library for minecraft clients and mods.
 
 ## Contributors
-- .zajchu.
+- parkopes
+- jDev
+- .idk1.
+- .stormingmoon
 - coccocoahelper
 - kellohyllyy
-- .stormingmoon
-- tabio1337
-- 000000001_1
-- 3000IQPlay
+- TrilliumHQ
+- HCU (Former)
 
 ## [Sources](/sources)
 - Apple

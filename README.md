@@ -99,7 +99,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Mint
 - Monsoon 1.2
 - Monsoon 1.3
-- Moonense v1.00
+- Moonsense v1.00
 - Moonsense v1.01
 - MoonX
 - Mystra
@@ -107,6 +107,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - NeverHook 1.4
 - Nightmare
 - Nivia B3
+- North
 - November
 - Ohareware 6.9
 - Old-Novoline
@@ -116,6 +117,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - PingBypass
 - Polaris B14
 - PowerClient
+- Prestige
 - Pulsive 5.0
 - Radium Public
 - Rainbow
@@ -149,6 +151,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Sudo
 - Summer 5.0
 - Summer Reborn 3.0
+- Swift
 - Tank V4
 - Tenacity 5.1
 - Tenacity 6.0

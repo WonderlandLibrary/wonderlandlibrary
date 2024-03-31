@@ -264,5 +264,6 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Uberware 1.1
 - Uberware 1.2
 - Umbrella 1.3
+- VestigePlus 1.3.1
 - Winter 7.2
 - Xenza Recode B2

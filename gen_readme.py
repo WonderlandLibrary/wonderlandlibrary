@@ -9,7 +9,7 @@ out += "\n"
 # Contributors
 out += "## Contributors\n";
 
-contributorsInput = "parkopes;jDev;.idk1.;.stormingmoon;coccocoahelper;kellohyllyy;TrilliumHQ;HCU (Former)"
+contributorsInput = "parkopes;jDev;.idk1.;.stormingmoon;coccocoahelper;kellohyllyy;TrilliumHQ;HCU (Former);Xoraii"
 contributors = contributorsInput.split(";")
 for contributor in contributors:
     out += "- " + contributor + "\n";
@@ -28,6 +28,12 @@ out += "\n"
 out += "## [Jars](/jars)\n"
 
 for jarName in os.listdir("jars"):
+    out += "- " + jarName + "\n";
+    
+# Leaks
+out += "## [Leaks](/leaks)\n"
+
+for jarName in os.listdir("leaks"):
     out += "- " + jarName + "\n";
 
 

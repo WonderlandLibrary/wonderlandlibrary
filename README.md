@@ -10,6 +10,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - kellohyllyy
 - TrilliumHQ
 - HCU (Former)
+- Xoraii
 
 ## [Sources](/sources)
 - Apple
@@ -142,12 +143,14 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Sigma 2.08
 - Sigma 3.9
 - Sigma 4.11
+- Sigma Nextgen
 - SkyLine B28
 - Slowly b12.3
 - Spectrum
 - Spicy
 - Splash
 - Straightware
+- Strife
 - Sudo
 - Summer 5.0
 - Summer Reborn 3.0
@@ -267,3 +270,5 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - VestigePlus 1.3.1
 - Winter 7.2
 - Xenza Recode B2
+## [Leaks](/leaks)
+- DogClient.jar

@@ -209,7 +209,9 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Gothaj 3.0
 - Gothaj 3.01b-Alpha
 - Hallucination 2.1
+- Hawk 1.6
 - Hera 14
+- Huzuni 1.5.2
 - Huzuni 3.5 VIP
 - Hydrogen 1.12.5
 - Icarus X b5
@@ -227,6 +229,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - LiquidBounce+
 - LiquidBounce++
 - Matix B1.5.2
+- Mint
 - Monsoon 1.2
 - Monsoon 3.0-A6
 - Moon X
@@ -235,16 +238,19 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - MythicX Beta
 - Nexus
 - Night X
+- Pandora b10
 - Pandora b9
 - Peter
 - Protocol b18
 - Radium v1.4.0
+- Rapid 1.6
 - Raven B+
 - Raven B-
 - Raze 1.4.4
 - Remix 1.4
 - Rich Free 1.3
 - Rise 5.100
+- Rise 5.100r3
 - Rise 5.90
 - Rise 5.98
 - Serenity b21
@@ -253,6 +259,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Sigma 4.11
 - Sigma NextGen b7
 - Sigma Remake
+- Sigma5
 - Skid 12.11
 - Skilled v3
 - Summer 10.0
@@ -269,6 +276,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Umbrella 1.3
 - VestigePlus 1.3.1
 - Winter 7.2
+- Wolfram
 - Xenza Recode B2
 ## [Leaks](/leaks)
 - DogClient.jar

@@ -3,7 +3,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 
 ## Contributors
 - parkopes
-- jDev
+- allah.himself
 - .idk1.
 - .stormingmoon
 - coccocoahelper
@@ -17,6 +17,9 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Aqua
 - Aquatic
 - Artemis
+- Asteria 1.19.4
+- Asteria 1.20.1
+- Asteria 1.20.2
 - Astomero
 - Astro 2.2.1
 - Async
@@ -38,6 +41,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Corrosion
 - CrossSine B34
 - Cupid 0.1
+- Dawn 0.0.1
 - Debug 1.2.6
 - Deluge 0.23
 - Diablo 2.1
@@ -192,6 +196,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Atmosphere
 - Augustus b2.5
 - Augustus b2.6
+- Aurora 2.0
 - Autumn 1.0.0
 - Azura X 1.3.1
 - BleachHack 1.2.6
@@ -250,6 +255,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Lime
 - Lime Reborn
 - LiquidBounce b73
+- Liquidbounce Forks
 - LiquidBounce+
 - LiquidBounce++
 - Lynx 0.9

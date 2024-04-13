@@ -144,6 +144,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Sigma 3.9
 - Sigma 4.11
 - Sigma Nextgen
+- Skullhack
 - SkyLine B28
 - Slowly b12.3
 - Spectrum
@@ -167,6 +168,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Vestige 2.0
 - Vestige 3.0
 - vika
+- Virgin b0.9.5
 - Virtue
 - Vulture
 - WeepCraft 0.2
@@ -183,14 +185,18 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Ancient
 - Aqua
 - Ascension beta 1.0
+- Asteria.rip
 - Astomero
 - Astroline
 - Atani 0.0.3
 - Atmosphere
-- Augustus
+- Augustus b2.5
+- Augustus b2.6
 - Autumn 1.0.0
 - Azura X 1.3.1
 - BleachHack 1.2.6
+- Bloody 0.4.4
+- Bloody 1.0.1
 - Blossom Crack
 - Blueberry
 - BlueZenith
@@ -214,10 +220,12 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Flare 3.7
 - Flow 1.1
 - Flux B13
-- Francium Crack
+- Francium 1.20.4
+- Francium Reborn
 - FusionX
 - FusionX B2 Reborn
 - Glorium
+- GoldGrinder 3.0
 - Gothaj 3.0
 - Gothaj 3.01b-Alpha
 - Hallucination 2.1
@@ -235,6 +243,8 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Klientus 1.0
 - Kraken X
 - Kryptonite
+- KVN b4.1.0
+- Kyino B17.1
 - Lavabounce b11
 - Lightning
 - Lime
@@ -257,6 +267,8 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Nodus
 - Nodus 1.4.7
 - Nodus 1.5.2
+- November 3.03
+- Opal 1.6
 - Pandora b10
 - Pandora b8
 - Pandora b9
@@ -266,7 +278,9 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Radium v1.4.0
 - Rapid 1.6
 - Raven B+
-- Raven B-
+- Raven B- Latest
+- Raven B- v9
+- RavenB- Old
 - Raze 1.4.4
 - Remix 1.4
 - Rich Free 1.3
@@ -283,6 +297,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Sigma5
 - Skid 12.11
 - Skilled v3
+- Sloth
 - Spooky
 - Summer 10.0
 - Summer 4.0
@@ -290,9 +305,11 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Summer 8.0
 - Summer 9.0
 - Sumo
+- TellyBridgeBot
 - Tenacity 2.0
 - Tenacity 5.1
 - TheBoys
+- ThunderHack Deluxe b0.0.7
 - Tifality
 - Tomato
 - Triton B7
@@ -303,6 +320,9 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Venom
 - Vestige v3
 - VestigePlus 1.3.1
+- Virgin 0.1
+- Virgin 0.21
+- Virgin 0.22
 - Winter 7.2
 - Wolfram
 - XatzClient
@@ -311,3 +331,6 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Zues
 ## [Leaks](/leaks)
 - DogClient.jar
+- Fabuls 1.0.jar
+- RavenB-.jar
+- Virgin_1.20.1.jar

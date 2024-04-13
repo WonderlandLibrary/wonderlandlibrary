@@ -1,7 +1,7 @@
 {
     "assets": "1.8",
     "downloads": {},
-    "id": "Autumn1.0.0",
+    "id": "Autumn 1.0.0",
     "libraries": [
       {
         "name": "oshi-project:oshi-core:1.1"

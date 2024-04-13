@@ -1,14 +1,10 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.vertex;
 
-import org.lwjgl.opengl.GL11;
 import java.nio.ByteBuffer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.optifine.render.VboRange;
 import net.optifine.render.VboRegion;
+import org.lwjgl.opengl.GL11;
 
 public class VertexBuffer
 {
@@ -18,72 +14,91 @@ public class VertexBuffer
     private VboRegion vboRegion;
     private VboRange vboRange;
     private int drawMode;
-    
-    public VertexBuffer(final VertexFormat vertexFormatIn) {
+
+    public VertexBuffer(VertexFormat vertexFormatIn)
+    {
         this.vertexFormat = vertexFormatIn;
         this.glBufferId = OpenGlHelper.glGenBuffers();
     }
-    
-    public void bindBuffer() {
+
+    public void bindBuffer()
+    {
         OpenGlHelper.glBindBuffer(OpenGlHelper.GL_ARRAY_BUFFER, this.glBufferId);
     }
-    
-    public void bufferData(final ByteBuffer p_181722_1_) {
-        if (this.vboRegion != null) {
+
+    public void func_181722_a(ByteBuffer p_181722_1_)
+    {
+        if (this.vboRegion != null)
+        {
             this.vboRegion.bufferData(p_181722_1_, this.vboRange);
         }
-        else {
+        else
+        {
             this.bindBuffer();
             OpenGlHelper.glBufferData(OpenGlHelper.GL_ARRAY_BUFFER, p_181722_1_, 35044);
             this.unbindBuffer();
             this.count = p_181722_1_.limit() / this.vertexFormat.getNextOffset();
         }
     }
-    
-    public void drawArrays(int mode) {
-        if (this.drawMode > 0) {
+
+    public void drawArrays(int mode)
+    {
+        if (this.drawMode > 0)
+        {
             mode = this.drawMode;
         }
-        if (this.vboRegion != null) {
+
+        if (this.vboRegion != null)
+        {
             this.vboRegion.drawArrays(mode, this.vboRange);
         }
-        else {
+        else
+        {
             GL11.glDrawArrays(mode, 0, this.count);
         }
     }
-    
-    public void unbindBuffer() {
+
+    public void unbindBuffer()
+    {
         OpenGlHelper.glBindBuffer(OpenGlHelper.GL_ARRAY_BUFFER, 0);
     }
-    
-    public void deleteGlBuffers() {
-        if (this.glBufferId >= 0) {
+
+    public void deleteGlBuffers()
+    {
+        if (this.glBufferId >= 0)
+        {
             OpenGlHelper.glDeleteBuffers(this.glBufferId);
             this.glBufferId = -1;
         }
     }
-    
-    public void setVboRegion(final VboRegion p_setVboRegion_1_) {
-        if (p_setVboRegion_1_ != null) {
+
+    public void setVboRegion(VboRegion p_setVboRegion_1_)
+    {
+        if (p_setVboRegion_1_ != null)
+        {
             this.deleteGlBuffers();
             this.vboRegion = p_setVboRegion_1_;
             this.vboRange = new VboRange();
         }
     }
-    
-    public VboRegion getVboRegion() {
+
+    public VboRegion getVboRegion()
+    {
         return this.vboRegion;
     }
-    
-    public VboRange getVboRange() {
+
+    public VboRange getVboRange()
+    {
         return this.vboRange;
     }
-    
-    public int getDrawMode() {
+
+    public int getDrawMode()
+    {
         return this.drawMode;
     }
-    
-    public void setDrawMode(final int p_setDrawMode_1_) {
+
+    public void setDrawMode(int p_setDrawMode_1_)
+    {
         this.drawMode = p_setDrawMode_1_;
     }
 }

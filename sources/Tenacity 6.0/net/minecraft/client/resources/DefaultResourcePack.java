@@ -1,91 +1,100 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.resources;
 
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.client.renderer.texture.TextureUtil;
 import java.awt.image.BufferedImage;
-import net.minecraft.client.resources.data.IMetadataSection;
-import net.minecraft.client.resources.data.IMetadataSerializer;
-import net.optifine.reflect.ReflectorForge;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import net.minecraft.util.ResourceLocation;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Set;
+import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.resources.data.IMetadataSection;
+import net.minecraft.client.resources.data.IMetadataSerializer;
+import net.minecraft.util.ResourceLocation;
+import net.optifine.reflect.ReflectorForge;
 
 public class DefaultResourcePack implements IResourcePack
 {
-    public static final Set<String> defaultResourceDomains;
+    public static final Set<String> defaultResourceDomains = ImmutableSet.<String>of("minecraft", "realms");
     private final Map<String, File> mapAssets;
-    
-    public DefaultResourcePack(final Map<String, File> mapAssetsIn) {
+
+    public DefaultResourcePack(Map<String, File> mapAssetsIn)
+    {
         this.mapAssets = mapAssetsIn;
     }
-    
-    @Override
-    public InputStream getInputStream(final ResourceLocation location) throws IOException {
-        final InputStream inputstream = this.getResourceStream(location);
-        if (inputstream != null) {
+
+    public InputStream getInputStream(ResourceLocation location) throws IOException
+    {
+        InputStream inputstream = this.getResourceStream(location);
+
+        if (inputstream != null)
+        {
             return inputstream;
         }
-        final InputStream inputstream2 = this.getInputStreamAssets(location);
-        if (inputstream2 != null) {
-            return inputstream2;
+        else
+        {
+            InputStream inputstream1 = this.getInputStreamAssets(location);
+
+            if (inputstream1 != null)
+            {
+                return inputstream1;
+            }
+            else
+            {
+                throw new FileNotFoundException(location.getResourcePath());
+            }
         }
-        throw new FileNotFoundException(location.getResourcePath());
     }
-    
-    public InputStream getInputStreamAssets(final ResourceLocation location) throws IOException, FileNotFoundException {
-        final File file1 = this.mapAssets.get(location.toString());
-        return (file1 != null && file1.isFile()) ? new FileInputStream(file1) : null;
+
+    public InputStream getInputStreamAssets(ResourceLocation location) throws IOException, FileNotFoundException
+    {
+        File file1 = (File)this.mapAssets.get(location.toString());
+        return file1 != null && file1.isFile() ? new FileInputStream(file1) : null;
     }
-    
-    private InputStream getResourceStream(final ResourceLocation location) {
-        final String s = "/assets/" + location.getResourceDomain() + "/" + location.getResourcePath();
-        final InputStream inputstream = ReflectorForge.getOptiFineResourceStream(s);
-        return (inputstream != null) ? inputstream : DefaultResourcePack.class.getResourceAsStream(s);
+
+    private InputStream getResourceStream(ResourceLocation location)
+    {
+        String s = "/assets/" + location.getResourceDomain() + "/" + location.getResourcePath();
+        InputStream inputstream = ReflectorForge.getOptiFineResourceStream(s);
+        return inputstream != null ? inputstream : DefaultResourcePack.class.getResourceAsStream(s);
     }
-    
-    @Override
-    public boolean resourceExists(final ResourceLocation location) {
+
+    public boolean resourceExists(ResourceLocation location)
+    {
         return this.getResourceStream(location) != null || this.mapAssets.containsKey(location.toString());
     }
-    
-    @Override
-    public Set<String> getResourceDomains() {
-        return DefaultResourcePack.defaultResourceDomains;
+
+    public Set<String> getResourceDomains()
+    {
+        return defaultResourceDomains;
     }
-    
-    @Override
-    public <T extends IMetadataSection> T getPackMetadata(final IMetadataSerializer metadataSerializer, final String metadataSectionName) throws IOException {
-        try {
-            final InputStream inputstream = new FileInputStream(this.mapAssets.get("pack.mcmeta"));
-            return AbstractResourcePack.readMetadata(metadataSerializer, inputstream, metadataSectionName);
+
+    public <T extends IMetadataSection> T getPackMetadata(IMetadataSerializer p_135058_1_, String p_135058_2_) throws IOException
+    {
+        try
+        {
+            InputStream inputstream = new FileInputStream((File)this.mapAssets.get("pack.mcmeta"));
+            return AbstractResourcePack.readMetadata(p_135058_1_, inputstream, p_135058_2_);
         }
-        catch (RuntimeException | FileNotFoundException ex2) {
-            final Exception ex;
-            final Exception var4 = ex;
-            return null;
+        catch (RuntimeException var4)
+        {
+            return (T)((IMetadataSection)null);
+        }
+        catch (FileNotFoundException var5)
+        {
+            return (T)((IMetadataSection)null);
         }
     }
-    
-    @Override
-    public BufferedImage getPackImage() throws IOException {
-        return TextureUtil.readBufferedImage(DefaultResourcePack.class.getResourceAsStream("/" + new ResourceLocation("pack.png").getResourcePath()));
+
+    public BufferedImage getPackImage() throws IOException
+    {
+        return TextureUtil.readBufferedImage(DefaultResourcePack.class.getResourceAsStream("/" + (new ResourceLocation("pack.png")).getResourcePath()));
     }
-    
-    @Override
-    public String getPackName() {
+
+    public String getPackName()
+    {
         return "Default";
-    }
-    
-    static {
-        defaultResourceDomains = (Set)ImmutableSet.of((Object)"minecraft");
     }
 }

@@ -1,18 +1,14 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.gui.spectator;
 
 import net.minecraft.util.IChatComponent;
 
 public interface ISpectatorMenuObject
 {
-    void func_178661_a(final SpectatorMenu p0);
-    
+    void func_178661_a(SpectatorMenu menu);
+
     IChatComponent getSpectatorName();
-    
-    void func_178663_a(final float p0, final int p1);
-    
+
+    void func_178663_a(float p_178663_1_, int alpha);
+
     boolean func_178662_A_();
 }

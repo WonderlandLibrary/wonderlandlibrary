@@ -1,16 +1,9 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.entity.ai;
 
-import net.minecraft.util.Vec3;
-import java.util.Iterator;
 import java.util.List;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.util.Vec3;
 
 public class EntityAIPlay extends EntityAIBase
 {
@@ -18,74 +11,113 @@ public class EntityAIPlay extends EntityAIBase
     private EntityLivingBase targetVillager;
     private double speed;
     private int playTime;
-    
-    public EntityAIPlay(final EntityVillager villagerObjIn, final double speedIn) {
+
+    public EntityAIPlay(EntityVillager villagerObjIn, double speedIn)
+    {
         this.villagerObj = villagerObjIn;
         this.speed = speedIn;
         this.setMutexBits(1);
     }
-    
-    @Override
-    public boolean shouldExecute() {
-        if (this.villagerObj.getGrowingAge() >= 0) {
+
+    /**
+     * Returns whether the EntityAIBase should begin execution.
+     */
+    public boolean shouldExecute()
+    {
+        if (this.villagerObj.getGrowingAge() >= 0)
+        {
             return false;
         }
-        if (this.villagerObj.getRNG().nextInt(400) != 0) {
+        else if (this.villagerObj.getRNG().nextInt(400) != 0)
+        {
             return false;
         }
-        final List<EntityVillager> list = this.villagerObj.worldObj.getEntitiesWithinAABB((Class<? extends EntityVillager>)EntityVillager.class, this.villagerObj.getEntityBoundingBox().expand(6.0, 3.0, 6.0));
-        double d0 = Double.MAX_VALUE;
-        for (final EntityVillager entityvillager : list) {
-            if (entityvillager != this.villagerObj && !entityvillager.isPlaying() && entityvillager.getGrowingAge() < 0) {
-                final double d2 = entityvillager.getDistanceSqToEntity(this.villagerObj);
-                if (d2 > d0) {
-                    continue;
+        else
+        {
+            List<EntityVillager> list = this.villagerObj.worldObj.<EntityVillager>getEntitiesWithinAABB(EntityVillager.class, this.villagerObj.getEntityBoundingBox().expand(6.0D, 3.0D, 6.0D));
+            double d0 = Double.MAX_VALUE;
+
+            for (EntityVillager entityvillager : list)
+            {
+                if (entityvillager != this.villagerObj && !entityvillager.isPlaying() && entityvillager.getGrowingAge() < 0)
+                {
+                    double d1 = entityvillager.getDistanceSqToEntity(this.villagerObj);
+
+                    if (d1 <= d0)
+                    {
+                        d0 = d1;
+                        this.targetVillager = entityvillager;
+                    }
                 }
-                d0 = d2;
-                this.targetVillager = entityvillager;
             }
-        }
-        if (this.targetVillager == null) {
-            final Vec3 vec3 = RandomPositionGenerator.findRandomTarget(this.villagerObj, 16, 3);
-            if (vec3 == null) {
-                return false;
+
+            if (this.targetVillager == null)
+            {
+                Vec3 vec3 = RandomPositionGenerator.findRandomTarget(this.villagerObj, 16, 3);
+
+                if (vec3 == null)
+                {
+                    return false;
+                }
             }
+
+            return true;
         }
-        return true;
     }
-    
-    @Override
-    public boolean continueExecuting() {
+
+    /**
+     * Returns whether an in-progress EntityAIBase should continue executing
+     */
+    public boolean continueExecuting()
+    {
         return this.playTime > 0;
     }
-    
-    @Override
-    public void startExecuting() {
-        if (this.targetVillager != null) {
+
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
+    {
+        if (this.targetVillager != null)
+        {
             this.villagerObj.setPlaying(true);
         }
+
         this.playTime = 1000;
     }
-    
-    @Override
-    public void resetTask() {
+
+    /**
+     * Resets the task
+     */
+    public void resetTask()
+    {
         this.villagerObj.setPlaying(false);
         this.targetVillager = null;
     }
-    
-    @Override
-    public void updateTask() {
+
+    /**
+     * Updates the task
+     */
+    public void updateTask()
+    {
         --this.playTime;
-        if (this.targetVillager != null) {
-            if (this.villagerObj.getDistanceSqToEntity(this.targetVillager) > 4.0) {
+
+        if (this.targetVillager != null)
+        {
+            if (this.villagerObj.getDistanceSqToEntity(this.targetVillager) > 4.0D)
+            {
                 this.villagerObj.getNavigator().tryMoveToEntityLiving(this.targetVillager, this.speed);
             }
         }
-        else if (this.villagerObj.getNavigator().noPath()) {
-            final Vec3 vec3 = RandomPositionGenerator.findRandomTarget(this.villagerObj, 16, 3);
-            if (vec3 == null) {
+        else if (this.villagerObj.getNavigator().noPath())
+        {
+            Vec3 vec3 = RandomPositionGenerator.findRandomTarget(this.villagerObj, 16, 3);
+
+            if (vec3 == null)
+            {
                 return;
             }
+
             this.villagerObj.getNavigator().tryMoveToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord, this.speed);
         }
     }

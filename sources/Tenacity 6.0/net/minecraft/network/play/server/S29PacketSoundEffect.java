@@ -1,44 +1,42 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.network.play.server;
 
-import net.minecraft.network.INetHandler;
 import java.io.IOException;
+import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.util.MathHelper;
 import org.apache.commons.lang3.Validate;
-import net.minecraft.network.play.INetHandlerPlayClient;
-import net.minecraft.network.Packet;
 
 public class S29PacketSoundEffect implements Packet<INetHandlerPlayClient>
 {
     private String soundName;
     private int posX;
-    private int posY;
+    private int posY = Integer.MAX_VALUE;
     private int posZ;
     private float soundVolume;
     private int soundPitch;
-    
-    public S29PacketSoundEffect() {
-        this.posY = Integer.MAX_VALUE;
+
+    public S29PacketSoundEffect()
+    {
     }
-    
-    public S29PacketSoundEffect(final String soundNameIn, final double soundX, final double soundY, final double soundZ, final float volume, float pitch) {
-        this.posY = Integer.MAX_VALUE;
-        Validate.notNull((Object)soundNameIn, "name", new Object[0]);
+
+    public S29PacketSoundEffect(String soundNameIn, double soundX, double soundY, double soundZ, float volume, float pitch)
+    {
+        Validate.notNull(soundNameIn, "name", new Object[0]);
         this.soundName = soundNameIn;
-        this.posX = (int)(soundX * 8.0);
-        this.posY = (int)(soundY * 8.0);
-        this.posZ = (int)(soundZ * 8.0);
+        this.posX = (int)(soundX * 8.0D);
+        this.posY = (int)(soundY * 8.0D);
+        this.posZ = (int)(soundZ * 8.0D);
         this.soundVolume = volume;
-        this.soundPitch = (int)(pitch * 63.0f);
-        pitch = MathHelper.clamp_float(pitch, 0.0f, 255.0f);
+        this.soundPitch = (int)(pitch * 63.0F);
+        pitch = MathHelper.clamp_float(pitch, 0.0F, 255.0F);
     }
-    
-    @Override
-    public void readPacketData(final PacketBuffer buf) throws IOException {
+
+    /**
+     * Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(PacketBuffer buf) throws IOException
+    {
         this.soundName = buf.readStringFromBuffer(256);
         this.posX = buf.readInt();
         this.posY = buf.readInt();
@@ -46,9 +44,12 @@ public class S29PacketSoundEffect implements Packet<INetHandlerPlayClient>
         this.soundVolume = buf.readFloat();
         this.soundPitch = buf.readUnsignedByte();
     }
-    
-    @Override
-    public void writePacketData(final PacketBuffer buf) throws IOException {
+
+    /**
+     * Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(PacketBuffer buf) throws IOException
+    {
         buf.writeString(this.soundName);
         buf.writeInt(this.posX);
         buf.writeInt(this.posY);
@@ -56,33 +57,42 @@ public class S29PacketSoundEffect implements Packet<INetHandlerPlayClient>
         buf.writeFloat(this.soundVolume);
         buf.writeByte(this.soundPitch);
     }
-    
-    public String getSoundName() {
+
+    public String getSoundName()
+    {
         return this.soundName;
     }
-    
-    public double getX() {
-        return this.posX / 8.0f;
+
+    public double getX()
+    {
+        return (double)((float)this.posX / 8.0F);
     }
-    
-    public double getY() {
-        return this.posY / 8.0f;
+
+    public double getY()
+    {
+        return (double)((float)this.posY / 8.0F);
     }
-    
-    public double getZ() {
-        return this.posZ / 8.0f;
+
+    public double getZ()
+    {
+        return (double)((float)this.posZ / 8.0F);
     }
-    
-    public float getVolume() {
+
+    public float getVolume()
+    {
         return this.soundVolume;
     }
-    
-    public float getPitch() {
-        return this.soundPitch / 63.0f;
+
+    public float getPitch()
+    {
+        return (float)this.soundPitch / 63.0F;
     }
-    
-    @Override
-    public void processPacket(final INetHandlerPlayClient handler) {
+
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(INetHandlerPlayClient handler)
+    {
         handler.handleSoundEffect(this);
     }
 }

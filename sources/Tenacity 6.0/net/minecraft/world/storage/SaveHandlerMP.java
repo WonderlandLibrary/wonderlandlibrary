@@ -1,60 +1,83 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.world.storage;
 
 import java.io.File;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.chunk.storage.IChunkLoader;
-import net.minecraft.world.WorldProvider;
 import net.minecraft.world.MinecraftException;
+import net.minecraft.world.WorldProvider;
+import net.minecraft.world.chunk.storage.IChunkLoader;
 
 public class SaveHandlerMP implements ISaveHandler
 {
-    @Override
-    public WorldInfo loadWorldInfo() {
+    /**
+     * Loads and returns the world info
+     */
+    public WorldInfo loadWorldInfo()
+    {
         return null;
     }
-    
-    @Override
-    public void checkSessionLock() throws MinecraftException {
+
+    /**
+     * Checks the session lock to prevent save collisions
+     */
+    public void checkSessionLock() throws MinecraftException
+    {
     }
-    
-    @Override
-    public IChunkLoader getChunkLoader(final WorldProvider provider) {
+
+    /**
+     * initializes and returns the chunk loader for the specified world provider
+     */
+    public IChunkLoader getChunkLoader(WorldProvider provider)
+    {
         return null;
     }
-    
-    @Override
-    public void saveWorldInfoWithPlayer(final WorldInfo worldInformation, final NBTTagCompound tagCompound) {
+
+    /**
+     * Saves the given World Info with the given NBTTagCompound as the Player.
+     */
+    public void saveWorldInfoWithPlayer(WorldInfo worldInformation, NBTTagCompound tagCompound)
+    {
     }
-    
-    @Override
-    public void saveWorldInfo(final WorldInfo worldInformation) {
+
+    /**
+     * used to update level.dat from old format to MCRegion format
+     */
+    public void saveWorldInfo(WorldInfo worldInformation)
+    {
     }
-    
-    @Override
-    public IPlayerFileData getPlayerNBTManager() {
+
+    public IPlayerFileData getPlayerNBTManager()
+    {
         return null;
     }
-    
-    @Override
-    public void flush() {
+
+    /**
+     * Called to flush all changes to disk, waiting for them to complete.
+     */
+    public void flush()
+    {
     }
-    
-    @Override
-    public File getMapFileFromName(final String mapName) {
+
+    /**
+     * Gets the file location of the given map
+     */
+    public File getMapFileFromName(String mapName)
+    {
         return null;
     }
-    
-    @Override
-    public String getWorldDirectoryName() {
+
+    /**
+     * Returns the name of the directory where world information is saved.
+     */
+    public String getWorldDirectoryName()
+    {
         return "none";
     }
-    
-    @Override
-    public File getWorldDirectory() {
+
+    /**
+     * Gets the File object corresponding to the base directory of this world.
+     */
+    public File getWorldDirectory()
+    {
         return null;
     }
 }

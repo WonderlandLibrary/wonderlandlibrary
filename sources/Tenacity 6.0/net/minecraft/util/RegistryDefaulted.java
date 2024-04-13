@@ -1,20 +1,20 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.util;
 
 public class RegistryDefaulted<K, V> extends RegistrySimple<K, V>
 {
+    /**
+     * Default object for this registry, returned when an object is not found.
+     */
     private final V defaultObject;
-    
-    public RegistryDefaulted(final V defaultObjectIn) {
+
+    public RegistryDefaulted(V defaultObjectIn)
+    {
         this.defaultObject = defaultObjectIn;
     }
-    
-    @Override
-    public V getObject(final K name) {
-        final V v = super.getObject(name);
-        return (v == null) ? this.defaultObject : v;
+
+    public V getObject(K name)
+    {
+        V v = super.getObject(name);
+        return (V)(v == null ? this.defaultObject : v);
     }
 }

@@ -1,55 +1,63 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.entity.item;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
-import net.minecraft.entity.projectile.EntityThrowable;
 
 public class EntityExpBottle extends EntityThrowable
 {
-    public EntityExpBottle(final World worldIn) {
+    public EntityExpBottle(World worldIn)
+    {
         super(worldIn);
     }
-    
-    public EntityExpBottle(final World worldIn, final EntityLivingBase p_i1786_2_) {
+
+    public EntityExpBottle(World worldIn, EntityLivingBase p_i1786_2_)
+    {
         super(worldIn, p_i1786_2_);
     }
-    
-    public EntityExpBottle(final World worldIn, final double x, final double y, final double z) {
-        super(worldIn, x, y, z);
+
+    public EntityExpBottle(World worldIn, double p_i1787_2_, double p_i1787_4_, double p_i1787_6_)
+    {
+        super(worldIn, p_i1787_2_, p_i1787_4_, p_i1787_6_);
     }
-    
-    @Override
-    protected float getGravityVelocity() {
-        return 0.07f;
+
+    /**
+     * Gets the amount of gravity to apply to the thrown entity with each tick.
+     */
+    protected float getGravityVelocity()
+    {
+        return 0.07F;
     }
-    
-    @Override
-    protected float getVelocity() {
-        return 0.7f;
+
+    protected float getVelocity()
+    {
+        return 0.7F;
     }
-    
-    @Override
-    protected float getInaccuracy() {
-        return -20.0f;
+
+    protected float getInaccuracy()
+    {
+        return -20.0F;
     }
-    
-    @Override
-    protected void onImpact(final MovingObjectPosition p_70184_1_) {
-        if (!this.worldObj.isRemote) {
+
+    /**
+     * Called when this EntityThrowable hits a block or entity.
+     */
+    protected void onImpact(MovingObjectPosition p_70184_1_)
+    {
+        if (!this.worldObj.isRemote)
+        {
             this.worldObj.playAuxSFX(2002, new BlockPos(this), 0);
             int i = 3 + this.worldObj.rand.nextInt(5) + this.worldObj.rand.nextInt(5);
-            while (i > 0) {
-                final int j = EntityXPOrb.getXPSplit(i);
+
+            while (i > 0)
+            {
+                int j = EntityXPOrb.getXPSplit(i);
                 i -= j;
                 this.worldObj.spawnEntityInWorld(new EntityXPOrb(this.worldObj, this.posX, this.posY, this.posZ, j));
             }
+
             this.setDead();
         }
     }

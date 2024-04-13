@@ -1,18 +1,17 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.world;
 
 public class WorldProviderSurface extends WorldProvider
 {
-    @Override
-    public String getDimensionName() {
+    /**
+     * Returns the dimension's name, e.g. "The End", "Nether", or "Overworld".
+     */
+    public String getDimensionName()
+    {
         return "Overworld";
     }
-    
-    @Override
-    public String getInternalNameSuffix() {
+
+    public String getInternalNameSuffix()
+    {
         return "";
     }
 }

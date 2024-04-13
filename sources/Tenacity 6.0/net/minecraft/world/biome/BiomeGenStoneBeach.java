@@ -1,15 +1,12 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.world.biome;
 
 import net.minecraft.init.Blocks;
 
 public class BiomeGenStoneBeach extends BiomeGenBase
 {
-    public BiomeGenStoneBeach(final int id) {
-        super(id);
+    public BiomeGenStoneBeach(int p_i45384_1_)
+    {
+        super(p_i45384_1_);
         this.spawnableCreatureList.clear();
         this.topBlock = Blocks.stone.getDefaultState();
         this.fillerBlock = Blocks.stone.getDefaultState();

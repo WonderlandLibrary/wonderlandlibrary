@@ -1,64 +1,56 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.network.play.client;
 
-import net.minecraft.network.INetHandler;
 import java.io.IOException;
+import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.INetHandlerPlayServer;
-import net.minecraft.network.Packet;
 
 public class C16PacketClientStatus implements Packet<INetHandlerPlayServer>
 {
-    private EnumState status;
-    
-    public C16PacketClientStatus() {
+    private C16PacketClientStatus.EnumState status;
+
+    public C16PacketClientStatus()
+    {
     }
-    
-    public C16PacketClientStatus(final EnumState statusIn) {
+
+    public C16PacketClientStatus(C16PacketClientStatus.EnumState statusIn)
+    {
         this.status = statusIn;
     }
-    
-    @Override
-    public void readPacketData(final PacketBuffer buf) throws IOException {
-        this.status = buf.readEnumValue(EnumState.class);
+
+    /**
+     * Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(PacketBuffer buf) throws IOException
+    {
+        this.status = (C16PacketClientStatus.EnumState)buf.readEnumValue(C16PacketClientStatus.EnumState.class);
     }
-    
-    @Override
-    public void writePacketData(final PacketBuffer buf) throws IOException {
+
+    /**
+     * Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(PacketBuffer buf) throws IOException
+    {
         buf.writeEnumValue(this.status);
     }
-    
-    @Override
-    public void processPacket(final INetHandlerPlayServer handler) {
+
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(INetHandlerPlayServer handler)
+    {
         handler.processClientStatus(this);
     }
-    
-    public EnumState getStatus() {
+
+    public C16PacketClientStatus.EnumState getStatus()
+    {
         return this.status;
     }
-    
-    @Override
-    public int getID() {
-        return 22;
-    }
-    
-    public enum EnumState
+
+    public static enum EnumState
     {
-        PERFORM_RESPAWN(0), 
-        REQUEST_STATS(1), 
-        OPEN_INVENTORY_ACHIEVEMENT(2);
-        
-        private final int id;
-        
-        public int getId() {
-            return this.id;
-        }
-        
-        private EnumState(final int id) {
-            this.id = id;
-        }
+        PERFORM_RESPAWN,
+        REQUEST_STATS,
+        OPEN_INVENTORY_ACHIEVEMENT;
     }
 }

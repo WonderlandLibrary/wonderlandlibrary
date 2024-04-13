@@ -1,95 +1,143 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.item;
 
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.stats.StatList;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraft.creativetab.CreativeTabs;
 
 public class ItemFood extends Item
 {
+    /** Number of ticks to run while 'EnumAction'ing until result. */
     public final int itemUseDuration;
+
+    /** The amount this food item heals the player. */
     private final int healAmount;
     private final float saturationModifier;
+
+    /** Whether wolves like this food (true for raw and cooked porkchop). */
     private final boolean isWolfsFavoriteMeat;
+
+    /**
+     * If this field is true, the food can be consumed even if the player don't need to eat.
+     */
     private boolean alwaysEdible;
+
+    /**
+     * represents the potion effect that will occurr upon eating this food. Set by setPotionEffect
+     */
     private int potionId;
+
+    /** set by setPotionEffect */
     private int potionDuration;
+
+    /** set by setPotionEffect */
     private int potionAmplifier;
+
+    /** probably of the set potion effect occurring */
     private float potionEffectProbability;
-    
-    public ItemFood(final int amount, final float saturation, final boolean isWolfFood) {
+
+    public ItemFood(int amount, float saturation, boolean isWolfFood)
+    {
         this.itemUseDuration = 32;
         this.healAmount = amount;
         this.isWolfsFavoriteMeat = isWolfFood;
         this.saturationModifier = saturation;
         this.setCreativeTab(CreativeTabs.tabFood);
     }
-    
-    public ItemFood(final int amount, final boolean isWolfFood) {
-        this(amount, 0.6f, isWolfFood);
+
+    public ItemFood(int amount, boolean isWolfFood)
+    {
+        this(amount, 0.6F, isWolfFood);
     }
-    
-    @Override
-    public ItemStack onItemUseFinish(final ItemStack stack, final World worldIn, final EntityPlayer playerIn) {
+
+    /**
+     * Called when the player finishes using this Item (E.g. finishes eating.). Not called when the player stops using
+     * the Item before the action is complete.
+     */
+    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn)
+    {
         --stack.stackSize;
         playerIn.getFoodStats().addStats(this, stack);
-        worldIn.playSoundAtEntity(playerIn, "random.burp", 0.5f, worldIn.rand.nextFloat() * 0.1f + 0.9f);
+        worldIn.playSoundAtEntity(playerIn, "random.burp", 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
         this.onFoodEaten(stack, worldIn, playerIn);
         playerIn.triggerAchievement(StatList.objectUseStats[Item.getIdFromItem(this)]);
         return stack;
     }
-    
-    protected void onFoodEaten(final ItemStack stack, final World worldIn, final EntityPlayer player) {
-        if (!worldIn.isRemote && this.potionId > 0 && worldIn.rand.nextFloat() < this.potionEffectProbability) {
+
+    protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player)
+    {
+        if (!worldIn.isRemote && this.potionId > 0 && worldIn.rand.nextFloat() < this.potionEffectProbability)
+        {
             player.addPotionEffect(new PotionEffect(this.potionId, this.potionDuration * 20, this.potionAmplifier));
         }
     }
-    
-    @Override
-    public int getMaxItemUseDuration(final ItemStack stack) {
+
+    /**
+     * How long it takes to use or consume an item
+     */
+    public int getMaxItemUseDuration(ItemStack stack)
+    {
         return 32;
     }
-    
-    @Override
-    public EnumAction getItemUseAction(final ItemStack stack) {
+
+    /**
+     * returns the action that specifies what animation to play when the items is being used
+     */
+    public EnumAction getItemUseAction(ItemStack stack)
+    {
         return EnumAction.EAT;
     }
-    
-    @Override
-    public ItemStack onItemRightClick(final ItemStack itemStackIn, final World worldIn, final EntityPlayer playerIn) {
-        if (playerIn.canEat(this.alwaysEdible)) {
+
+    /**
+     * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
+     */
+    public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)
+    {
+        if (playerIn.canEat(this.alwaysEdible))
+        {
             playerIn.setItemInUse(itemStackIn, this.getMaxItemUseDuration(itemStackIn));
         }
+
         return itemStackIn;
     }
-    
-    public int getHealAmount(final ItemStack stack) {
+
+    public int getHealAmount(ItemStack stack)
+    {
         return this.healAmount;
     }
-    
-    public float getSaturationModifier(final ItemStack stack) {
+
+    public float getSaturationModifier(ItemStack stack)
+    {
         return this.saturationModifier;
     }
-    
-    public boolean isWolfsFavoriteMeat() {
+
+    /**
+     * Whether wolves like this food (true for raw and cooked porkchop).
+     */
+    public boolean isWolfsFavoriteMeat()
+    {
         return this.isWolfsFavoriteMeat;
     }
-    
-    public ItemFood setPotionEffect(final int id, final int duration, final int amplifier, final float probability) {
+
+    /**
+     * sets a potion effect on the item. Args: int potionId, int duration (will be multiplied by 20), int amplifier,
+     * float probability of effect happening
+     */
+    public ItemFood setPotionEffect(int id, int duration, int amplifier, float probability)
+    {
         this.potionId = id;
         this.potionDuration = duration;
         this.potionAmplifier = amplifier;
         this.potionEffectProbability = probability;
         return this;
     }
-    
-    public ItemFood setAlwaysEdible() {
+
+    /**
+     * Set the field 'alwaysEdible' to true, and make the food edible even if the player don't need to eat.
+     */
+    public ItemFood setAlwaysEdible()
+    {
         this.alwaysEdible = true;
         return this;
     }

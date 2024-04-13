@@ -1,27 +1,33 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block.material;
 
 public class MaterialPortal extends Material
 {
-    public MaterialPortal(final MapColor color) {
+    public MaterialPortal(MapColor color)
+    {
         super(color);
     }
-    
-    @Override
-    public boolean isSolid() {
+
+    /**
+     * Returns true if the block is a considered solid. This is true by default.
+     */
+    public boolean isSolid()
+    {
         return false;
     }
-    
-    @Override
-    public boolean blocksLight() {
+
+    /**
+     * Will prevent grass from growing on dirt underneath and kill any grass below it if it returns true
+     */
+    public boolean blocksLight()
+    {
         return false;
     }
-    
-    @Override
-    public boolean blocksMovement() {
+
+    /**
+     * Returns if this material is considered solid or not
+     */
+    public boolean blocksMovement()
+    {
         return false;
     }
 }

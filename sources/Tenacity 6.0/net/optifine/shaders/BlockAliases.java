@@ -1,174 +1,244 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.shaders;
 
-import net.optifine.config.MatchBlock;
-import java.util.Iterator;
-import java.util.Properties;
-import net.optifine.util.StrUtils;
-import net.optifine.config.ConnectedParser;
-import net.optifine.shaders.config.MacroProcessor;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import net.minecraft.client.Minecraft;
 import net.minecraft.src.Config;
 import net.minecraft.util.ResourceLocation;
+import net.optifine.config.ConnectedParser;
+import net.optifine.config.MatchBlock;
+import net.optifine.reflect.Reflector;
 import net.optifine.reflect.ReflectorForge;
-import java.io.InputStream;
-import java.util.List;
-import java.util.ArrayList;
+import net.optifine.shaders.config.MacroProcessor;
 import net.optifine.util.PropertiesOrdered;
+import net.optifine.util.StrUtils;
 
 public class BlockAliases
 {
-    private static BlockAlias[][] blockAliases;
-    private static PropertiesOrdered blockLayerPropertes;
+    private static BlockAlias[][] blockAliases = (BlockAlias[][])null;
+    private static PropertiesOrdered blockLayerPropertes = null;
     private static boolean updateOnResourcesReloaded;
-    
-    public static int getBlockAliasId(final int blockId, final int metadata) {
-        if (BlockAliases.blockAliases == null) {
+
+    public static int getBlockAliasId(int blockId, int metadata)
+    {
+        if (blockAliases == null)
+        {
             return blockId;
         }
-        if (blockId < 0 || blockId >= BlockAliases.blockAliases.length) {
-            return blockId;
-        }
-        final BlockAlias[] ablockalias = BlockAliases.blockAliases[blockId];
-        if (ablockalias == null) {
-            return blockId;
-        }
-        for (int i = 0; i < ablockalias.length; ++i) {
-            final BlockAlias blockalias = ablockalias[i];
-            if (blockalias.matches(blockId, metadata)) {
-                return blockalias.getBlockAliasId();
+        else if (blockId >= 0 && blockId < blockAliases.length)
+        {
+            BlockAlias[] ablockalias = blockAliases[blockId];
+
+            if (ablockalias == null)
+            {
+                return blockId;
+            }
+            else
+            {
+                for (int i = 0; i < ablockalias.length; ++i)
+                {
+                    BlockAlias blockalias = ablockalias[i];
+
+                    if (blockalias.matches(blockId, metadata))
+                    {
+                        return blockalias.getBlockAliasId();
+                    }
+                }
+
+                return blockId;
             }
         }
-        return blockId;
+        else
+        {
+            return blockId;
+        }
     }
-    
-    public static void resourcesReloaded() {
-        if (BlockAliases.updateOnResourcesReloaded) {
-            BlockAliases.updateOnResourcesReloaded = false;
+
+    public static void resourcesReloaded()
+    {
+        if (updateOnResourcesReloaded)
+        {
+            updateOnResourcesReloaded = false;
             update(Shaders.getShaderPack());
         }
     }
-    
-    public static void update(final IShaderPack shaderPack) {
+
+    public static void update(IShaderPack shaderPack)
+    {
         reset();
-        if (shaderPack != null) {
-            final List<List<BlockAlias>> list = new ArrayList<List<BlockAlias>>();
-            final String s = "/shaders/block.properties";
-            final InputStream inputstream = shaderPack.getResourceAsStream(s);
-            if (inputstream != null) {
-                loadBlockAliases(inputstream, s, list);
+
+        if (shaderPack != null)
+        {
+            if (Reflector.Loader_getActiveModList.exists() && Minecraft.getMinecraft().getResourcePackRepository() == null)
+            {
+                Config.dbg("[Shaders] Delayed loading of block mappings after resources are loaded");
+                updateOnResourcesReloaded = true;
             }
-            loadModBlockAliases(list);
-            if (list.size() > 0) {
-                BlockAliases.blockAliases = toArrays(list);
+            else
+            {
+                List<List<BlockAlias>> list = new ArrayList();
+                String s = "/shaders/block.properties";
+                InputStream inputstream = shaderPack.getResourceAsStream(s);
+
+                if (inputstream != null)
+                {
+                    loadBlockAliases(inputstream, s, list);
+                }
+
+                loadModBlockAliases(list);
+
+                if (((List)list).size() > 0)
+                {
+                    blockAliases = toArrays(list);
+                }
             }
         }
     }
-    
-    private static void loadModBlockAliases(final List<List<BlockAlias>> listBlockAliases) {
-        final String[] astring = ReflectorForge.getForgeModIds();
-        for (int i = 0; i < astring.length; ++i) {
-            final String s = astring[i];
-            try {
-                final ResourceLocation resourcelocation = new ResourceLocation(s, "shaders/block.properties");
-                final InputStream inputstream = Config.getResourceStream(resourcelocation);
+
+    private static void loadModBlockAliases(List<List<BlockAlias>> listBlockAliases)
+    {
+        String[] astring = ReflectorForge.getForgeModIds();
+
+        for (int i = 0; i < astring.length; ++i)
+        {
+            String s = astring[i];
+
+            try
+            {
+                ResourceLocation resourcelocation = new ResourceLocation(s, "shaders/block.properties");
+                InputStream inputstream = Config.getResourceStream(resourcelocation);
                 loadBlockAliases(inputstream, resourcelocation.toString(), listBlockAliases);
             }
-            catch (IOException ex) {}
+            catch (IOException var6)
+            {
+                ;
+            }
         }
     }
-    
-    private static void loadBlockAliases(InputStream in, final String path, final List<List<BlockAlias>> listBlockAliases) {
-        if (in != null) {
-            try {
+
+    private static void loadBlockAliases(InputStream in, String path, List<List<BlockAlias>> listBlockAliases)
+    {
+        if (in != null)
+        {
+            try
+            {
                 in = MacroProcessor.process(in, path);
-                final Properties properties = new PropertiesOrdered();
+                Properties properties = new PropertiesOrdered();
                 properties.load(in);
                 in.close();
                 Config.dbg("[Shaders] Parsing block mappings: " + path);
-                final ConnectedParser connectedparser = new ConnectedParser("Shaders");
-                for (final Object s0 : properties.keySet()) {
-                    final String s2 = (String)s0;
-                    final String s3 = properties.getProperty(s2);
-                    if (s2.startsWith("layer.")) {
-                        if (BlockAliases.blockLayerPropertes == null) {
-                            BlockAliases.blockLayerPropertes = new PropertiesOrdered();
+                ConnectedParser connectedparser = new ConnectedParser("Shaders");
+
+                for (Object e : properties.keySet())
+                {
+                    String s = (String) e;
+                    String s1 = properties.getProperty(s);
+
+                    if (s.startsWith("layer."))
+                    {
+                        if (blockLayerPropertes == null)
+                        {
+                            blockLayerPropertes = new PropertiesOrdered();
                         }
-                        BlockAliases.blockLayerPropertes.put(s2, s3);
+
+                        blockLayerPropertes.put(s, s1);
                     }
-                    else {
-                        final String s4 = "block.";
-                        if (!s2.startsWith(s4)) {
-                            Config.warn("[Shaders] Invalid block ID: " + s2);
+                    else
+                    {
+                        String s2 = "block.";
+
+                        if (!s.startsWith(s2))
+                        {
+                            Config.warn("[Shaders] Invalid block ID: " + s);
                         }
-                        else {
-                            final String s5 = StrUtils.removePrefix(s2, s4);
-                            final int i = Config.parseInt(s5, -1);
-                            if (i < 0) {
-                                Config.warn("[Shaders] Invalid block ID: " + s2);
+                        else
+                        {
+                            String s3 = StrUtils.removePrefix(s, s2);
+                            int i = Config.parseInt(s3, -1);
+
+                            if (i < 0)
+                            {
+                                Config.warn("[Shaders] Invalid block ID: " + s);
                             }
-                            else {
-                                final MatchBlock[] amatchblock = connectedparser.parseMatchBlocks(s3);
-                                if (amatchblock != null && amatchblock.length >= 1) {
-                                    final BlockAlias blockalias = new BlockAlias(i, amatchblock);
+                            else
+                            {
+                                MatchBlock[] amatchblock = connectedparser.parseMatchBlocks(s1);
+
+                                if (amatchblock != null && amatchblock.length >= 1)
+                                {
+                                    BlockAlias blockalias = new BlockAlias(i, amatchblock);
                                     addToList(listBlockAliases, blockalias);
                                 }
-                                else {
-                                    Config.warn("[Shaders] Invalid block ID mapping: " + s2 + "=" + s3);
+                                else
+                                {
+                                    Config.warn("[Shaders] Invalid block ID mapping: " + s + "=" + s1);
                                 }
                             }
                         }
                     }
                 }
             }
-            catch (IOException var14) {
+            catch (IOException var14)
+            {
                 Config.warn("[Shaders] Error reading: " + path);
             }
         }
     }
-    
-    private static void addToList(final List<List<BlockAlias>> blocksAliases, final BlockAlias ba) {
-        final int[] aint = ba.getMatchBlockIds();
-        for (int i = 0; i < aint.length; ++i) {
-            final int j = aint[i];
-            while (j >= blocksAliases.size()) {
+
+    private static void addToList(List<List<BlockAlias>> blocksAliases, BlockAlias ba)
+    {
+        int[] aint = ba.getMatchBlockIds();
+
+        for (int i = 0; i < aint.length; ++i)
+        {
+            int j = aint[i];
+
+            while (j >= blocksAliases.size())
+            {
                 blocksAliases.add(null);
             }
-            List<BlockAlias> list = blocksAliases.get(j);
-            if (list == null) {
-                list = new ArrayList<BlockAlias>();
+
+            List<BlockAlias> list = (List)blocksAliases.get(j);
+
+            if (list == null)
+            {
+                list = new ArrayList();
                 blocksAliases.set(j, list);
             }
-            final BlockAlias blockalias = new BlockAlias(ba.getBlockAliasId(), ba.getMatchBlocks(j));
+
+            BlockAlias blockalias = new BlockAlias(ba.getBlockAliasId(), ba.getMatchBlocks(j));
             list.add(blockalias);
         }
     }
-    
-    private static BlockAlias[][] toArrays(final List<List<BlockAlias>> listBlocksAliases) {
-        final BlockAlias[][] ablockalias = new BlockAlias[listBlocksAliases.size()][];
-        for (int i = 0; i < ablockalias.length; ++i) {
-            final List<BlockAlias> list = listBlocksAliases.get(i);
-            if (list != null) {
-                ablockalias[i] = list.toArray(new BlockAlias[list.size()]);
+
+    private static BlockAlias[][] toArrays(List<List<BlockAlias>> listBlocksAliases)
+    {
+        BlockAlias[][] ablockalias = new BlockAlias[listBlocksAliases.size()][];
+
+        for (int i = 0; i < ablockalias.length; ++i)
+        {
+            List<BlockAlias> list = (List)listBlocksAliases.get(i);
+
+            if (list != null)
+            {
+                ablockalias[i] = (BlockAlias[])((BlockAlias[])list.toArray(new BlockAlias[list.size()]));
             }
         }
+
         return ablockalias;
     }
-    
-    public static PropertiesOrdered getBlockLayerPropertes() {
-        return BlockAliases.blockLayerPropertes;
+
+    public static PropertiesOrdered getBlockLayerPropertes()
+    {
+        return blockLayerPropertes;
     }
-    
-    public static void reset() {
-        BlockAliases.blockAliases = null;
-        BlockAliases.blockLayerPropertes = null;
-    }
-    
-    static {
-        BlockAliases.blockAliases = null;
-        BlockAliases.blockLayerPropertes = null;
+
+    public static void reset()
+    {
+        blockAliases = (BlockAlias[][])null;
+        blockLayerPropertes = null;
     }
 }

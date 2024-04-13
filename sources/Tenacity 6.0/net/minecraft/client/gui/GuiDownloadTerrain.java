@@ -1,59 +1,76 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.gui;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.C00PacketKeepAlive;
 import java.io.IOException;
-import net.optifine.CustomLoadingScreens;
-import net.optifine.CustomLoadingScreen;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.network.play.client.C00PacketKeepAlive;
+import net.optifine.CustomLoadingScreen;
+import net.optifine.CustomLoadingScreens;
 
 public class GuiDownloadTerrain extends GuiScreen
 {
     private NetHandlerPlayClient netHandlerPlayClient;
     private int progress;
-    private CustomLoadingScreen customLoadingScreen;
-    
-    public GuiDownloadTerrain(final NetHandlerPlayClient netHandler) {
-        this.customLoadingScreen = CustomLoadingScreens.getCustomLoadingScreen();
+    private CustomLoadingScreen customLoadingScreen = CustomLoadingScreens.getCustomLoadingScreen();
+
+    public GuiDownloadTerrain(NetHandlerPlayClient netHandler)
+    {
         this.netHandlerPlayClient = netHandler;
     }
-    
-    @Override
-    protected void keyTyped(final char typedChar, final int keyCode) throws IOException {
+
+    /**
+     * Fired when a key is typed (except F11 which toggles full screen). This is the equivalent of
+     * KeyListener.keyTyped(KeyEvent e). Args : character (character on the key), keyCode (lwjgl Keyboard key code)
+     */
+    protected void keyTyped(char typedChar, int keyCode) throws IOException
+    {
     }
-    
-    @Override
-    public void initGui() {
+
+    /**
+     * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
+     * window resizes, the buttonList is cleared beforehand.
+     */
+    public void initGui()
+    {
         this.buttonList.clear();
     }
-    
-    @Override
-    public void updateScreen() {
+
+    /**
+     * Called from the main game loop to update the screen.
+     */
+    public void updateScreen()
+    {
         ++this.progress;
-        if (this.progress % 20 == 0) {
+
+        if (this.progress % 20 == 0)
+        {
             this.netHandlerPlayClient.addToSendQueue(new C00PacketKeepAlive());
         }
     }
-    
-    @Override
-    public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
-        if (this.customLoadingScreen != null) {
+
+    /**
+     * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
+     */
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
+        if (this.customLoadingScreen != null)
+        {
             this.customLoadingScreen.drawBackground(this.width, this.height);
         }
-        else {
+        else
+        {
             this.drawBackground(0);
         }
+
         this.drawCenteredString(this.fontRendererObj, I18n.format("multiplayer.downloadingTerrain", new Object[0]), this.width / 2, this.height / 2 - 50, 16777215);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
-    
-    @Override
-    public boolean doesGuiPauseGame() {
+
+    /**
+     * Returns true if this GUI should pause the game when it is displayed in single-player
+     */
+    public boolean doesGuiPauseGame()
+    {
         return false;
     }
 }

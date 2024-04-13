@@ -1,140 +1,163 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.block.state.BlockState;
-import net.minecraft.block.material.MapColor;
 import java.util.List;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.World;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyEnum;
 
 public class BlockQuartz extends Block
 {
-    public static final PropertyEnum<EnumType> VARIANT;
-    
-    public BlockQuartz() {
+    public static final PropertyEnum<BlockQuartz.EnumType> VARIANT = PropertyEnum.<BlockQuartz.EnumType>create("variant", BlockQuartz.EnumType.class);
+
+    public BlockQuartz()
+    {
         super(Material.rock);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(BlockQuartz.VARIANT, EnumType.DEFAULT));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockQuartz.EnumType.DEFAULT));
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
-    
-    @Override
-    public IBlockState onBlockPlaced(final World worldIn, final BlockPos pos, final EnumFacing facing, final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer) {
-        if (meta != EnumType.LINES_Y.getMetadata()) {
-            return (meta == EnumType.CHISELED.getMetadata()) ? this.getDefaultState().withProperty(BlockQuartz.VARIANT, EnumType.CHISELED) : this.getDefaultState().withProperty(BlockQuartz.VARIANT, EnumType.DEFAULT);
+
+    /**
+     * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
+     * IBlockstate
+     */
+    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    {
+        if (meta == BlockQuartz.EnumType.LINES_Y.getMetadata())
+        {
+            switch (facing.getAxis())
+            {
+                case Z:
+                    return this.getDefaultState().withProperty(VARIANT, BlockQuartz.EnumType.LINES_Z);
+
+                case X:
+                    return this.getDefaultState().withProperty(VARIANT, BlockQuartz.EnumType.LINES_X);
+
+                case Y:
+                default:
+                    return this.getDefaultState().withProperty(VARIANT, BlockQuartz.EnumType.LINES_Y);
+            }
         }
-        switch (facing.getAxis()) {
-            case Z: {
-                return this.getDefaultState().withProperty(BlockQuartz.VARIANT, EnumType.LINES_Z);
-            }
-            case X: {
-                return this.getDefaultState().withProperty(BlockQuartz.VARIANT, EnumType.LINES_X);
-            }
-            default: {
-                return this.getDefaultState().withProperty(BlockQuartz.VARIANT, EnumType.LINES_Y);
-            }
+        else
+        {
+            return meta == BlockQuartz.EnumType.CHISELED.getMetadata() ? this.getDefaultState().withProperty(VARIANT, BlockQuartz.EnumType.CHISELED) : this.getDefaultState().withProperty(VARIANT, BlockQuartz.EnumType.DEFAULT);
         }
     }
-    
-    @Override
-    public int damageDropped(final IBlockState state) {
-        final EnumType blockquartz$enumtype = state.getValue(BlockQuartz.VARIANT);
-        return (blockquartz$enumtype != EnumType.LINES_X && blockquartz$enumtype != EnumType.LINES_Z) ? blockquartz$enumtype.getMetadata() : EnumType.LINES_Y.getMetadata();
+
+    /**
+     * Gets the metadata of the item this Block can drop. This method is called when the block gets destroyed. It
+     * returns the metadata of the dropped item based on the old metadata of the block.
+     */
+    public int damageDropped(IBlockState state)
+    {
+        BlockQuartz.EnumType blockquartz$enumtype = (BlockQuartz.EnumType)state.getValue(VARIANT);
+        return blockquartz$enumtype != BlockQuartz.EnumType.LINES_X && blockquartz$enumtype != BlockQuartz.EnumType.LINES_Z ? blockquartz$enumtype.getMetadata() : BlockQuartz.EnumType.LINES_Y.getMetadata();
     }
-    
-    @Override
-    protected ItemStack createStackedBlock(final IBlockState state) {
-        final EnumType blockquartz$enumtype = state.getValue(BlockQuartz.VARIANT);
-        return (blockquartz$enumtype != EnumType.LINES_X && blockquartz$enumtype != EnumType.LINES_Z) ? super.createStackedBlock(state) : new ItemStack(Item.getItemFromBlock(this), 1, EnumType.LINES_Y.getMetadata());
+
+    protected ItemStack createStackedBlock(IBlockState state)
+    {
+        BlockQuartz.EnumType blockquartz$enumtype = (BlockQuartz.EnumType)state.getValue(VARIANT);
+        return blockquartz$enumtype != BlockQuartz.EnumType.LINES_X && blockquartz$enumtype != BlockQuartz.EnumType.LINES_Z ? super.createStackedBlock(state) : new ItemStack(Item.getItemFromBlock(this), 1, BlockQuartz.EnumType.LINES_Y.getMetadata());
     }
-    
-    @Override
-    public void getSubBlocks(final Item itemIn, final CreativeTabs tab, final List<ItemStack> list) {
-        list.add(new ItemStack(itemIn, 1, EnumType.DEFAULT.getMetadata()));
-        list.add(new ItemStack(itemIn, 1, EnumType.CHISELED.getMetadata()));
-        list.add(new ItemStack(itemIn, 1, EnumType.LINES_Y.getMetadata()));
+
+    /**
+     * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
+     */
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+    {
+        list.add(new ItemStack(itemIn, 1, BlockQuartz.EnumType.DEFAULT.getMetadata()));
+        list.add(new ItemStack(itemIn, 1, BlockQuartz.EnumType.CHISELED.getMetadata()));
+        list.add(new ItemStack(itemIn, 1, BlockQuartz.EnumType.LINES_Y.getMetadata()));
     }
-    
-    @Override
-    public MapColor getMapColor(final IBlockState state) {
+
+    /**
+     * Get the MapColor for this Block and the given BlockState
+     */
+    public MapColor getMapColor(IBlockState state)
+    {
         return MapColor.quartzColor;
     }
-    
-    @Override
-    public IBlockState getStateFromMeta(final int meta) {
-        return this.getDefaultState().withProperty(BlockQuartz.VARIANT, EnumType.byMetadata(meta));
-    }
-    
-    @Override
-    public int getMetaFromState(final IBlockState state) {
-        return state.getValue(BlockQuartz.VARIANT).getMetadata();
-    }
-    
-    @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, new IProperty[] { BlockQuartz.VARIANT });
-    }
-    
-    static {
-        VARIANT = PropertyEnum.create("variant", EnumType.class);
-    }
-    
-    public enum EnumType implements IStringSerializable
+
+    /**
+     * Convert the given metadata into a BlockState for this Block
+     */
+    public IBlockState getStateFromMeta(int meta)
     {
-        DEFAULT(0, "default", "default"), 
-        CHISELED(1, "chiseled", "chiseled"), 
-        LINES_Y(2, "lines_y", "lines"), 
-        LINES_X(3, "lines_x", "lines"), 
+        return this.getDefaultState().withProperty(VARIANT, BlockQuartz.EnumType.byMetadata(meta));
+    }
+
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
+        return ((BlockQuartz.EnumType)state.getValue(VARIANT)).getMetadata();
+    }
+
+    protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {VARIANT});
+    }
+
+    public static enum EnumType implements IStringSerializable
+    {
+        DEFAULT(0, "default", "default"),
+        CHISELED(1, "chiseled", "chiseled"),
+        LINES_Y(2, "lines_y", "lines"),
+        LINES_X(3, "lines_x", "lines"),
         LINES_Z(4, "lines_z", "lines");
-        
-        private static final EnumType[] META_LOOKUP;
+
+        private static final BlockQuartz.EnumType[] META_LOOKUP = new BlockQuartz.EnumType[values().length];
         private final int meta;
         private final String field_176805_h;
         private final String unlocalizedName;
-        
-        private EnumType(final int meta, final String name, final String unlocalizedName) {
+
+        private EnumType(int meta, String name, String unlocalizedName)
+        {
             this.meta = meta;
             this.field_176805_h = name;
             this.unlocalizedName = unlocalizedName;
         }
-        
-        public int getMetadata() {
+
+        public int getMetadata()
+        {
             return this.meta;
         }
-        
-        @Override
-        public String toString() {
+
+        public String toString()
+        {
             return this.unlocalizedName;
         }
-        
-        public static EnumType byMetadata(int meta) {
-            if (meta < 0 || meta >= EnumType.META_LOOKUP.length) {
+
+        public static BlockQuartz.EnumType byMetadata(int meta)
+        {
+            if (meta < 0 || meta >= META_LOOKUP.length)
+            {
                 meta = 0;
             }
-            return EnumType.META_LOOKUP[meta];
+
+            return META_LOOKUP[meta];
         }
-        
-        @Override
-        public String getName() {
+
+        public String getName()
+        {
             return this.field_176805_h;
         }
-        
+
         static {
-            META_LOOKUP = new EnumType[values().length];
-            for (final EnumType blockquartz$enumtype : values()) {
-                EnumType.META_LOOKUP[blockquartz$enumtype.getMetadata()] = blockquartz$enumtype;
+            for (BlockQuartz.EnumType blockquartz$enumtype : values())
+            {
+                META_LOOKUP[blockquartz$enumtype.getMetadata()] = blockquartz$enumtype;
             }
         }
     }

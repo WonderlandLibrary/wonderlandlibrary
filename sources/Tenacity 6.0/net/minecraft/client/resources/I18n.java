@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.resources;
 
 import java.util.Map;
@@ -9,16 +5,22 @@ import java.util.Map;
 public class I18n
 {
     private static Locale i18nLocale;
-    
-    static void setLocale(final Locale i18nLocaleIn) {
-        I18n.i18nLocale = i18nLocaleIn;
+
+    static void setLocale(Locale i18nLocaleIn)
+    {
+        i18nLocale = i18nLocaleIn;
     }
-    
-    public static String format(final String translateKey, final Object... parameters) {
-        return I18n.i18nLocale.formatMessage(translateKey, parameters);
+
+    /**
+     * format(a, b) is equivalent to String.format(translate(a), b). Args: translationKey, params...
+     */
+    public static String format(String translateKey, Object... parameters)
+    {
+        return i18nLocale.formatMessage(translateKey, parameters);
     }
-    
-    public static Map getLocaleProperties() {
-        return I18n.i18nLocale.properties;
+
+    public static Map getLocaleProperties()
+    {
+        return i18nLocale.properties;
     }
 }

@@ -1,31 +1,25 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.entity;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.Entity;
-import net.minecraft.client.renderer.entity.layers.LayerSaddle;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.layers.LayerSaddle;
 import net.minecraft.entity.passive.EntityPig;
+import net.minecraft.util.ResourceLocation;
 
 public class RenderPig extends RenderLiving<EntityPig>
 {
-    private static final ResourceLocation pigTextures;
-    
-    public RenderPig(final RenderManager renderManagerIn, final ModelBase modelBaseIn, final float shadowSizeIn) {
+    private static final ResourceLocation pigTextures = new ResourceLocation("textures/entity/pig/pig.png");
+
+    public RenderPig(RenderManager renderManagerIn, ModelBase modelBaseIn, float shadowSizeIn)
+    {
         super(renderManagerIn, modelBaseIn, shadowSizeIn);
-        ((RendererLivingEntity<EntityLivingBase>)this).addLayer(new LayerSaddle(this));
+        this.addLayer(new LayerSaddle(this));
     }
-    
-    @Override
-    protected ResourceLocation getEntityTexture(final EntityPig entity) {
-        return RenderPig.pigTextures;
-    }
-    
-    static {
-        pigTextures = new ResourceLocation("textures/entity/pig/pig.png");
+
+    /**
+     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
+     */
+    protected ResourceLocation getEntityTexture(EntityPig entity)
+    {
+        return pigTextures;
     }
 }

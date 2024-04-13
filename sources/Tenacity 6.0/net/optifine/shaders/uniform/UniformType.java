@@ -1,146 +1,178 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.shaders.uniform;
 
 import net.optifine.expr.ExpressionType;
-import net.optifine.expr.IExpressionFloatArray;
-import net.optifine.expr.IExpressionFloat;
-import net.optifine.expr.IExpressionBool;
 import net.optifine.expr.IExpression;
+import net.optifine.expr.IExpressionBool;
+import net.optifine.expr.IExpressionFloat;
+import net.optifine.expr.IExpressionFloatArray;
 
 public enum UniformType
 {
-    BOOL, 
-    INT, 
-    FLOAT, 
-    VEC2, 
-    VEC3, 
+    BOOL,
+    INT,
+    FLOAT,
+    VEC2,
+    VEC3,
     VEC4;
-    
-    public ShaderUniformBase makeShaderUniform(final String name) {
-        switch (this) {
-            case BOOL: {
+
+    public ShaderUniformBase makeShaderUniform(String name)
+    {
+        switch (this)
+        {
+            case BOOL:
                 return new ShaderUniform1i(name);
-            }
-            case INT: {
+
+            case INT:
                 return new ShaderUniform1i(name);
-            }
-            case FLOAT: {
+
+            case FLOAT:
                 return new ShaderUniform1f(name);
-            }
-            case VEC2: {
+
+            case VEC2:
                 return new ShaderUniform2f(name);
-            }
-            case VEC3: {
+
+            case VEC3:
                 return new ShaderUniform3f(name);
-            }
-            case VEC4: {
+
+            case VEC4:
                 return new ShaderUniform4f(name);
-            }
-            default: {
+
+            default:
                 throw new RuntimeException("Unknown uniform type: " + this);
-            }
         }
     }
-    
-    public void updateUniform(final IExpression expression, final ShaderUniformBase uniform) {
-        switch (this) {
-            case BOOL: {
+
+    public void updateUniform(IExpression expression, ShaderUniformBase uniform)
+    {
+        switch (this)
+        {
+            case BOOL:
                 this.updateUniformBool((IExpressionBool)expression, (ShaderUniform1i)uniform);
-            }
-            case INT: {
+                return;
+
+            case INT:
                 this.updateUniformInt((IExpressionFloat)expression, (ShaderUniform1i)uniform);
-            }
-            case FLOAT: {
+                return;
+
+            case FLOAT:
                 this.updateUniformFloat((IExpressionFloat)expression, (ShaderUniform1f)uniform);
-            }
-            case VEC2: {
+                return;
+
+            case VEC2:
                 this.updateUniformFloat2((IExpressionFloatArray)expression, (ShaderUniform2f)uniform);
-            }
-            case VEC3: {
+                return;
+
+            case VEC3:
                 this.updateUniformFloat3((IExpressionFloatArray)expression, (ShaderUniform3f)uniform);
-            }
-            case VEC4: {
+                return;
+
+            case VEC4:
                 this.updateUniformFloat4((IExpressionFloatArray)expression, (ShaderUniform4f)uniform);
-            }
-            default: {
+                return;
+
+            default:
                 throw new RuntimeException("Unknown uniform type: " + this);
-            }
         }
     }
-    
-    private void updateUniformBool(final IExpressionBool expression, final ShaderUniform1i uniform) {
-        final int i;
-        final boolean flag = (i = (expression.eval() ? 1 : 0)) != 0;
+
+    private void updateUniformBool(IExpressionBool expression, ShaderUniform1i uniform)
+    {
+        boolean flag = expression.eval();
+        int i = flag ? 1 : 0;
         uniform.setValue(i);
     }
-    
-    private void updateUniformInt(final IExpressionFloat expression, final ShaderUniform1i uniform) {
-        final int i = (int)expression.eval();
+
+    private void updateUniformInt(IExpressionFloat expression, ShaderUniform1i uniform)
+    {
+        int i = (int)expression.eval();
         uniform.setValue(i);
     }
-    
-    private void updateUniformFloat(final IExpressionFloat expression, final ShaderUniform1f uniform) {
-        final float f = expression.eval();
+
+    private void updateUniformFloat(IExpressionFloat expression, ShaderUniform1f uniform)
+    {
+        float f = expression.eval();
         uniform.setValue(f);
     }
-    
-    private void updateUniformFloat2(final IExpressionFloatArray expression, final ShaderUniform2f uniform) {
-        final float[] afloat = expression.eval();
-        if (afloat.length != 2) {
+
+    private void updateUniformFloat2(IExpressionFloatArray expression, ShaderUniform2f uniform)
+    {
+        float[] afloat = expression.eval();
+
+        if (afloat.length != 2)
+        {
             throw new RuntimeException("Value length is not 2, length: " + afloat.length);
         }
-        uniform.setValue(afloat[0], afloat[1]);
+        else
+        {
+            uniform.setValue(afloat[0], afloat[1]);
+        }
     }
-    
-    private void updateUniformFloat3(final IExpressionFloatArray expression, final ShaderUniform3f uniform) {
-        final float[] afloat = expression.eval();
-        if (afloat.length != 3) {
+
+    private void updateUniformFloat3(IExpressionFloatArray expression, ShaderUniform3f uniform)
+    {
+        float[] afloat = expression.eval();
+
+        if (afloat.length != 3)
+        {
             throw new RuntimeException("Value length is not 3, length: " + afloat.length);
         }
-        uniform.setValue(afloat[0], afloat[1], afloat[2]);
+        else
+        {
+            uniform.setValue(afloat[0], afloat[1], afloat[2]);
+        }
     }
-    
-    private void updateUniformFloat4(final IExpressionFloatArray expression, final ShaderUniform4f uniform) {
-        final float[] afloat = expression.eval();
-        if (afloat.length != 4) {
+
+    private void updateUniformFloat4(IExpressionFloatArray expression, ShaderUniform4f uniform)
+    {
+        float[] afloat = expression.eval();
+
+        if (afloat.length != 4)
+        {
             throw new RuntimeException("Value length is not 4, length: " + afloat.length);
         }
-        uniform.setValue(afloat[0], afloat[1], afloat[2], afloat[3]);
-    }
-    
-    public boolean matchesExpressionType(final ExpressionType expressionType) {
-        switch (this) {
-            case BOOL: {
-                return expressionType == ExpressionType.BOOL;
-            }
-            case INT: {
-                return expressionType == ExpressionType.FLOAT;
-            }
-            case FLOAT: {
-                return expressionType == ExpressionType.FLOAT;
-            }
-            case VEC2:
-            case VEC3:
-            case VEC4: {
-                return expressionType == ExpressionType.FLOAT_ARRAY;
-            }
-            default: {
-                throw new RuntimeException("Unknown uniform type: " + this);
-            }
+        else
+        {
+            uniform.setValue(afloat[0], afloat[1], afloat[2], afloat[3]);
         }
     }
-    
-    public static UniformType parse(final String type) {
-        final UniformType[] auniformtype = values();
-        for (int i = 0; i < auniformtype.length; ++i) {
-            final UniformType uniformtype = auniformtype[i];
-            if (uniformtype.name().toLowerCase().equals(type)) {
+
+    public boolean matchesExpressionType(ExpressionType expressionType)
+    {
+        switch (this)
+        {
+            case BOOL:
+                return expressionType == ExpressionType.BOOL;
+
+            case INT:
+                return expressionType == ExpressionType.FLOAT;
+
+            case FLOAT:
+                return expressionType == ExpressionType.FLOAT;
+
+            case VEC2:
+            case VEC3:
+            case VEC4:
+                return expressionType == ExpressionType.FLOAT_ARRAY;
+
+            default:
+                throw new RuntimeException("Unknown uniform type: " + this);
+        }
+    }
+
+    public static UniformType parse(String type)
+    {
+        UniformType[] auniformtype = values();
+
+        for (int i = 0; i < auniformtype.length; ++i)
+        {
+            UniformType uniformtype = auniformtype[i];
+
+            if (uniformtype.name().toLowerCase().equals(type))
+            {
                 return uniformtype;
             }
         }
+
         return null;
     }
 }

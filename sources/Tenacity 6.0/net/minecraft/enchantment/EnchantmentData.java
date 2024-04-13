@@ -1,17 +1,17 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.enchantment;
 
 import net.minecraft.util.WeightedRandom;
 
 public class EnchantmentData extends WeightedRandom.Item
 {
+    /** Enchantment object associated with this EnchantmentData */
     public final Enchantment enchantmentobj;
+
+    /** Enchantment level associated with this EnchantmentData */
     public final int enchantmentLevel;
-    
-    public EnchantmentData(final Enchantment enchantmentObj, final int enchLevel) {
+
+    public EnchantmentData(Enchantment enchantmentObj, int enchLevel)
+    {
         super(enchantmentObj.getWeight());
         this.enchantmentobj = enchantmentObj;
         this.enchantmentLevel = enchLevel;

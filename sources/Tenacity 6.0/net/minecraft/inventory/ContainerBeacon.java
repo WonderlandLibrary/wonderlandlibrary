@@ -1,122 +1,160 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.inventory;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerBeacon extends Container
 {
     private IInventory tileBeacon;
-    private final BeaconSlot beaconSlot;
-    
-    public ContainerBeacon(final IInventory playerInventory, final IInventory tileBeaconIn) {
+
+    /**
+     * This beacon's slot where you put in Emerald, Diamond, Gold or Iron Ingot.
+     */
+    private final ContainerBeacon.BeaconSlot beaconSlot;
+
+    public ContainerBeacon(IInventory playerInventory, IInventory tileBeaconIn)
+    {
         this.tileBeacon = tileBeaconIn;
-        this.addSlotToContainer(this.beaconSlot = new BeaconSlot(tileBeaconIn, 0, 136, 110));
-        final int i = 36;
-        final int j = 137;
-        for (int k = 0; k < 3; ++k) {
-            for (int l = 0; l < 9; ++l) {
+        this.addSlotToContainer(this.beaconSlot = new ContainerBeacon.BeaconSlot(tileBeaconIn, 0, 136, 110));
+        int i = 36;
+        int j = 137;
+
+        for (int k = 0; k < 3; ++k)
+        {
+            for (int l = 0; l < 9; ++l)
+            {
                 this.addSlotToContainer(new Slot(playerInventory, l + k * 9 + 9, i + l * 18, j + k * 18));
             }
         }
-        for (int i2 = 0; i2 < 9; ++i2) {
-            this.addSlotToContainer(new Slot(playerInventory, i2, i + i2 * 18, 58 + j));
+
+        for (int i1 = 0; i1 < 9; ++i1)
+        {
+            this.addSlotToContainer(new Slot(playerInventory, i1, i + i1 * 18, 58 + j));
         }
     }
-    
-    @Override
-    public void onCraftGuiOpened(final ICrafting listener) {
+
+    public void onCraftGuiOpened(ICrafting listener)
+    {
         super.onCraftGuiOpened(listener);
-        listener.sendAllWindowProperties(this, this.tileBeacon);
+        listener.func_175173_a(this, this.tileBeacon);
     }
-    
-    @Override
-    public void updateProgressBar(final int id, final int data) {
+
+    public void updateProgressBar(int id, int data)
+    {
         this.tileBeacon.setField(id, data);
     }
-    
-    public IInventory func_180611_e() {
+
+    public IInventory func_180611_e()
+    {
         return this.tileBeacon;
     }
-    
-    @Override
-    public void onContainerClosed(final EntityPlayer playerIn) {
+
+    /**
+     * Called when the container is closed.
+     */
+    public void onContainerClosed(EntityPlayer playerIn)
+    {
         super.onContainerClosed(playerIn);
-        if (playerIn != null && !playerIn.worldObj.isRemote) {
-            final ItemStack itemstack = this.beaconSlot.decrStackSize(this.beaconSlot.getSlotStackLimit());
-            if (itemstack != null) {
+
+        if (playerIn != null && !playerIn.worldObj.isRemote)
+        {
+            ItemStack itemstack = this.beaconSlot.decrStackSize(this.beaconSlot.getSlotStackLimit());
+
+            if (itemstack != null)
+            {
                 playerIn.dropPlayerItemWithRandomChoice(itemstack, false);
             }
         }
     }
-    
-    @Override
-    public boolean canInteractWith(final EntityPlayer playerIn) {
+
+    public boolean canInteractWith(EntityPlayer playerIn)
+    {
         return this.tileBeacon.isUseableByPlayer(playerIn);
     }
-    
-    @Override
-    public ItemStack transferStackInSlot(final EntityPlayer playerIn, final int index) {
+
+    /**
+     * Take a stack from the specified inventory slot.
+     */
+    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
+    {
         ItemStack itemstack = null;
-        final Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            final ItemStack itemstack2 = slot.getStack();
-            itemstack = itemstack2.copy();
-            if (index == 0) {
-                if (!this.mergeItemStack(itemstack2, 1, 37, true)) {
+        Slot slot = (Slot)this.inventorySlots.get(index);
+
+        if (slot != null && slot.getHasStack())
+        {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+
+            if (index == 0)
+            {
+                if (!this.mergeItemStack(itemstack1, 1, 37, true))
+                {
                     return null;
                 }
-                slot.onSlotChange(itemstack2, itemstack);
+
+                slot.onSlotChange(itemstack1, itemstack);
             }
-            else if (!this.beaconSlot.getHasStack() && this.beaconSlot.isItemValid(itemstack2) && itemstack2.stackSize == 1) {
-                if (!this.mergeItemStack(itemstack2, 0, 1, false)) {
-                    return null;
-                }
-            }
-            else if (index >= 1 && index < 28) {
-                if (!this.mergeItemStack(itemstack2, 28, 37, false)) {
-                    return null;
-                }
-            }
-            else if (index >= 28 && index < 37) {
-                if (!this.mergeItemStack(itemstack2, 1, 28, false)) {
+            else if (!this.beaconSlot.getHasStack() && this.beaconSlot.isItemValid(itemstack1) && itemstack1.stackSize == 1)
+            {
+                if (!this.mergeItemStack(itemstack1, 0, 1, false))
+                {
                     return null;
                 }
             }
-            else if (!this.mergeItemStack(itemstack2, 1, 37, false)) {
+            else if (index >= 1 && index < 28)
+            {
+                if (!this.mergeItemStack(itemstack1, 28, 37, false))
+                {
+                    return null;
+                }
+            }
+            else if (index >= 28 && index < 37)
+            {
+                if (!this.mergeItemStack(itemstack1, 1, 28, false))
+                {
+                    return null;
+                }
+            }
+            else if (!this.mergeItemStack(itemstack1, 1, 37, false))
+            {
                 return null;
             }
-            if (itemstack2.stackSize == 0) {
-                slot.putStack(null);
+
+            if (itemstack1.stackSize == 0)
+            {
+                slot.putStack((ItemStack)null);
             }
-            else {
+            else
+            {
                 slot.onSlotChanged();
             }
-            if (itemstack2.stackSize == itemstack.stackSize) {
+
+            if (itemstack1.stackSize == itemstack.stackSize)
+            {
                 return null;
             }
-            slot.onPickupFromSlot(playerIn, itemstack2);
+
+            slot.onPickupFromSlot(playerIn, itemstack1);
         }
+
         return itemstack;
     }
-    
+
     class BeaconSlot extends Slot
     {
-        public BeaconSlot(final IInventory p_i1801_2_, final int p_i1801_3_, final int p_i1801_4_, final int p_i1801_5_) {
+        public BeaconSlot(IInventory p_i1801_2_, int p_i1801_3_, int p_i1801_4_, int p_i1801_5_)
+        {
             super(p_i1801_2_, p_i1801_3_, p_i1801_4_, p_i1801_5_);
         }
-        
-        @Override
-        public boolean isItemValid(final ItemStack stack) {
-            return stack != null && (stack.getItem() == Items.emerald || stack.getItem() == Items.diamond || stack.getItem() == Items.gold_ingot || stack.getItem() == Items.iron_ingot);
+
+        public boolean isItemValid(ItemStack stack)
+        {
+            return stack == null ? false : stack.getItem() == Items.emerald || stack.getItem() == Items.diamond || stack.getItem() == Items.gold_ingot || stack.getItem() == Items.iron_ingot;
         }
-        
-        @Override
-        public int getSlotStackLimit() {
+
+        public int getSlotStackLimit()
+        {
             return 1;
         }
     }

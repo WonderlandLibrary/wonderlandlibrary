@@ -1,86 +1,94 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
-import com.google.common.base.Predicate;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.world.World;
 import net.minecraft.util.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public class BlockWallSign extends BlockSign
 {
-    public static final PropertyDirection FACING;
-    
-    public BlockWallSign() {
-        this.setDefaultState(this.blockState.getBaseState().withProperty((IProperty<Comparable>)BlockWallSign.FACING, EnumFacing.NORTH));
+    public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+
+    public BlockWallSign()
+    {
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
-    
-    @Override
-    public void setBlockBoundsBasedOnState(final IBlockAccess worldIn, final BlockPos pos) {
-        final EnumFacing enumfacing = worldIn.getBlockState(pos).getValue((IProperty<EnumFacing>)BlockWallSign.FACING);
-        final float f = 0.28125f;
-        final float f2 = 0.78125f;
-        final float f3 = 0.0f;
-        final float f4 = 1.0f;
-        final float f5 = 0.125f;
-        this.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
-        switch (enumfacing) {
-            case NORTH: {
-                this.setBlockBounds(f3, f, 1.0f - f5, f4, f2, 1.0f);
+
+    @SuppressWarnings("incomplete-switch")
+    public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
+    {
+        EnumFacing enumfacing = (EnumFacing)worldIn.getBlockState(pos).getValue(FACING);
+        float f = 0.28125F;
+        float f1 = 0.78125F;
+        float f2 = 0.0F;
+        float f3 = 1.0F;
+        float f4 = 0.125F;
+        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+
+        switch (enumfacing)
+        {
+            case NORTH:
+                this.setBlockBounds(f2, f, 1.0F - f4, f3, f1, 1.0F);
                 break;
-            }
-            case SOUTH: {
-                this.setBlockBounds(f3, f, 0.0f, f4, f2, f5);
+
+            case SOUTH:
+                this.setBlockBounds(f2, f, 0.0F, f3, f1, f4);
                 break;
-            }
-            case WEST: {
-                this.setBlockBounds(1.0f - f5, f, f3, 1.0f, f2, f4);
+
+            case WEST:
+                this.setBlockBounds(1.0F - f4, f, f2, 1.0F, f1, f3);
                 break;
-            }
-            case EAST: {
-                this.setBlockBounds(0.0f, f, f3, f5, f2, f4);
-                break;
-            }
+
+            case EAST:
+                this.setBlockBounds(0.0F, f, f2, f4, f1, f3);
         }
     }
-    
-    @Override
-    public void onNeighborBlockChange(final World worldIn, final BlockPos pos, final IBlockState state, final Block neighborBlock) {
-        final EnumFacing enumfacing = state.getValue((IProperty<EnumFacing>)BlockWallSign.FACING);
-        if (!worldIn.getBlockState(pos.offset(enumfacing.getOpposite())).getBlock().getMaterial().isSolid()) {
+
+    /**
+     * Called when a neighboring block changes.
+     */
+    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+    {
+        EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
+
+        if (!worldIn.getBlockState(pos.offset(enumfacing.getOpposite())).getBlock().getMaterial().isSolid())
+        {
             this.dropBlockAsItem(worldIn, pos, state, 0);
             worldIn.setBlockToAir(pos);
         }
+
         super.onNeighborBlockChange(worldIn, pos, state, neighborBlock);
     }
-    
-    @Override
-    public IBlockState getStateFromMeta(final int meta) {
+
+    /**
+     * Convert the given metadata into a BlockState for this Block
+     */
+    public IBlockState getStateFromMeta(int meta)
+    {
         EnumFacing enumfacing = EnumFacing.getFront(meta);
-        if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
+
+        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
+        {
             enumfacing = EnumFacing.NORTH;
         }
-        return this.getDefaultState().withProperty((IProperty<Comparable>)BlockWallSign.FACING, enumfacing);
+
+        return this.getDefaultState().withProperty(FACING, enumfacing);
     }
-    
-    @Override
-    public int getMetaFromState(final IBlockState state) {
-        return state.getValue((IProperty<EnumFacing>)BlockWallSign.FACING).getIndex();
+
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
+        return ((EnumFacing)state.getValue(FACING)).getIndex();
     }
-    
-    @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, new IProperty[] { BlockWallSign.FACING });
-    }
-    
-    static {
-        FACING = PropertyDirection.create("facing", (Predicate<EnumFacing>)EnumFacing.Plane.HORIZONTAL);
+
+    protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {FACING});
     }
 }

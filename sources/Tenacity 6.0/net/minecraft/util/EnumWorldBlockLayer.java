@@ -1,24 +1,21 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.util;
 
 public enum EnumWorldBlockLayer
 {
-    SOLID("Solid"), 
-    CUTOUT_MIPPED("Mipped Cutout"), 
-    CUTOUT("Cutout"), 
+    SOLID("Solid"),
+    CUTOUT_MIPPED("Mipped Cutout"),
+    CUTOUT("Cutout"),
     TRANSLUCENT("Translucent");
-    
+
     private final String layerName;
-    
-    private EnumWorldBlockLayer(final String layerNameIn) {
+
+    private EnumWorldBlockLayer(String layerNameIn)
+    {
         this.layerName = layerNameIn;
     }
-    
-    @Override
-    public String toString() {
+
+    public String toString()
+    {
         return this.layerName;
     }
 }

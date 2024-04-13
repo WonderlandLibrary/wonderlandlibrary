@@ -1,92 +1,113 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
-import net.minecraft.block.material.MapColor;
-import net.minecraft.item.Item;
-import net.minecraft.util.EnumParticleTypes;
-import java.util.Random;
-import net.minecraft.entity.Entity;
 import java.util.List;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.tileentity.TileEntityEndPortal;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
+import java.util.Random;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityEndPortal;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public class BlockEndPortal extends BlockContainer
 {
-    protected BlockEndPortal(final Material materialIn) {
+    protected BlockEndPortal(Material materialIn)
+    {
         super(materialIn);
-        this.setLightLevel(1.0f);
+        this.setLightLevel(1.0F);
     }
-    
-    @Override
-    public TileEntity createNewTileEntity(final World worldIn, final int meta) {
+
+    /**
+     * Returns a new instance of a block's tile entity class. Called on placing the block.
+     */
+    public TileEntity createNewTileEntity(World worldIn, int meta)
+    {
         return new TileEntityEndPortal();
     }
-    
-    @Override
-    public void setBlockBoundsBasedOnState(final IBlockAccess worldIn, final BlockPos pos) {
-        final float f = 0.0625f;
-        this.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, f, 1.0f);
+
+    public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
+    {
+        float f = 0.0625F;
+        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F);
     }
-    
-    @Override
-    public boolean shouldSideBeRendered(final IBlockAccess worldIn, final BlockPos pos, final EnumFacing side) {
-        return side == EnumFacing.DOWN && super.shouldSideBeRendered(worldIn, pos, side);
+
+    public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+    {
+        return side == EnumFacing.DOWN ? super.shouldSideBeRendered(worldIn, pos, side) : false;
     }
-    
-    @Override
-    public void addCollisionBoxesToList(final World worldIn, final BlockPos pos, final IBlockState state, final AxisAlignedBB mask, final List<AxisAlignedBB> list, final Entity collidingEntity) {
+
+    /**
+     * Add all collision boxes of this Block to the list that intersect with the given mask.
+     *  
+     * @param collidingEntity the Entity colliding with this Block
+     */
+    public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
+    {
     }
-    
-    @Override
-    public boolean isOpaqueCube() {
+
+    /**
+     * Used to determine ambient occlusion and culling when rebuilding chunks for render
+     */
+    public boolean isOpaqueCube()
+    {
         return false;
     }
-    
-    @Override
-    public boolean isFullCube() {
+
+    public boolean isFullCube()
+    {
         return false;
     }
-    
-    @Override
-    public int quantityDropped(final Random random) {
+
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random random)
+    {
         return 0;
     }
-    
-    @Override
-    public void onEntityCollidedWithBlock(final World worldIn, final BlockPos pos, final IBlockState state, final Entity entityIn) {
-        if (entityIn.ridingEntity == null && entityIn.riddenByEntity == null && !worldIn.isRemote) {
+
+    /**
+     * Called When an Entity Collided with the Block
+     */
+    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
+    {
+        if (entityIn.ridingEntity == null && entityIn.riddenByEntity == null && !worldIn.isRemote)
+        {
             entityIn.travelToDimension(1);
         }
     }
-    
-    @Override
-    public void randomDisplayTick(final World worldIn, final BlockPos pos, final IBlockState state, final Random rand) {
-        final double d0 = pos.getX() + rand.nextFloat();
-        final double d2 = pos.getY() + 0.8f;
-        final double d3 = pos.getZ() + rand.nextFloat();
-        final double d4 = 0.0;
-        final double d5 = 0.0;
-        final double d6 = 0.0;
-        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d2, d3, d4, d5, d6, new int[0]);
+
+    public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+    {
+        double d0 = (double)((float)pos.getX() + rand.nextFloat());
+        double d1 = (double)((float)pos.getY() + 0.8F);
+        double d2 = (double)((float)pos.getZ() + rand.nextFloat());
+        double d3 = 0.0D;
+        double d4 = 0.0D;
+        double d5 = 0.0D;
+        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5, new int[0]);
     }
-    
-    @Override
-    public Item getItem(final World worldIn, final BlockPos pos) {
+
+    /**
+     * Used by pick block on the client to get a block's item form, if it exists.
+     */
+    public Item getItem(World worldIn, BlockPos pos)
+    {
         return null;
     }
-    
-    @Override
-    public MapColor getMapColor(final IBlockState state) {
+
+    /**
+     * Get the MapColor for this Block and the given BlockState
+     */
+    public MapColor getMapColor(IBlockState state)
+    {
         return MapColor.blackColor;
     }
 }

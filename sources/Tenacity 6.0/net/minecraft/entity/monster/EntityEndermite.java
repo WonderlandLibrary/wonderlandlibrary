@@ -1,155 +1,199 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.entity.monster;
 
-import net.minecraft.entity.EnumCreatureAttribute;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.item.Item;
 import net.minecraft.block.Block;
-import net.minecraft.util.BlockPos;
+import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public class EntityEndermite extends EntityMob
 {
-    private int lifetime;
-    private boolean playerSpawned;
-    
-    public EntityEndermite(final World worldIn) {
+    private int lifetime = 0;
+    private boolean playerSpawned = false;
+
+    public EntityEndermite(World worldIn)
+    {
         super(worldIn);
-        this.lifetime = 0;
-        this.playerSpawned = false;
         this.experienceValue = 3;
-        this.setSize(0.4f, 0.3f);
+        this.setSize(0.4F, 0.3F);
         this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0, false));
-        this.tasks.addTask(3, new EntityAIWander(this, 1.0));
-        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
+        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));
+        this.tasks.addTask(3, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(8, new EntityAILookIdle(this));
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[0]));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<Object>(this, EntityPlayer.class, true));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
     }
-    
-    @Override
-    public float getEyeHeight() {
-        return 0.1f;
+
+    public float getEyeHeight()
+    {
+        return 0.1F;
     }
-    
-    @Override
-    protected void applyEntityAttributes() {
+
+    protected void applyEntityAttributes()
+    {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(8.0);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(2.0);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(8.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(2.0D);
     }
-    
-    @Override
-    protected boolean canTriggerWalking() {
+
+    /**
+     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
+     * prevent them from trampling crops
+     */
+    protected boolean canTriggerWalking()
+    {
         return false;
     }
-    
-    @Override
-    protected String getLivingSound() {
+
+    /**
+     * Returns the sound this mob makes while it's alive.
+     */
+    protected String getLivingSound()
+    {
         return "mob.silverfish.say";
     }
-    
-    @Override
-    protected String getHurtSound() {
+
+    /**
+     * Returns the sound this mob makes when it is hurt.
+     */
+    protected String getHurtSound()
+    {
         return "mob.silverfish.hit";
     }
-    
-    @Override
-    protected String getDeathSound() {
+
+    /**
+     * Returns the sound this mob makes on death.
+     */
+    protected String getDeathSound()
+    {
         return "mob.silverfish.kill";
     }
-    
-    @Override
-    protected void playStepSound(final BlockPos pos, final Block blockIn) {
-        this.playSound("mob.silverfish.step", 0.15f, 1.0f);
+
+    protected void playStepSound(BlockPos pos, Block blockIn)
+    {
+        this.playSound("mob.silverfish.step", 0.15F, 1.0F);
     }
-    
-    @Override
-    protected Item getDropItem() {
+
+    protected Item getDropItem()
+    {
         return null;
     }
-    
-    @Override
-    public void readEntityFromNBT(final NBTTagCompound tagCompund) {
+
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    public void readEntityFromNBT(NBTTagCompound tagCompund)
+    {
         super.readEntityFromNBT(tagCompund);
         this.lifetime = tagCompund.getInteger("Lifetime");
         this.playerSpawned = tagCompund.getBoolean("PlayerSpawned");
     }
-    
-    @Override
-    public void writeEntityToNBT(final NBTTagCompound tagCompound) {
+
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    public void writeEntityToNBT(NBTTagCompound tagCompound)
+    {
         super.writeEntityToNBT(tagCompound);
         tagCompound.setInteger("Lifetime", this.lifetime);
         tagCompound.setBoolean("PlayerSpawned", this.playerSpawned);
     }
-    
-    @Override
-    public void onUpdate() {
+
+    /**
+     * Called to update the entity's position/logic.
+     */
+    public void onUpdate()
+    {
         this.renderYawOffset = this.rotationYaw;
         super.onUpdate();
     }
-    
-    public boolean isSpawnedByPlayer() {
+
+    public boolean isSpawnedByPlayer()
+    {
         return this.playerSpawned;
     }
-    
-    public void setSpawnedByPlayer(final boolean spawnedByPlayer) {
+
+    /**
+     * Sets if this mob was spawned by a player or not.
+     *  
+     * @param spawnedByPlayer If the mob was spawned by a player or not.
+     */
+    public void setSpawnedByPlayer(boolean spawnedByPlayer)
+    {
         this.playerSpawned = spawnedByPlayer;
     }
-    
-    @Override
-    public void onLivingUpdate() {
+
+    /**
+     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+     * use this to react to sunlight and start to burn.
+     */
+    public void onLivingUpdate()
+    {
         super.onLivingUpdate();
-        if (this.worldObj.isRemote) {
-            for (int i = 0; i < 2; ++i) {
-                this.worldObj.spawnParticle(EnumParticleTypes.PORTAL, this.posX + (this.rand.nextDouble() - 0.5) * this.width, this.posY + this.rand.nextDouble() * this.height, this.posZ + (this.rand.nextDouble() - 0.5) * this.width, (this.rand.nextDouble() - 0.5) * 2.0, -this.rand.nextDouble(), (this.rand.nextDouble() - 0.5) * 2.0, new int[0]);
+
+        if (this.worldObj.isRemote)
+        {
+            for (int i = 0; i < 2; ++i)
+            {
+                this.worldObj.spawnParticle(EnumParticleTypes.PORTAL, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, (this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(), (this.rand.nextDouble() - 0.5D) * 2.0D, new int[0]);
             }
         }
-        else {
-            if (!this.isNoDespawnRequired()) {
+        else
+        {
+            if (!this.isNoDespawnRequired())
+            {
                 ++this.lifetime;
             }
-            if (this.lifetime >= 2400) {
+
+            if (this.lifetime >= 2400)
+            {
                 this.setDead();
             }
         }
     }
-    
-    @Override
-    protected boolean isValidLightLevel() {
+
+    /**
+     * Checks to make sure the light is not too bright where the mob is spawning
+     */
+    protected boolean isValidLightLevel()
+    {
         return true;
     }
-    
-    @Override
-    public boolean getCanSpawnHere() {
-        if (super.getCanSpawnHere()) {
-            final EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 5.0);
+
+    /**
+     * Checks if the entity's current position is a valid location to spawn this entity.
+     */
+    public boolean getCanSpawnHere()
+    {
+        if (super.getCanSpawnHere())
+        {
+            EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 5.0D);
             return entityplayer == null;
         }
-        return false;
+        else
+        {
+            return false;
+        }
     }
-    
-    @Override
-    public EnumCreatureAttribute getCreatureAttribute() {
+
+    /**
+     * Get this Entity's EnumCreatureAttribute
+     */
+    public EnumCreatureAttribute getCreatureAttribute()
+    {
         return EnumCreatureAttribute.ARTHROPOD;
     }
 }

@@ -1,160 +1,235 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.command;
 
-import java.util.Collection;
-import java.util.Iterator;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.block.state.IBlockState;
-import java.util.List;
-import net.minecraft.world.World;
-import net.minecraft.block.Block;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.init.Blocks;
 import com.google.common.collect.Lists;
-import net.minecraft.nbt.NBTException;
+import java.util.List;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
 
 public class CommandFill extends CommandBase
 {
-    @Override
-    public String getCommandName() {
+    /**
+     * Gets the name of the command
+     */
+    public String getCommandName()
+    {
         return "fill";
     }
-    
-    @Override
-    public int getRequiredPermissionLevel() {
+
+    /**
+     * Return the required permission level for this command.
+     */
+    public int getRequiredPermissionLevel()
+    {
         return 2;
     }
-    
-    @Override
-    public String getCommandUsage(final ICommandSender sender) {
+
+    /**
+     * Gets the usage string for the command.
+     *  
+     * @param sender The {@link ICommandSender} who is requesting usage details.
+     */
+    public String getCommandUsage(ICommandSender sender)
+    {
         return "commands.fill.usage";
     }
-    
-    @Override
-    public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
-        if (args.length < 7) {
+
+    /**
+     * Callback when the command is invoked
+     *  
+     * @param sender The {@link ICommandSender sender} who executed the command
+     * @param args The arguments that were passed with the command
+     */
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException
+    {
+        if (args.length < 7)
+        {
             throw new WrongUsageException("commands.fill.usage", new Object[0]);
         }
-        sender.setCommandStat(CommandResultStats.Type.AFFECTED_BLOCKS, 0);
-        final BlockPos blockpos = CommandBase.parseBlockPos(sender, args, 0, false);
-        final BlockPos blockpos2 = CommandBase.parseBlockPos(sender, args, 3, false);
-        final Block block = CommandBase.getBlockByText(sender, args[6]);
-        int i = 0;
-        if (args.length >= 8) {
-            i = CommandBase.parseInt(args[7], 0, 15);
-        }
-        final BlockPos blockpos3 = new BlockPos(Math.min(blockpos.getX(), blockpos2.getX()), Math.min(blockpos.getY(), blockpos2.getY()), Math.min(blockpos.getZ(), blockpos2.getZ()));
-        final BlockPos blockpos4 = new BlockPos(Math.max(blockpos.getX(), blockpos2.getX()), Math.max(blockpos.getY(), blockpos2.getY()), Math.max(blockpos.getZ(), blockpos2.getZ()));
-        int j = (blockpos4.getX() - blockpos3.getX() + 1) * (blockpos4.getY() - blockpos3.getY() + 1) * (blockpos4.getZ() - blockpos3.getZ() + 1);
-        if (j > 32768) {
-            throw new CommandException("commands.fill.tooManyBlocks", new Object[] { j, 32768 });
-        }
-        if (blockpos3.getY() < 0 || blockpos4.getY() >= 256) {
-            throw new CommandException("commands.fill.outOfWorld", new Object[0]);
-        }
-        final World world = sender.getEntityWorld();
-        for (int k = blockpos3.getZ(); k < blockpos4.getZ() + 16; k += 16) {
-            for (int l = blockpos3.getX(); l < blockpos4.getX() + 16; l += 16) {
-                if (!world.isBlockLoaded(new BlockPos(l, blockpos4.getY() - blockpos3.getY(), k))) {
-                    throw new CommandException("commands.fill.outOfWorld", new Object[0]);
+        else
+        {
+            sender.setCommandStat(CommandResultStats.Type.AFFECTED_BLOCKS, 0);
+            BlockPos blockpos = parseBlockPos(sender, args, 0, false);
+            BlockPos blockpos1 = parseBlockPos(sender, args, 3, false);
+            Block block = CommandBase.getBlockByText(sender, args[6]);
+            int i = 0;
+
+            if (args.length >= 8)
+            {
+                i = parseInt(args[7], 0, 15);
+            }
+
+            BlockPos blockpos2 = new BlockPos(Math.min(blockpos.getX(), blockpos1.getX()), Math.min(blockpos.getY(), blockpos1.getY()), Math.min(blockpos.getZ(), blockpos1.getZ()));
+            BlockPos blockpos3 = new BlockPos(Math.max(blockpos.getX(), blockpos1.getX()), Math.max(blockpos.getY(), blockpos1.getY()), Math.max(blockpos.getZ(), blockpos1.getZ()));
+            int j = (blockpos3.getX() - blockpos2.getX() + 1) * (blockpos3.getY() - blockpos2.getY() + 1) * (blockpos3.getZ() - blockpos2.getZ() + 1);
+
+            if (j > 32768)
+            {
+                throw new CommandException("commands.fill.tooManyBlocks", new Object[] {Integer.valueOf(j), Integer.valueOf(32768)});
+            }
+            else if (blockpos2.getY() >= 0 && blockpos3.getY() < 256)
+            {
+                World world = sender.getEntityWorld();
+
+                for (int k = blockpos2.getZ(); k < blockpos3.getZ() + 16; k += 16)
+                {
+                    for (int l = blockpos2.getX(); l < blockpos3.getX() + 16; l += 16)
+                    {
+                        if (!world.isBlockLoaded(new BlockPos(l, blockpos3.getY() - blockpos2.getY(), k)))
+                        {
+                            throw new CommandException("commands.fill.outOfWorld", new Object[0]);
+                        }
+                    }
                 }
-            }
-        }
-        NBTTagCompound nbttagcompound = new NBTTagCompound();
-        boolean flag = false;
-        if (args.length >= 10 && block.hasTileEntity()) {
-            final String s = CommandBase.getChatComponentFromNthArg(sender, args, 9).getUnformattedText();
-            try {
-                nbttagcompound = JsonToNBT.getTagFromJson(s);
-                flag = true;
-            }
-            catch (NBTException nbtexception) {
-                throw new CommandException("commands.fill.tagError", new Object[] { nbtexception.getMessage() });
-            }
-        }
-        final List<BlockPos> list = (List<BlockPos>)Lists.newArrayList();
-        j = 0;
-        for (int i2 = blockpos3.getZ(); i2 <= blockpos4.getZ(); ++i2) {
-            for (int j2 = blockpos3.getY(); j2 <= blockpos4.getY(); ++j2) {
-                for (int k2 = blockpos3.getX(); k2 <= blockpos4.getX(); ++k2) {
-                    final BlockPos blockpos5 = new BlockPos(k2, j2, i2);
-                    if (args.length >= 9) {
-                        if (!args[8].equals("outline") && !args[8].equals("hollow")) {
-                            if (args[8].equals("destroy")) {
-                                world.destroyBlock(blockpos5, true);
-                            }
-                            else if (args[8].equals("keep")) {
-                                if (!world.isAirBlock(blockpos5)) {
+
+                NBTTagCompound nbttagcompound = new NBTTagCompound();
+                boolean flag = false;
+
+                if (args.length >= 10 && block.hasTileEntity())
+                {
+                    String s = getChatComponentFromNthArg(sender, args, 9).getUnformattedText();
+
+                    try
+                    {
+                        nbttagcompound = JsonToNBT.getTagFromJson(s);
+                        flag = true;
+                    }
+                    catch (NBTException nbtexception)
+                    {
+                        throw new CommandException("commands.fill.tagError", new Object[] {nbtexception.getMessage()});
+                    }
+                }
+
+                List<BlockPos> list = Lists.<BlockPos>newArrayList();
+                j = 0;
+
+                for (int i1 = blockpos2.getZ(); i1 <= blockpos3.getZ(); ++i1)
+                {
+                    for (int j1 = blockpos2.getY(); j1 <= blockpos3.getY(); ++j1)
+                    {
+                        for (int k1 = blockpos2.getX(); k1 <= blockpos3.getX(); ++k1)
+                        {
+                            BlockPos blockpos4 = new BlockPos(k1, j1, i1);
+
+                            if (args.length >= 9)
+                            {
+                                if (!args[8].equals("outline") && !args[8].equals("hollow"))
+                                {
+                                    if (args[8].equals("destroy"))
+                                    {
+                                        world.destroyBlock(blockpos4, true);
+                                    }
+                                    else if (args[8].equals("keep"))
+                                    {
+                                        if (!world.isAirBlock(blockpos4))
+                                        {
+                                            continue;
+                                        }
+                                    }
+                                    else if (args[8].equals("replace") && !block.hasTileEntity())
+                                    {
+                                        if (args.length > 9)
+                                        {
+                                            Block block1 = CommandBase.getBlockByText(sender, args[9]);
+
+                                            if (world.getBlockState(blockpos4).getBlock() != block1)
+                                            {
+                                                continue;
+                                            }
+                                        }
+
+                                        if (args.length > 10)
+                                        {
+                                            int l1 = CommandBase.parseInt(args[10]);
+                                            IBlockState iblockstate = world.getBlockState(blockpos4);
+
+                                            if (iblockstate.getBlock().getMetaFromState(iblockstate) != l1)
+                                            {
+                                                continue;
+                                            }
+                                        }
+                                    }
+                                }
+                                else if (k1 != blockpos2.getX() && k1 != blockpos3.getX() && j1 != blockpos2.getY() && j1 != blockpos3.getY() && i1 != blockpos2.getZ() && i1 != blockpos3.getZ())
+                                {
+                                    if (args[8].equals("hollow"))
+                                    {
+                                        world.setBlockState(blockpos4, Blocks.air.getDefaultState(), 2);
+                                        list.add(blockpos4);
+                                    }
+
                                     continue;
                                 }
                             }
-                            else if (args[8].equals("replace") && !block.hasTileEntity()) {
-                                if (args.length > 9) {
-                                    final Block block2 = CommandBase.getBlockByText(sender, args[9]);
-                                    if (world.getBlockState(blockpos5).getBlock() != block2) {
-                                        continue;
+
+                            TileEntity tileentity1 = world.getTileEntity(blockpos4);
+
+                            if (tileentity1 != null)
+                            {
+                                if (tileentity1 instanceof IInventory)
+                                {
+                                    ((IInventory)tileentity1).clear();
+                                }
+
+                                world.setBlockState(blockpos4, Blocks.barrier.getDefaultState(), block == Blocks.barrier ? 2 : 4);
+                            }
+
+                            IBlockState iblockstate1 = block.getStateFromMeta(i);
+
+                            if (world.setBlockState(blockpos4, iblockstate1, 2))
+                            {
+                                list.add(blockpos4);
+                                ++j;
+
+                                if (flag)
+                                {
+                                    TileEntity tileentity = world.getTileEntity(blockpos4);
+
+                                    if (tileentity != null)
+                                    {
+                                        nbttagcompound.setInteger("x", blockpos4.getX());
+                                        nbttagcompound.setInteger("y", blockpos4.getY());
+                                        nbttagcompound.setInteger("z", blockpos4.getZ());
+                                        tileentity.readFromNBT(nbttagcompound);
                                     }
                                 }
-                                if (args.length > 10) {
-                                    final int l2 = CommandBase.parseInt(args[10]);
-                                    final IBlockState iblockstate = world.getBlockState(blockpos5);
-                                    if (iblockstate.getBlock().getMetaFromState(iblockstate) != l2) {
-                                        continue;
-                                    }
-                                }
-                            }
-                        }
-                        else if (k2 != blockpos3.getX() && k2 != blockpos4.getX() && j2 != blockpos3.getY() && j2 != blockpos4.getY() && i2 != blockpos3.getZ() && i2 != blockpos4.getZ()) {
-                            if (args[8].equals("hollow")) {
-                                world.setBlockState(blockpos5, Blocks.air.getDefaultState(), 2);
-                                list.add(blockpos5);
-                            }
-                            continue;
-                        }
-                    }
-                    final TileEntity tileentity1 = world.getTileEntity(blockpos5);
-                    if (tileentity1 != null) {
-                        if (tileentity1 instanceof IInventory) {
-                            ((IInventory)tileentity1).clear();
-                        }
-                        world.setBlockState(blockpos5, Blocks.barrier.getDefaultState(), (block == Blocks.barrier) ? 2 : 4);
-                    }
-                    final IBlockState iblockstate2 = block.getStateFromMeta(i);
-                    if (world.setBlockState(blockpos5, iblockstate2, 2)) {
-                        list.add(blockpos5);
-                        ++j;
-                        if (flag) {
-                            final TileEntity tileentity2 = world.getTileEntity(blockpos5);
-                            if (tileentity2 != null) {
-                                nbttagcompound.setInteger("x", blockpos5.getX());
-                                nbttagcompound.setInteger("y", blockpos5.getY());
-                                nbttagcompound.setInteger("z", blockpos5.getZ());
-                                tileentity2.readFromNBT(nbttagcompound);
                             }
                         }
                     }
                 }
+
+                for (BlockPos blockpos5 : list)
+                {
+                    Block block2 = world.getBlockState(blockpos5).getBlock();
+                    world.notifyNeighborsRespectDebug(blockpos5, block2);
+                }
+
+                if (j <= 0)
+                {
+                    throw new CommandException("commands.fill.failed", new Object[0]);
+                }
+                else
+                {
+                    sender.setCommandStat(CommandResultStats.Type.AFFECTED_BLOCKS, j);
+                    notifyOperators(sender, this, "commands.fill.success", new Object[] {Integer.valueOf(j)});
+                }
+            }
+            else
+            {
+                throw new CommandException("commands.fill.outOfWorld", new Object[0]);
             }
         }
-        for (final BlockPos blockpos6 : list) {
-            final Block block3 = world.getBlockState(blockpos6).getBlock();
-            world.notifyNeighborsRespectDebug(blockpos6, block3);
-        }
-        if (j <= 0) {
-            throw new CommandException("commands.fill.failed", new Object[0]);
-        }
-        sender.setCommandStat(CommandResultStats.Type.AFFECTED_BLOCKS, j);
-        CommandBase.notifyOperators(sender, this, "commands.fill.success", j);
     }
-    
-    @Override
-    public List<String> addTabCompletionOptions(final ICommandSender sender, final String[] args, final BlockPos pos) {
-        return (args.length > 0 && args.length <= 3) ? CommandBase.func_175771_a(args, 0, pos) : ((args.length > 3 && args.length <= 6) ? CommandBase.func_175771_a(args, 3, pos) : ((args.length == 7) ? CommandBase.getListOfStringsMatchingLastWord(args, Block.blockRegistry.getKeys()) : ((args.length == 9) ? CommandBase.getListOfStringsMatchingLastWord(args, "replace", "destroy", "keep", "hollow", "outline") : ((args.length == 10 && "replace".equals(args[8])) ? CommandBase.getListOfStringsMatchingLastWord(args, Block.blockRegistry.getKeys()) : null))));
+
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
+    {
+        return args.length > 0 && args.length <= 3 ? func_175771_a(args, 0, pos) : (args.length > 3 && args.length <= 6 ? func_175771_a(args, 3, pos) : (args.length == 7 ? getListOfStringsMatchingLastWord(args, Block.blockRegistry.getKeys()) : (args.length == 9 ? getListOfStringsMatchingLastWord(args, new String[] {"replace", "destroy", "keep", "hollow", "outline"}): (args.length == 10 && "replace".equals(args[8]) ? getListOfStringsMatchingLastWord(args, Block.blockRegistry.getKeys()) : null))));
     }
 }

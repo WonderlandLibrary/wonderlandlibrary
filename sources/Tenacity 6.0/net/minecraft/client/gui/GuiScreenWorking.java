@@ -1,70 +1,86 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.gui;
 
-import net.optifine.CustomLoadingScreens;
-import net.optifine.CustomLoadingScreen;
 import net.minecraft.util.IProgressUpdate;
+import net.optifine.CustomLoadingScreen;
+import net.optifine.CustomLoadingScreens;
 
 public class GuiScreenWorking extends GuiScreen implements IProgressUpdate
 {
-    private String field_146591_a;
-    private String field_146589_f;
+    private String field_146591_a = "";
+    private String field_146589_f = "";
     private int progress;
     private boolean doneWorking;
-    private CustomLoadingScreen customLoadingScreen;
-    
-    public GuiScreenWorking() {
-        this.field_146591_a = "";
-        this.field_146589_f = "";
-        this.customLoadingScreen = CustomLoadingScreens.getCustomLoadingScreen();
-    }
-    
-    @Override
-    public void displaySavingString(final String message) {
+    private CustomLoadingScreen customLoadingScreen = CustomLoadingScreens.getCustomLoadingScreen();
+
+    /**
+     * Shows the 'Saving level' string.
+     */
+    public void displaySavingString(String message)
+    {
         this.resetProgressAndMessage(message);
     }
-    
-    @Override
-    public void resetProgressAndMessage(final String message) {
+
+    /**
+     * this string, followed by "working..." and then the "% complete" are the 3 lines shown. This resets progress to 0,
+     * and the WorkingString to "working...".
+     */
+    public void resetProgressAndMessage(String message)
+    {
         this.field_146591_a = message;
         this.displayLoadingString("Working...");
     }
-    
-    @Override
-    public void displayLoadingString(final String message) {
+
+    /**
+     * Displays a string on the loading screen supposed to indicate what is being done currently.
+     */
+    public void displayLoadingString(String message)
+    {
         this.field_146589_f = message;
         this.setLoadingProgress(0);
     }
-    
-    @Override
-    public void setLoadingProgress(final int progress) {
+
+    /**
+     * Updates the progress bar on the loading screen to the specified amount. Args: loadProgress
+     */
+    public void setLoadingProgress(int progress)
+    {
         this.progress = progress;
     }
-    
-    @Override
-    public void setDoneWorking() {
+
+    public void setDoneWorking()
+    {
         this.doneWorking = true;
     }
-    
-    @Override
-    public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
-        if (this.doneWorking) {
-            this.mc2.displayGuiScreen(null);
+
+    /**
+     * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
+     */
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
+        if (this.doneWorking)
+        {
+            if (!this.mc.func_181540_al())
+            {
+                this.mc.displayGuiScreen((GuiScreen)null);
+            }
         }
-        else {
-            if (this.customLoadingScreen != null && this.mc2.theWorld == null) {
+        else
+        {
+            if (this.customLoadingScreen != null && this.mc.theWorld == null)
+            {
                 this.customLoadingScreen.drawBackground(this.width, this.height);
             }
-            else {
+            else
+            {
                 this.drawDefaultBackground();
             }
-            if (this.progress > 0) {
+
+            if (this.progress > 0)
+            {
                 this.drawCenteredString(this.fontRendererObj, this.field_146591_a, this.width / 2, 70, 16777215);
                 this.drawCenteredString(this.fontRendererObj, this.field_146589_f + " " + this.progress + "%", this.width / 2, 90, 16777215);
             }
+
             super.drawScreen(mouseX, mouseY, partialTicks);
         }
     }

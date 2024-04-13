@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.shaders.uniform;
 
 import net.optifine.expr.ExpressionType;
@@ -12,33 +8,36 @@ public class ShaderParameterIndexed implements IExpressionFloat
     private ShaderParameterFloat type;
     private int index1;
     private int index2;
-    
-    public ShaderParameterIndexed(final ShaderParameterFloat type) {
+
+    public ShaderParameterIndexed(ShaderParameterFloat type)
+    {
         this(type, 0, 0);
     }
-    
-    public ShaderParameterIndexed(final ShaderParameterFloat type, final int index1) {
+
+    public ShaderParameterIndexed(ShaderParameterFloat type, int index1)
+    {
         this(type, index1, 0);
     }
-    
-    public ShaderParameterIndexed(final ShaderParameterFloat type, final int index1, final int index2) {
+
+    public ShaderParameterIndexed(ShaderParameterFloat type, int index1, int index2)
+    {
         this.type = type;
         this.index1 = index1;
         this.index2 = index2;
     }
-    
-    @Override
-    public float eval() {
+
+    public float eval()
+    {
         return this.type.eval(this.index1, this.index2);
     }
-    
-    @Override
-    public ExpressionType getExpressionType() {
+
+    public ExpressionType getExpressionType()
+    {
         return ExpressionType.FLOAT;
     }
-    
-    @Override
-    public String toString() {
-        return (this.type.getIndexNames1() == null) ? ("" + this.type) : ((this.type.getIndexNames2() == null) ? ("" + this.type + "." + this.type.getIndexNames1()[this.index1]) : ("" + this.type + "." + this.type.getIndexNames1()[this.index1] + "." + this.type.getIndexNames2()[this.index2]));
+
+    public String toString()
+    {
+        return this.type.getIndexNames1() == null ? "" + this.type : (this.type.getIndexNames2() == null ? "" + this.type + "." + this.type.getIndexNames1()[this.index1] : "" + this.type + "." + this.type.getIndexNames1()[this.index1] + "." + this.type.getIndexNames2()[this.index2]);
     }
 }

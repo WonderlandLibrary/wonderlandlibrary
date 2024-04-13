@@ -1,87 +1,101 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.particle;
 
-import net.minecraft.util.MathHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class EntityFlameFX extends EntityFX
 {
+    /** the scale of the flame FX */
     private float flameScale;
-    
-    protected EntityFlameFX(final World worldIn, final double xCoordIn, final double yCoordIn, final double zCoordIn, final double xSpeedIn, final double ySpeedIn, final double zSpeedIn) {
+
+    protected EntityFlameFX(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn)
+    {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
-        this.motionX = this.motionX * 0.009999999776482582 + xSpeedIn;
-        this.motionY = this.motionY * 0.009999999776482582 + ySpeedIn;
-        this.motionZ = this.motionZ * 0.009999999776482582 + zSpeedIn;
-        this.posX += (this.rand.nextFloat() - this.rand.nextFloat()) * 0.05f;
-        this.posY += (this.rand.nextFloat() - this.rand.nextFloat()) * 0.05f;
-        this.posZ += (this.rand.nextFloat() - this.rand.nextFloat()) * 0.05f;
+        this.motionX = this.motionX * 0.009999999776482582D + xSpeedIn;
+        this.motionY = this.motionY * 0.009999999776482582D + ySpeedIn;
+        this.motionZ = this.motionZ * 0.009999999776482582D + zSpeedIn;
+        this.posX += (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F);
+        this.posY += (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F);
+        this.posZ += (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F);
         this.flameScale = this.particleScale;
-        final float particleRed = 1.0f;
-        this.particleBlue = particleRed;
-        this.particleGreen = particleRed;
-        this.particleRed = particleRed;
-        this.particleMaxAge = (int)(8.0 / (Math.random() * 0.8 + 0.2)) + 4;
+        this.particleRed = this.particleGreen = this.particleBlue = 1.0F;
+        this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.2D)) + 4;
         this.noClip = true;
         this.setParticleTextureIndex(48);
     }
-    
-    @Override
-    public void renderParticle(final WorldRenderer worldRendererIn, final Entity entityIn, final float partialTicks, final float rotationX, final float rotationZ, final float rotationYZ, final float rotationXY, final float rotationXZ) {
-        final float f = (this.particleAge + partialTicks) / this.particleMaxAge;
-        this.particleScale = this.flameScale * (1.0f - f * f * 0.5f);
-        super.renderParticle(worldRendererIn, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
+
+    /**
+     * Renders the particle
+     *  
+     * @param worldRendererIn The WorldRenderer instance
+     */
+    public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float p_180434_4_, float p_180434_5_, float p_180434_6_, float p_180434_7_, float p_180434_8_)
+    {
+        float f = ((float)this.particleAge + partialTicks) / (float)this.particleMaxAge;
+        this.particleScale = this.flameScale * (1.0F - f * f * 0.5F);
+        super.renderParticle(worldRendererIn, entityIn, partialTicks, p_180434_4_, p_180434_5_, p_180434_6_, p_180434_7_, p_180434_8_);
     }
-    
-    @Override
-    public int getBrightnessForRender(final float partialTicks) {
-        float f = (this.particleAge + partialTicks) / this.particleMaxAge;
-        f = MathHelper.clamp_float(f, 0.0f, 1.0f);
-        final int i = super.getBrightnessForRender(partialTicks);
-        int j = i & 0xFF;
-        final int k = i >> 16 & 0xFF;
-        j += (int)(f * 15.0f * 16.0f);
-        if (j > 240) {
+
+    public int getBrightnessForRender(float partialTicks)
+    {
+        float f = ((float)this.particleAge + partialTicks) / (float)this.particleMaxAge;
+        f = MathHelper.clamp_float(f, 0.0F, 1.0F);
+        int i = super.getBrightnessForRender(partialTicks);
+        int j = i & 255;
+        int k = i >> 16 & 255;
+        j = j + (int)(f * 15.0F * 16.0F);
+
+        if (j > 240)
+        {
             j = 240;
         }
+
         return j | k << 16;
     }
-    
-    @Override
-    public float getBrightness(final float partialTicks) {
-        float f = (this.particleAge + partialTicks) / this.particleMaxAge;
-        f = MathHelper.clamp_float(f, 0.0f, 1.0f);
-        final float f2 = super.getBrightness(partialTicks);
-        return f2 * f + (1.0f - f);
+
+    /**
+     * Gets how bright this entity is.
+     */
+    public float getBrightness(float partialTicks)
+    {
+        float f = ((float)this.particleAge + partialTicks) / (float)this.particleMaxAge;
+        f = MathHelper.clamp_float(f, 0.0F, 1.0F);
+        float f1 = super.getBrightness(partialTicks);
+        return f1 * f + (1.0F - f);
     }
-    
-    @Override
-    public void onUpdate() {
+
+    /**
+     * Called to update the entity's position/logic.
+     */
+    public void onUpdate()
+    {
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
-        if (this.particleAge++ >= this.particleMaxAge) {
+
+        if (this.particleAge++ >= this.particleMaxAge)
+        {
             this.setDead();
         }
+
         this.moveEntity(this.motionX, this.motionY, this.motionZ);
-        this.motionX *= 0.9599999785423279;
-        this.motionY *= 0.9599999785423279;
-        this.motionZ *= 0.9599999785423279;
-        if (this.onGround) {
-            this.motionX *= 0.699999988079071;
-            this.motionZ *= 0.699999988079071;
+        this.motionX *= 0.9599999785423279D;
+        this.motionY *= 0.9599999785423279D;
+        this.motionZ *= 0.9599999785423279D;
+
+        if (this.onGround)
+        {
+            this.motionX *= 0.699999988079071D;
+            this.motionZ *= 0.699999988079071D;
         }
     }
-    
+
     public static class Factory implements IParticleFactory
     {
-        @Override
-        public EntityFX getEntityFX(final int particleID, final World worldIn, final double xCoordIn, final double yCoordIn, final double zCoordIn, final double xSpeedIn, final double ySpeedIn, final double zSpeedIn, final int... p_178902_15_) {
+        public EntityFX getEntityFX(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_)
+        {
             return new EntityFlameFX(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
         }
     }

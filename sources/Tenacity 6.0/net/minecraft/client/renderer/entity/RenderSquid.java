@@ -1,46 +1,43 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.entity;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.passive.EntitySquid;
+import net.minecraft.util.ResourceLocation;
 
 public class RenderSquid extends RenderLiving<EntitySquid>
 {
-    private static final ResourceLocation squidTextures;
-    
-    public RenderSquid(final RenderManager renderManagerIn, final ModelBase modelBaseIn, final float shadowSizeIn) {
+    private static final ResourceLocation squidTextures = new ResourceLocation("textures/entity/squid.png");
+
+    public RenderSquid(RenderManager renderManagerIn, ModelBase modelBaseIn, float shadowSizeIn)
+    {
         super(renderManagerIn, modelBaseIn, shadowSizeIn);
     }
-    
-    @Override
-    protected ResourceLocation getEntityTexture(final EntitySquid entity) {
-        return RenderSquid.squidTextures;
+
+    /**
+     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
+     */
+    protected ResourceLocation getEntityTexture(EntitySquid entity)
+    {
+        return squidTextures;
     }
-    
-    @Override
-    protected void rotateCorpse(final EntitySquid bat, final float p_77043_2_, final float p_77043_3_, final float partialTicks) {
-        final float f = bat.prevSquidPitch + (bat.squidPitch - bat.prevSquidPitch) * partialTicks;
-        final float f2 = bat.prevSquidYaw + (bat.squidYaw - bat.prevSquidYaw) * partialTicks;
-        GlStateManager.translate(0.0f, 0.5f, 0.0f);
-        GlStateManager.rotate(180.0f - p_77043_3_, 0.0f, 1.0f, 0.0f);
-        GlStateManager.rotate(f, 1.0f, 0.0f, 0.0f);
-        GlStateManager.rotate(f2, 0.0f, 1.0f, 0.0f);
-        GlStateManager.translate(0.0f, -1.2f, 0.0f);
+
+    protected void rotateCorpse(EntitySquid bat, float p_77043_2_, float p_77043_3_, float partialTicks)
+    {
+        float f = bat.prevSquidPitch + (bat.squidPitch - bat.prevSquidPitch) * partialTicks;
+        float f1 = bat.prevSquidYaw + (bat.squidYaw - bat.prevSquidYaw) * partialTicks;
+        GlStateManager.translate(0.0F, 0.5F, 0.0F);
+        GlStateManager.rotate(180.0F - p_77043_3_, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(f, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(f1, 0.0F, 1.0F, 0.0F);
+        GlStateManager.translate(0.0F, -1.2F, 0.0F);
     }
-    
-    @Override
-    protected float handleRotationFloat(final EntitySquid livingBase, final float partialTicks) {
+
+    /**
+     * Defines what float the third param in setRotationAngles of ModelBase is
+     */
+    protected float handleRotationFloat(EntitySquid livingBase, float partialTicks)
+    {
         return livingBase.lastTentacleAngle + (livingBase.tentacleAngle - livingBase.lastTentacleAngle) * partialTicks;
-    }
-    
-    static {
-        squidTextures = new ResourceLocation("textures/entity/squid.png");
     }
 }

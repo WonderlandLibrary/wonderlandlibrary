@@ -1,13 +1,12 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
 public class BlockYellowFlower extends BlockFlower
 {
-    @Override
-    public EnumFlowerColor getBlockType() {
-        return EnumFlowerColor.YELLOW;
+    /**
+     * Get the Type of this flower (Yellow/Red)
+     */
+    public BlockFlower.EnumFlowerColor getBlockType()
+    {
+        return BlockFlower.EnumFlowerColor.YELLOW;
     }
 }

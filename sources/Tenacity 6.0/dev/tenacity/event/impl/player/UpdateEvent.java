@@ -1,11 +1,6 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package dev.tenacity.event.impl.player;
 
 import dev.tenacity.event.Event;
 
-public class UpdateEvent extends Event
-{
+public final class UpdateEvent extends Event {
 }

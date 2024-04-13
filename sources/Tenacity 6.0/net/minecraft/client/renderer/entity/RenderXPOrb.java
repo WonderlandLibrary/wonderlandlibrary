@@ -1,92 +1,103 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.entity;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.MathHelper;
-import net.optifine.CustomColors;
-import net.minecraft.src.Config;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.src.Config;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
+import net.optifine.CustomColors;
 
 public class RenderXPOrb extends Render<EntityXPOrb>
 {
-    private static final ResourceLocation experienceOrbTextures;
-    
-    public RenderXPOrb(final RenderManager renderManagerIn) {
+    private static final ResourceLocation experienceOrbTextures = new ResourceLocation("textures/entity/experience_orb.png");
+
+    public RenderXPOrb(RenderManager renderManagerIn)
+    {
         super(renderManagerIn);
-        this.shadowSize = 0.15f;
-        this.shadowOpaque = 0.75f;
+        this.shadowSize = 0.15F;
+        this.shadowOpaque = 0.75F;
     }
-    
-    @Override
-    public void doRender(final EntityXPOrb entity, final double x, final double y, final double z, final float entityYaw, final float partialTicks) {
+
+    /**
+     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
+     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
+     * (Render<T extends Entity>) and this method has signature public void doRender(T entity, double d, double d1,
+     * double d2, float f, float f1). But JAD is pre 1.5 so doe
+     *  
+     * @param entityYaw The yaw rotation of the passed entity
+     */
+    public void doRender(EntityXPOrb entity, double x, double y, double z, float entityYaw, float partialTicks)
+    {
         GlStateManager.pushMatrix();
         GlStateManager.translate((float)x, (float)y, (float)z);
         this.bindEntityTexture(entity);
-        final int i = entity.getTextureByXP();
-        final float f = (i % 4 * 16 + 0) / 64.0f;
-        final float f2 = (i % 4 * 16 + 16) / 64.0f;
-        final float f3 = (i / 4 * 16 + 0) / 64.0f;
-        final float f4 = (i / 4 * 16 + 16) / 64.0f;
-        final float f5 = 1.0f;
-        final float f6 = 0.5f;
-        final float f7 = 0.25f;
-        final int j = entity.getBrightnessForRender(partialTicks);
-        final int k = j % 65536;
+        int i = entity.getTextureByXP();
+        float f = (float)(i % 4 * 16 + 0) / 64.0F;
+        float f1 = (float)(i % 4 * 16 + 16) / 64.0F;
+        float f2 = (float)(i / 4 * 16 + 0) / 64.0F;
+        float f3 = (float)(i / 4 * 16 + 16) / 64.0F;
+        float f4 = 1.0F;
+        float f5 = 0.5F;
+        float f6 = 0.25F;
+        int j = entity.getBrightnessForRender(partialTicks);
+        int k = j % 65536;
         int l = j / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, k / 1.0f, l / 1.0f);
-        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-        final float f8 = 255.0f;
-        float f9 = (entity.xpColor + partialTicks) / 2.0f;
-        if (Config.isCustomColors()) {
-            f9 = CustomColors.getXpOrbTimer(f9);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)k / 1.0F, (float)l / 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        float f7 = 255.0F;
+        float f8 = ((float)entity.xpColor + partialTicks) / 2.0F;
+
+        if (Config.isCustomColors())
+        {
+            f8 = CustomColors.getXpOrbTimer(f8);
         }
-        l = (int)((MathHelper.sin(f9 + 0.0f) + 1.0f) * 0.5f * 255.0f);
-        final int i2 = 255;
-        final int j2 = (int)((MathHelper.sin(f9 + 4.1887903f) + 1.0f) * 0.1f * 255.0f);
-        GlStateManager.rotate(180.0f - this.renderManager.playerViewY, 0.0f, 1.0f, 0.0f);
-        GlStateManager.rotate(-this.renderManager.playerViewX, 1.0f, 0.0f, 0.0f);
-        final float f10 = 0.3f;
-        GlStateManager.scale(0.3f, 0.3f, 0.3f);
-        final Tessellator tessellator = Tessellator.getInstance();
-        final WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        int k2 = l;
-        int l2 = 255;
-        int i3 = j2;
-        if (Config.isCustomColors()) {
-            final int j3 = CustomColors.getXpOrbColor(f9);
-            if (j3 >= 0) {
-                k2 = (j3 >> 16 & 0xFF);
-                l2 = (j3 >> 8 & 0xFF);
-                i3 = (j3 >> 0 & 0xFF);
+
+        l = (int)((MathHelper.sin(f8 + 0.0F) + 1.0F) * 0.5F * 255.0F);
+        int i1 = 255;
+        int j1 = (int)((MathHelper.sin(f8 + 4.1887903F) + 1.0F) * 0.1F * 255.0F);
+        GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+        float f9 = 0.3F;
+        GlStateManager.scale(0.3F, 0.3F, 0.3F);
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        worldrenderer.begin(7, DefaultVertexFormats.field_181712_l);
+        int k1 = l;
+        int l1 = 255;
+        int i2 = j1;
+
+        if (Config.isCustomColors())
+        {
+            int j2 = CustomColors.getXpOrbColor(f8);
+
+            if (j2 >= 0)
+            {
+                k1 = j2 >> 16 & 255;
+                l1 = j2 >> 8 & 255;
+                i2 = j2 >> 0 & 255;
             }
         }
-        worldrenderer.pos(0.0f - f6, 0.0f - f7, 0.0).tex(f, f4).color(k2, l2, i3, 128).normal(0.0f, 1.0f, 0.0f).endVertex();
-        worldrenderer.pos(f5 - f6, 0.0f - f7, 0.0).tex(f2, f4).color(k2, l2, i3, 128).normal(0.0f, 1.0f, 0.0f).endVertex();
-        worldrenderer.pos(f5 - f6, 1.0f - f7, 0.0).tex(f2, f3).color(k2, l2, i3, 128).normal(0.0f, 1.0f, 0.0f).endVertex();
-        worldrenderer.pos(0.0f - f6, 1.0f - f7, 0.0).tex(f, f3).color(k2, l2, i3, 128).normal(0.0f, 1.0f, 0.0f).endVertex();
+
+        worldrenderer.pos((double)(0.0F - f5), (double)(0.0F - f6), 0.0D).tex((double)f, (double)f3).func_181669_b(k1, l1, i2, 128).func_181663_c(0.0F, 1.0F, 0.0F).endVertex();
+        worldrenderer.pos((double)(f4 - f5), (double)(0.0F - f6), 0.0D).tex((double)f1, (double)f3).func_181669_b(k1, l1, i2, 128).func_181663_c(0.0F, 1.0F, 0.0F).endVertex();
+        worldrenderer.pos((double)(f4 - f5), (double)(1.0F - f6), 0.0D).tex((double)f1, (double)f2).func_181669_b(k1, l1, i2, 128).func_181663_c(0.0F, 1.0F, 0.0F).endVertex();
+        worldrenderer.pos((double)(0.0F - f5), (double)(1.0F - f6), 0.0D).tex((double)f, (double)f2).func_181669_b(k1, l1, i2, 128).func_181663_c(0.0F, 1.0F, 0.0F).endVertex();
         tessellator.draw();
         GlStateManager.disableBlend();
         GlStateManager.disableRescaleNormal();
         GlStateManager.popMatrix();
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
-    
-    @Override
-    protected ResourceLocation getEntityTexture(final EntityXPOrb entity) {
-        return RenderXPOrb.experienceOrbTextures;
-    }
-    
-    static {
-        experienceOrbTextures = new ResourceLocation("textures/entity/experience_orb.png");
+
+    /**
+     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
+     */
+    protected ResourceLocation getEntityTexture(EntityXPOrb entity)
+    {
+        return experienceOrbTextures;
     }
 }

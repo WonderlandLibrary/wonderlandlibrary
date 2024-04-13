@@ -1,14 +1,13 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.culling;
 
 import net.minecraft.util.AxisAlignedBB;
 
 public interface ICamera
 {
-    boolean isBoundingBoxInFrustum(final AxisAlignedBB p0);
-    
-    void setPosition(final double p0, final double p1, final double p2);
+    /**
+     * Returns true if the bounding box is inside all 6 clipping planes, otherwise returns false.
+     */
+    boolean isBoundingBoxInFrustum(AxisAlignedBB p_78546_1_);
+
+    void setPosition(double p_78547_1_, double p_78547_3_, double p_78547_5_);
 }

@@ -1,79 +1,87 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.entity.model;
 
+import java.util.HashMap;
+import java.util.Map;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelRabbit;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderRabbit;
-import net.minecraft.client.Minecraft;
-import java.util.HashMap;
-import net.optifine.reflect.Reflector;
-import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.model.ModelRabbit;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.entity.passive.EntityRabbit;
-import java.util.Map;
+import net.optifine.reflect.Reflector;
 
 public class ModelAdapterRabbit extends ModelAdapter
 {
-    private static Map<String, Integer> mapPartFields;
-    
-    public ModelAdapterRabbit() {
-        super(EntityRabbit.class, "rabbit", 0.3f);
+    private static Map<String, Integer> mapPartFields = null;
+
+    public ModelAdapterRabbit()
+    {
+        super(EntityRabbit.class, "rabbit", 0.3F);
     }
-    
-    @Override
-    public ModelBase makeModel() {
+
+    public ModelBase makeModel()
+    {
         return new ModelRabbit();
     }
-    
-    @Override
-    public ModelRenderer getModelRenderer(final ModelBase model, final String modelPart) {
-        if (!(model instanceof ModelRabbit)) {
+
+    public ModelRenderer getModelRenderer(ModelBase model, String modelPart)
+    {
+        if (!(model instanceof ModelRabbit))
+        {
             return null;
         }
-        final ModelRabbit modelrabbit = (ModelRabbit)model;
-        final Map<String, Integer> map = getMapPartFields();
-        if (map.containsKey(modelPart)) {
-            final int i = map.get(modelPart);
-            return (ModelRenderer)Reflector.getFieldValue(modelrabbit, Reflector.ModelRabbit_renderers, i);
+        else
+        {
+            ModelRabbit modelrabbit = (ModelRabbit)model;
+            Map<String, Integer> map = getMapPartFields();
+
+            if (map.containsKey(modelPart))
+            {
+                int i = ((Integer)map.get(modelPart)).intValue();
+                return (ModelRenderer)Reflector.getFieldValue(modelrabbit, Reflector.ModelRabbit_renderers, i);
+            }
+            else
+            {
+                return null;
+            }
         }
-        return null;
     }
-    
-    @Override
-    public String[] getModelRendererNames() {
-        return new String[] { "left_foot", "right_foot", "left_thigh", "right_thigh", "body", "left_arm", "right_arm", "head", "right_ear", "left_ear", "tail", "nose" };
+
+    public String[] getModelRendererNames()
+    {
+        return new String[] {"left_foot", "right_foot", "left_thigh", "right_thigh", "body", "left_arm", "right_arm", "head", "right_ear", "left_ear", "tail", "nose"};
     }
-    
-    private static Map<String, Integer> getMapPartFields() {
-        if (ModelAdapterRabbit.mapPartFields != null) {
-            return ModelAdapterRabbit.mapPartFields;
+
+    private static Map<String, Integer> getMapPartFields()
+    {
+        if (mapPartFields != null)
+        {
+            return mapPartFields;
         }
-        (ModelAdapterRabbit.mapPartFields = new HashMap<String, Integer>()).put("left_foot", 0);
-        ModelAdapterRabbit.mapPartFields.put("right_foot", 1);
-        ModelAdapterRabbit.mapPartFields.put("left_thigh", 2);
-        ModelAdapterRabbit.mapPartFields.put("right_thigh", 3);
-        ModelAdapterRabbit.mapPartFields.put("body", 4);
-        ModelAdapterRabbit.mapPartFields.put("left_arm", 5);
-        ModelAdapterRabbit.mapPartFields.put("right_arm", 6);
-        ModelAdapterRabbit.mapPartFields.put("head", 7);
-        ModelAdapterRabbit.mapPartFields.put("right_ear", 8);
-        ModelAdapterRabbit.mapPartFields.put("left_ear", 9);
-        ModelAdapterRabbit.mapPartFields.put("tail", 10);
-        ModelAdapterRabbit.mapPartFields.put("nose", 11);
-        return ModelAdapterRabbit.mapPartFields;
+        else
+        {
+            mapPartFields = new HashMap();
+            mapPartFields.put("left_foot", Integer.valueOf(0));
+            mapPartFields.put("right_foot", Integer.valueOf(1));
+            mapPartFields.put("left_thigh", Integer.valueOf(2));
+            mapPartFields.put("right_thigh", Integer.valueOf(3));
+            mapPartFields.put("body", Integer.valueOf(4));
+            mapPartFields.put("left_arm", Integer.valueOf(5));
+            mapPartFields.put("right_arm", Integer.valueOf(6));
+            mapPartFields.put("head", Integer.valueOf(7));
+            mapPartFields.put("right_ear", Integer.valueOf(8));
+            mapPartFields.put("left_ear", Integer.valueOf(9));
+            mapPartFields.put("tail", Integer.valueOf(10));
+            mapPartFields.put("nose", Integer.valueOf(11));
+            return mapPartFields;
+        }
     }
-    
-    @Override
-    public IEntityRenderer makeEntityRender(final ModelBase modelBase, final float shadowSize) {
-        final RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
-        final RenderRabbit renderrabbit = new RenderRabbit(rendermanager, modelBase, shadowSize);
+
+    public IEntityRenderer makeEntityRender(ModelBase modelBase, float shadowSize)
+    {
+        RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
+        RenderRabbit renderrabbit = new RenderRabbit(rendermanager, modelBase, shadowSize);
         return renderrabbit;
-    }
-    
-    static {
-        ModelAdapterRabbit.mapPartFields = null;
     }
 }

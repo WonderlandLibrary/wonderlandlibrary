@@ -1,30 +1,35 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.world;
 
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.biome.BiomeGenBase;
 
 public interface IBlockAccess
 {
-    TileEntity getTileEntity(final BlockPos p0);
-    
-    int getCombinedLight(final BlockPos p0, final int p1);
-    
-    IBlockState getBlockState(final BlockPos p0);
-    
-    boolean isAirBlock(final BlockPos p0);
-    
-    BiomeGenBase getBiomeGenForCoords(final BlockPos p0);
-    
+    TileEntity getTileEntity(BlockPos pos);
+
+    int getCombinedLight(BlockPos pos, int lightValue);
+
+    IBlockState getBlockState(BlockPos pos);
+
+    /**
+     * Checks to see if an air block exists at the provided location. Note that this only checks to see if the blocks
+     * material is set to air, meaning it is possible for non-vanilla blocks to still pass this check.
+     *  
+     * @param pos The position of the block being checked.
+     */
+    boolean isAirBlock(BlockPos pos);
+
+    BiomeGenBase getBiomeGenForCoords(BlockPos pos);
+
+    /**
+     * set by !chunk.getAreLevelsEmpty
+     */
     boolean extendedLevelsInChunkCache();
-    
-    int getStrongPower(final BlockPos p0, final EnumFacing p1);
-    
+
+    int getStrongPower(BlockPos pos, EnumFacing direction);
+
     WorldType getWorldType();
 }

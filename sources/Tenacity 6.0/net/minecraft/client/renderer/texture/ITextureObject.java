@@ -1,22 +1,18 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.texture;
 
-import net.optifine.shaders.MultiTexID;
 import java.io.IOException;
 import net.minecraft.client.resources.IResourceManager;
+import net.optifine.shaders.MultiTexID;
 
 public interface ITextureObject
 {
-    void setBlurMipmap(final boolean p0, final boolean p1);
-    
+    void setBlurMipmap(boolean p_174936_1_, boolean p_174936_2_);
+
     void restoreLastBlurMipmap();
-    
-    void loadTexture(final IResourceManager p0) throws IOException;
-    
+
+    void loadTexture(IResourceManager resourceManager) throws IOException;
+
     int getGlTextureId();
-    
+
     MultiTexID getMultiTexID();
 }

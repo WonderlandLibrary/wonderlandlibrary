@@ -1,99 +1,121 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.util;
 
-import java.util.Iterator;
-import java.util.List;
-import net.minecraft.src.Config;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import net.minecraft.world.World;
+import java.util.List;
+import net.minecraft.src.Config;
 import net.minecraft.util.BlockPos;
-import net.optifine.reflect.Reflector;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.optifine.reflect.ReflectorField;
+import net.optifine.reflect.Reflector;
 import net.optifine.reflect.ReflectorClass;
+import net.optifine.reflect.ReflectorField;
 
 public class ChunkUtils
 {
-    private static ReflectorClass chunkClass;
-    private static ReflectorField fieldHasEntities;
-    private static ReflectorField fieldPrecipitationHeightMap;
-    
-    public static boolean hasEntities(final Chunk chunk) {
-        return Reflector.getFieldValueBoolean(chunk, ChunkUtils.fieldHasEntities, true);
+    private static ReflectorClass chunkClass = new ReflectorClass(Chunk.class);
+    private static ReflectorField fieldHasEntities = findFieldHasEntities();
+    private static ReflectorField fieldPrecipitationHeightMap = new ReflectorField(chunkClass, int[].class, 0);
+
+    public static boolean hasEntities(Chunk chunk)
+    {
+        return Reflector.getFieldValueBoolean(chunk, fieldHasEntities, true);
     }
-    
-    public static int getPrecipitationHeight(final Chunk chunk, final BlockPos pos) {
-        final int[] aint = (int[])Reflector.getFieldValue(chunk, ChunkUtils.fieldPrecipitationHeightMap);
-        if (aint == null || aint.length != 256) {
+
+    public static int getPrecipitationHeight(Chunk chunk, BlockPos pos)
+    {
+        int[] aint = (int[])((int[])Reflector.getFieldValue(chunk, fieldPrecipitationHeightMap));
+
+        if (aint != null && aint.length == 256)
+        {
+            int i = pos.getX() & 15;
+            int j = pos.getZ() & 15;
+            int k = i | j << 4;
+            int l = aint[k];
+
+            if (l >= 0)
+            {
+                return l;
+            }
+            else
+            {
+                BlockPos blockpos = chunk.getPrecipitationHeight(pos);
+                return blockpos.getY();
+            }
+        }
+        else
+        {
             return -1;
         }
-        final int i = pos.getX() & 0xF;
-        final int j = pos.getZ() & 0xF;
-        final int k = i | j << 4;
-        final int l = aint[k];
-        if (l >= 0) {
-            return l;
-        }
-        final BlockPos blockpos = chunk.getPrecipitationHeight(pos);
-        return blockpos.getY();
     }
-    
-    private static ReflectorField findFieldHasEntities() {
-        try {
-            final Chunk chunk = new Chunk(null, 0, 0);
-            final List list = new ArrayList();
-            final List list2 = new ArrayList();
-            final Field[] afield = Chunk.class.getDeclaredFields();
-            for (int i = 0; i < afield.length; ++i) {
-                final Field field = afield[i];
-                if (field.getType() == Boolean.TYPE) {
+
+    private static ReflectorField findFieldHasEntities()
+    {
+        try
+        {
+            Chunk chunk = new Chunk((World)null, 0, 0);
+            List list = new ArrayList();
+            List list1 = new ArrayList();
+            Field[] afield = Chunk.class.getDeclaredFields();
+
+            for (int i = 0; i < afield.length; ++i)
+            {
+                Field field = afield[i];
+
+                if (field.getType() == Boolean.TYPE)
+                {
                     field.setAccessible(true);
                     list.add(field);
-                    list2.add(field.get(chunk));
+                    list1.add(field.get(chunk));
                 }
             }
+
             chunk.setHasEntities(false);
-            final List list3 = new ArrayList();
-            for (final Object field2 : list) {
-                final Field field3 = (Field)field2;
-                list3.add(field3.get(chunk));
+            List list2 = new ArrayList();
+
+            for (Object e : list)
+            {
+                Field field1 = (Field) e;
+                list2.add(field1.get(chunk));
             }
+
             chunk.setHasEntities(true);
-            final List list4 = new ArrayList();
-            for (final Object field4 : list) {
-                final Field field5 = (Field)field4;
-                list4.add(field5.get(chunk));
+            List list3 = new ArrayList();
+
+            for (Object e: list)
+            {
+                Field field2 = (Field) e;
+                list3.add(field2.get(chunk));
             }
-            final List list5 = new ArrayList();
-            for (int j = 0; j < list.size(); ++j) {
-                final Field field6 = list.get(j);
-                final Boolean obool = list3.get(j);
-                final Boolean obool2 = list4.get(j);
-                if (!obool && obool2) {
-                    list5.add(field6);
-                    final Boolean obool3 = list2.get(j);
-                    field6.set(chunk, obool3);
+
+            List list4 = new ArrayList();
+
+            for (int j = 0; j < ((List)list).size(); ++j)
+            {
+                Field field3 = (Field)list.get(j);
+                Boolean obool = (Boolean)list2.get(j);
+                Boolean obool1 = (Boolean)list3.get(j);
+
+                if (!obool.booleanValue() && obool1.booleanValue())
+                {
+                    list4.add(field3);
+                    Boolean obool2 = (Boolean)list1.get(j);
+                    field3.set(chunk, obool2);
                 }
             }
-            if (list5.size() == 1) {
-                final Field field7 = list5.get(0);
-                return new ReflectorField(field7);
+
+            if (list4.size() == 1)
+            {
+                Field field4 = (Field)list4.get(0);
+                return new ReflectorField(field4);
             }
         }
-        catch (Exception exception) {
+        catch (Exception exception)
+        {
             Config.warn(exception.getClass().getName() + " " + exception.getMessage());
         }
+
         Config.warn("Error finding Chunk.hasEntities");
         return new ReflectorField(new ReflectorClass(Chunk.class), "hasEntities");
-    }
-    
-    static {
-        ChunkUtils.chunkClass = new ReflectorClass(Chunk.class);
-        ChunkUtils.fieldHasEntities = findFieldHasEntities();
-        ChunkUtils.fieldPrecipitationHeightMap = new ReflectorField(ChunkUtils.chunkClass, int[].class, 0);
     }
 }

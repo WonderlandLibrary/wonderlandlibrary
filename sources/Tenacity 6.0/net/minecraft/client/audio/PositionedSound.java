@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.audio;
 
 import net.minecraft.util.ResourceLocation;
@@ -9,66 +5,64 @@ import net.minecraft.util.ResourceLocation;
 public abstract class PositionedSound implements ISound
 {
     protected final ResourceLocation positionedSoundLocation;
-    protected float volume;
-    protected float pitch;
+    protected float volume = 1.0F;
+    protected float pitch = 1.0F;
     protected float xPosF;
     protected float yPosF;
     protected float zPosF;
-    protected boolean repeat;
-    protected int repeatDelay;
-    protected AttenuationType attenuationType;
-    
-    protected PositionedSound(final ResourceLocation soundResource) {
-        this.volume = 1.0f;
-        this.pitch = 1.0f;
-        this.repeat = false;
-        this.repeatDelay = 0;
-        this.attenuationType = AttenuationType.LINEAR;
+    protected boolean repeat = false;
+
+    /** The number of ticks between repeating the sound */
+    protected int repeatDelay = 0;
+    protected ISound.AttenuationType attenuationType = ISound.AttenuationType.LINEAR;
+
+    protected PositionedSound(ResourceLocation soundResource)
+    {
         this.positionedSoundLocation = soundResource;
     }
-    
-    @Override
-    public ResourceLocation getSoundLocation() {
+
+    public ResourceLocation getSoundLocation()
+    {
         return this.positionedSoundLocation;
     }
-    
-    @Override
-    public boolean canRepeat() {
+
+    public boolean canRepeat()
+    {
         return this.repeat;
     }
-    
-    @Override
-    public int getRepeatDelay() {
+
+    public int getRepeatDelay()
+    {
         return this.repeatDelay;
     }
-    
-    @Override
-    public float getVolume() {
+
+    public float getVolume()
+    {
         return this.volume;
     }
-    
-    @Override
-    public float getPitch() {
+
+    public float getPitch()
+    {
         return this.pitch;
     }
-    
-    @Override
-    public float getXPosF() {
+
+    public float getXPosF()
+    {
         return this.xPosF;
     }
-    
-    @Override
-    public float getYPosF() {
+
+    public float getYPosF()
+    {
         return this.yPosF;
     }
-    
-    @Override
-    public float getZPosF() {
+
+    public float getZPosF()
+    {
         return this.zPosF;
     }
-    
-    @Override
-    public AttenuationType getAttenuationType() {
+
+    public ISound.AttenuationType getAttenuationType()
+    {
         return this.attenuationType;
     }
 }

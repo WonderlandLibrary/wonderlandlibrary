@@ -1,94 +1,147 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.command;
 
-import java.util.Iterator;
 import com.google.common.collect.Lists;
 import java.util.List;
-import net.minecraft.util.BlockPos;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.scoreboard.IScoreObjectiveCriteria;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.entity.Entity;
-import net.minecraft.scoreboard.IScoreObjectiveCriteria;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.BlockPos;
 
 public class CommandTrigger extends CommandBase
 {
-    @Override
-    public String getCommandName() {
+    /**
+     * Gets the name of the command
+     */
+    public String getCommandName()
+    {
         return "trigger";
     }
-    
-    @Override
-    public int getRequiredPermissionLevel() {
+
+    /**
+     * Return the required permission level for this command.
+     */
+    public int getRequiredPermissionLevel()
+    {
         return 0;
     }
-    
-    @Override
-    public String getCommandUsage(final ICommandSender sender) {
+
+    /**
+     * Gets the usage string for the command.
+     *  
+     * @param sender The {@link ICommandSender} who is requesting usage details.
+     */
+    public String getCommandUsage(ICommandSender sender)
+    {
         return "commands.trigger.usage";
     }
-    
-    @Override
-    public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
-        if (args.length < 3) {
+
+    /**
+     * Callback when the command is invoked
+     *  
+     * @param sender The {@link ICommandSender sender} who executed the command
+     * @param args The arguments that were passed with the command
+     */
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException
+    {
+        if (args.length < 3)
+        {
             throw new WrongUsageException("commands.trigger.usage", new Object[0]);
         }
-        EntityPlayerMP entityplayermp;
-        if (sender instanceof EntityPlayerMP) {
-            entityplayermp = (EntityPlayerMP)sender;
-        }
-        else {
-            final Entity entity = sender.getCommandSenderEntity();
-            if (!(entity instanceof EntityPlayerMP)) {
-                throw new CommandException("commands.trigger.invalidPlayer", new Object[0]);
+        else
+        {
+            EntityPlayerMP entityplayermp;
+
+            if (sender instanceof EntityPlayerMP)
+            {
+                entityplayermp = (EntityPlayerMP)sender;
             }
-            entityplayermp = (EntityPlayerMP)entity;
-        }
-        final Scoreboard scoreboard = MinecraftServer.getServer().worldServerForDimension(0).getScoreboard();
-        final ScoreObjective scoreobjective = scoreboard.getObjective(args[0]);
-        if (scoreobjective == null || scoreobjective.getCriteria() != IScoreObjectiveCriteria.TRIGGER) {
-            throw new CommandException("commands.trigger.invalidObjective", new Object[] { args[0] });
-        }
-        final int i = CommandBase.parseInt(args[2]);
-        if (!scoreboard.entityHasObjective(entityplayermp.getName(), scoreobjective)) {
-            throw new CommandException("commands.trigger.invalidObjective", new Object[] { args[0] });
-        }
-        final Score score = scoreboard.getValueFromObjective(entityplayermp.getName(), scoreobjective);
-        if (score.isLocked()) {
-            throw new CommandException("commands.trigger.disabled", new Object[] { args[0] });
-        }
-        if ("set".equals(args[1])) {
-            score.setScorePoints(i);
-        }
-        else {
-            if (!"add".equals(args[1])) {
-                throw new CommandException("commands.trigger.invalidMode", new Object[] { args[1] });
+            else
+            {
+                Entity entity = sender.getCommandSenderEntity();
+
+                if (!(entity instanceof EntityPlayerMP))
+                {
+                    throw new CommandException("commands.trigger.invalidPlayer", new Object[0]);
+                }
+
+                entityplayermp = (EntityPlayerMP)entity;
             }
-            score.increseScore(i);
-        }
-        score.setLocked(true);
-        if (entityplayermp.theItemInWorldManager.isCreative()) {
-            CommandBase.notifyOperators(sender, this, "commands.trigger.success", args[0], args[1], args[2]);
+
+            Scoreboard scoreboard = MinecraftServer.getServer().worldServerForDimension(0).getScoreboard();
+            ScoreObjective scoreobjective = scoreboard.getObjective(args[0]);
+
+            if (scoreobjective != null && scoreobjective.getCriteria() == IScoreObjectiveCriteria.TRIGGER)
+            {
+                int i = parseInt(args[2]);
+
+                if (!scoreboard.entityHasObjective(entityplayermp.getCommandSenderName(), scoreobjective))
+                {
+                    throw new CommandException("commands.trigger.invalidObjective", new Object[] {args[0]});
+                }
+                else
+                {
+                    Score score = scoreboard.getValueFromObjective(entityplayermp.getCommandSenderName(), scoreobjective);
+
+                    if (score.isLocked())
+                    {
+                        throw new CommandException("commands.trigger.disabled", new Object[] {args[0]});
+                    }
+                    else
+                    {
+                        if ("set".equals(args[1]))
+                        {
+                            score.setScorePoints(i);
+                        }
+                        else
+                        {
+                            if (!"add".equals(args[1]))
+                            {
+                                throw new CommandException("commands.trigger.invalidMode", new Object[] {args[1]});
+                            }
+
+                            score.increseScore(i);
+                        }
+
+                        score.setLocked(true);
+
+                        if (entityplayermp.theItemInWorldManager.isCreative())
+                        {
+                            notifyOperators(sender, this, "commands.trigger.success", new Object[] {args[0], args[1], args[2]});
+                        }
+                    }
+                }
+            }
+            else
+            {
+                throw new CommandException("commands.trigger.invalidObjective", new Object[] {args[0]});
+            }
         }
     }
-    
-    @Override
-    public List<String> addTabCompletionOptions(final ICommandSender sender, final String[] args, final BlockPos pos) {
-        if (args.length == 1) {
-            final Scoreboard scoreboard = MinecraftServer.getServer().worldServerForDimension(0).getScoreboard();
-            final List<String> list = (List<String>)Lists.newArrayList();
-            for (final ScoreObjective scoreobjective : scoreboard.getScoreObjectives()) {
-                if (scoreobjective.getCriteria() == IScoreObjectiveCriteria.TRIGGER) {
+
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
+    {
+        if (args.length == 1)
+        {
+            Scoreboard scoreboard = MinecraftServer.getServer().worldServerForDimension(0).getScoreboard();
+            List<String> list = Lists.<String>newArrayList();
+
+            for (ScoreObjective scoreobjective : scoreboard.getScoreObjectives())
+            {
+                if (scoreobjective.getCriteria() == IScoreObjectiveCriteria.TRIGGER)
+                {
                     list.add(scoreobjective.getName());
                 }
             }
-            return CommandBase.getListOfStringsMatchingLastWord(args, (String[])list.toArray(new String[list.size()]));
+
+            return getListOfStringsMatchingLastWord(args, (String[])list.toArray(new String[list.size()]));
         }
-        return (args.length == 2) ? CommandBase.getListOfStringsMatchingLastWord(args, "add", "set") : null;
+        else
+        {
+            return args.length == 2 ? getListOfStringsMatchingLastWord(args, new String[] {"add", "set"}): null;
+        }
     }
 }

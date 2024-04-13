@@ -1,22 +1,18 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.gui.achievement;
 
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.stats.Achievement;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.client.gui.Gui;
 
 public class GuiAchievement extends Gui
 {
-    private static final ResourceLocation achievementBg;
+    private static final ResourceLocation achievementBg = new ResourceLocation("textures/gui/achievement/achievement_background.png");
     private Minecraft mc;
     private int width;
     private int height;
@@ -26,29 +22,33 @@ public class GuiAchievement extends Gui
     private long notificationTime;
     private RenderItem renderItem;
     private boolean permanentNotification;
-    
-    public GuiAchievement(final Minecraft mc) {
+
+    public GuiAchievement(Minecraft mc)
+    {
         this.mc = mc;
         this.renderItem = mc.getRenderItem();
     }
-    
-    public void displayAchievement(final Achievement ach) {
+
+    public void displayAchievement(Achievement ach)
+    {
         this.achievementTitle = I18n.format("achievement.get", new Object[0]);
         this.achievementDescription = ach.getStatName().getUnformattedText();
         this.notificationTime = Minecraft.getSystemTime();
         this.theAchievement = ach;
         this.permanentNotification = false;
     }
-    
-    public void displayUnformattedAchievement(final Achievement achievementIn) {
+
+    public void displayUnformattedAchievement(Achievement achievementIn)
+    {
         this.achievementTitle = achievementIn.getStatName().getUnformattedText();
         this.achievementDescription = achievementIn.getDescription();
         this.notificationTime = Minecraft.getSystemTime() + 2500L;
         this.theAchievement = achievementIn;
         this.permanentNotification = true;
     }
-    
-    private void updateAchievementWindowScale() {
+
+    private void updateAchievementWindowScale()
+    {
         GlStateManager.viewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
         GlStateManager.matrixMode(5889);
         GlStateManager.loadIdentity();
@@ -56,58 +56,75 @@ public class GuiAchievement extends Gui
         GlStateManager.loadIdentity();
         this.width = this.mc.displayWidth;
         this.height = this.mc.displayHeight;
-        final ScaledResolution scaledresolution = new ScaledResolution(this.mc);
+        ScaledResolution scaledresolution = new ScaledResolution(this.mc);
         this.width = scaledresolution.getScaledWidth();
         this.height = scaledresolution.getScaledHeight();
         GlStateManager.clear(256);
         GlStateManager.matrixMode(5889);
         GlStateManager.loadIdentity();
-        GlStateManager.ortho(0.0, this.width, this.height, 0.0, 1000.0, 3000.0);
+        GlStateManager.ortho(0.0D, (double)this.width, (double)this.height, 0.0D, 1000.0D, 3000.0D);
         GlStateManager.matrixMode(5888);
         GlStateManager.loadIdentity();
-        GlStateManager.translate(0.0f, 0.0f, -2000.0f);
+        GlStateManager.translate(0.0F, 0.0F, -2000.0F);
     }
-    
-    public void updateAchievementWindow() {
-        if (this.theAchievement != null && this.notificationTime != 0L && Minecraft.getMinecraft().thePlayer != null) {
-            double d0 = (Minecraft.getSystemTime() - this.notificationTime) / 3000.0;
-            if (!this.permanentNotification) {
-                if (d0 < 0.0 || d0 > 1.0) {
+
+    public void updateAchievementWindow()
+    {
+        if (this.theAchievement != null && this.notificationTime != 0L && Minecraft.getMinecraft().thePlayer != null)
+        {
+            double d0 = (double)(Minecraft.getSystemTime() - this.notificationTime) / 3000.0D;
+
+            if (!this.permanentNotification)
+            {
+                if (d0 < 0.0D || d0 > 1.0D)
+                {
                     this.notificationTime = 0L;
                     return;
                 }
             }
-            else if (d0 > 0.5) {
-                d0 = 0.5;
+            else if (d0 > 0.5D)
+            {
+                d0 = 0.5D;
             }
+
             this.updateAchievementWindowScale();
             GlStateManager.disableDepth();
             GlStateManager.depthMask(false);
-            double d2 = d0 * 2.0;
-            if (d2 > 1.0) {
-                d2 = 2.0 - d2;
+            double d1 = d0 * 2.0D;
+
+            if (d1 > 1.0D)
+            {
+                d1 = 2.0D - d1;
             }
-            d2 *= 4.0;
-            d2 = 1.0 - d2;
-            if (d2 < 0.0) {
-                d2 = 0.0;
+
+            d1 = d1 * 4.0D;
+            d1 = 1.0D - d1;
+
+            if (d1 < 0.0D)
+            {
+                d1 = 0.0D;
             }
-            d2 *= d2;
-            d2 *= d2;
-            final int i = this.width - 160;
-            final int j = 0 - (int)(d2 * 36.0);
-            GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+
+            d1 = d1 * d1;
+            d1 = d1 * d1;
+            int i = this.width - 160;
+            int j = 0 - (int)(d1 * 36.0D);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.enableTexture2D();
-            this.mc.getTextureManager().bindTexture(GuiAchievement.achievementBg);
+            this.mc.getTextureManager().bindTexture(achievementBg);
             GlStateManager.disableLighting();
             this.drawTexturedModalRect(i, j, 96, 202, 160, 32);
-            if (this.permanentNotification) {
+
+            if (this.permanentNotification)
+            {
                 this.mc.fontRendererObj.drawSplitString(this.achievementDescription, i + 30, j + 7, 120, -1);
             }
-            else {
-                this.mc.fontRendererObj.drawString(this.achievementTitle, (float)(i + 30), (float)(j + 7), -256);
-                this.mc.fontRendererObj.drawString(this.achievementDescription, (float)(i + 30), (float)(j + 18), -1);
+            else
+            {
+                this.mc.fontRendererObj.drawString(this.achievementTitle, i + 30, j + 7, -256);
+                this.mc.fontRendererObj.drawString(this.achievementDescription, i + 30, j + 18, -1);
             }
+
             RenderHelper.enableGUIStandardItemLighting();
             GlStateManager.disableLighting();
             GlStateManager.enableRescaleNormal();
@@ -119,13 +136,10 @@ public class GuiAchievement extends Gui
             GlStateManager.enableDepth();
         }
     }
-    
-    public void clearAchievements() {
+
+    public void clearAchievements()
+    {
         this.theAchievement = null;
         this.notificationTime = 0L;
-    }
-    
-    static {
-        achievementBg = new ResourceLocation("textures/gui/achievement/achievement_background.png");
     }
 }

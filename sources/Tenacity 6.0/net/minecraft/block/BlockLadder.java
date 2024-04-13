@@ -1,140 +1,164 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
-import com.google.common.base.Predicate;
-import net.minecraft.block.state.BlockState;
-import net.minecraft.util.EnumWorldBlockLayer;
-import java.util.Iterator;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public class BlockLadder extends Block
 {
-    public static final PropertyDirection FACING;
-    
-    protected BlockLadder() {
+    public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+
+    protected BlockLadder()
+    {
         super(Material.circuits);
-        this.setDefaultState(this.blockState.getBaseState().withProperty((IProperty<Comparable>)BlockLadder.FACING, EnumFacing.NORTH));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
         this.setCreativeTab(CreativeTabs.tabDecorations);
     }
-    
-    @Override
-    public AxisAlignedBB getCollisionBoundingBox(final World worldIn, final BlockPos pos, final IBlockState state) {
+
+    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
+    {
         this.setBlockBoundsBasedOnState(worldIn, pos);
         return super.getCollisionBoundingBox(worldIn, pos, state);
     }
-    
-    @Override
-    public AxisAlignedBB getSelectedBoundingBox(final World worldIn, final BlockPos pos) {
+
+    public AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos)
+    {
         this.setBlockBoundsBasedOnState(worldIn, pos);
         return super.getSelectedBoundingBox(worldIn, pos);
     }
-    
-    @Override
-    public void setBlockBoundsBasedOnState(final IBlockAccess worldIn, final BlockPos pos) {
-        final IBlockState iblockstate = worldIn.getBlockState(pos);
-        if (iblockstate.getBlock() == this) {
-            final float f = 0.125f;
-            switch (iblockstate.getValue((IProperty<EnumFacing>)BlockLadder.FACING)) {
-                case NORTH: {
-                    this.setBlockBounds(0.0f, 0.0f, 1.0f - f, 1.0f, 1.0f, 1.0f);
+
+    public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
+    {
+        IBlockState iblockstate = worldIn.getBlockState(pos);
+
+        if (iblockstate.getBlock() == this)
+        {
+            float f = 0.125F;
+
+            switch ((EnumFacing)iblockstate.getValue(FACING))
+            {
+                case NORTH:
+                    this.setBlockBounds(0.0F, 0.0F, 1.0F - f, 1.0F, 1.0F, 1.0F);
                     break;
-                }
-                case SOUTH: {
-                    this.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, f);
+
+                case SOUTH:
+                    this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, f);
                     break;
-                }
-                case WEST: {
-                    this.setBlockBounds(1.0f - f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+
+                case WEST:
+                    this.setBlockBounds(1.0F - f, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
                     break;
-                }
-                default: {
-                    this.setBlockBounds(0.0f, 0.0f, 0.0f, f, 1.0f, 1.0f);
-                    break;
-                }
+
+                case EAST:
+                default:
+                    this.setBlockBounds(0.0F, 0.0F, 0.0F, f, 1.0F, 1.0F);
             }
         }
     }
-    
-    @Override
-    public boolean isOpaqueCube() {
+
+    /**
+     * Used to determine ambient occlusion and culling when rebuilding chunks for render
+     */
+    public boolean isOpaqueCube()
+    {
         return false;
     }
-    
-    @Override
-    public boolean isFullCube() {
+
+    public boolean isFullCube()
+    {
         return false;
     }
-    
-    @Override
-    public boolean canPlaceBlockAt(final World worldIn, final BlockPos pos) {
-        return worldIn.getBlockState(pos.west()).getBlock().isNormalCube() || worldIn.getBlockState(pos.east()).getBlock().isNormalCube() || worldIn.getBlockState(pos.north()).getBlock().isNormalCube() || worldIn.getBlockState(pos.south()).getBlock().isNormalCube();
+
+    public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
+    {
+        return worldIn.getBlockState(pos.west()).getBlock().isNormalCube() ? true : (worldIn.getBlockState(pos.east()).getBlock().isNormalCube() ? true : (worldIn.getBlockState(pos.north()).getBlock().isNormalCube() ? true : worldIn.getBlockState(pos.south()).getBlock().isNormalCube()));
     }
-    
-    @Override
-    public IBlockState onBlockPlaced(final World worldIn, final BlockPos pos, final EnumFacing facing, final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer) {
-        if (facing.getAxis().isHorizontal() && this.canBlockStay(worldIn, pos, facing)) {
-            return this.getDefaultState().withProperty((IProperty<Comparable>)BlockLadder.FACING, facing);
+
+    /**
+     * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
+     * IBlockstate
+     */
+    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    {
+        if (facing.getAxis().isHorizontal() && this.canBlockStay(worldIn, pos, facing))
+        {
+            return this.getDefaultState().withProperty(FACING, facing);
         }
-        for (final EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL) {
-            if (this.canBlockStay(worldIn, pos, enumfacing)) {
-                return this.getDefaultState().withProperty((IProperty<Comparable>)BlockLadder.FACING, enumfacing);
+        else
+        {
+            for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
+            {
+                if (this.canBlockStay(worldIn, pos, enumfacing))
+                {
+                    return this.getDefaultState().withProperty(FACING, enumfacing);
+                }
             }
+
+            return this.getDefaultState();
         }
-        return this.getDefaultState();
     }
-    
-    @Override
-    public void onNeighborBlockChange(final World worldIn, final BlockPos pos, final IBlockState state, final Block neighborBlock) {
-        final EnumFacing enumfacing = state.getValue((IProperty<EnumFacing>)BlockLadder.FACING);
-        if (!this.canBlockStay(worldIn, pos, enumfacing)) {
+
+    /**
+     * Called when a neighboring block changes.
+     */
+    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+    {
+        EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
+
+        if (!this.canBlockStay(worldIn, pos, enumfacing))
+        {
             this.dropBlockAsItem(worldIn, pos, state, 0);
             worldIn.setBlockToAir(pos);
         }
+
         super.onNeighborBlockChange(worldIn, pos, state, neighborBlock);
     }
-    
-    protected boolean canBlockStay(final World worldIn, final BlockPos pos, final EnumFacing facing) {
+
+    protected boolean canBlockStay(World worldIn, BlockPos pos, EnumFacing facing)
+    {
         return worldIn.getBlockState(pos.offset(facing.getOpposite())).getBlock().isNormalCube();
     }
-    
-    @Override
-    public EnumWorldBlockLayer getBlockLayer() {
+
+    public EnumWorldBlockLayer getBlockLayer()
+    {
         return EnumWorldBlockLayer.CUTOUT;
     }
-    
-    @Override
-    public IBlockState getStateFromMeta(final int meta) {
+
+    /**
+     * Convert the given metadata into a BlockState for this Block
+     */
+    public IBlockState getStateFromMeta(int meta)
+    {
         EnumFacing enumfacing = EnumFacing.getFront(meta);
-        if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
+
+        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
+        {
             enumfacing = EnumFacing.NORTH;
         }
-        return this.getDefaultState().withProperty((IProperty<Comparable>)BlockLadder.FACING, enumfacing);
+
+        return this.getDefaultState().withProperty(FACING, enumfacing);
     }
-    
-    @Override
-    public int getMetaFromState(final IBlockState state) {
-        return state.getValue((IProperty<EnumFacing>)BlockLadder.FACING).getIndex();
+
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
+        return ((EnumFacing)state.getValue(FACING)).getIndex();
     }
-    
-    @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, new IProperty[] { BlockLadder.FACING });
-    }
-    
-    static {
-        FACING = PropertyDirection.create("facing", (Predicate<EnumFacing>)EnumFacing.Plane.HORIZONTAL);
+
+    protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {FACING});
     }
 }

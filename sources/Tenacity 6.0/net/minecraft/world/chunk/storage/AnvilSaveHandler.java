@@ -1,54 +1,69 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.world.chunk.storage;
 
-import net.minecraft.world.storage.ThreadedFileIOBase;
+import java.io.File;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.storage.WorldInfo;
+import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldProviderEnd;
 import net.minecraft.world.WorldProviderHell;
-import net.minecraft.world.WorldProvider;
-import java.io.File;
 import net.minecraft.world.storage.SaveHandler;
+import net.minecraft.world.storage.ThreadedFileIOBase;
+import net.minecraft.world.storage.WorldInfo;
 
 public class AnvilSaveHandler extends SaveHandler
 {
-    public AnvilSaveHandler(final File savesDirectory, final String directoryName, final boolean storePlayerdata) {
-        super(savesDirectory, directoryName, storePlayerdata);
+    public AnvilSaveHandler(File savesDirectory, String p_i2142_2_, boolean storePlayerdata)
+    {
+        super(savesDirectory, p_i2142_2_, storePlayerdata);
     }
-    
-    @Override
-    public IChunkLoader getChunkLoader(final WorldProvider provider) {
-        final File file1 = this.getWorldDirectory();
-        if (provider instanceof WorldProviderHell) {
-            final File file2 = new File(file1, "DIM-1");
-            file2.mkdirs();
-            return new AnvilChunkLoader(file2);
-        }
-        if (provider instanceof WorldProviderEnd) {
-            final File file3 = new File(file1, "DIM1");
+
+    /**
+     * initializes and returns the chunk loader for the specified world provider
+     */
+    public IChunkLoader getChunkLoader(WorldProvider provider)
+    {
+        File file1 = this.getWorldDirectory();
+
+        if (provider instanceof WorldProviderHell)
+        {
+            File file3 = new File(file1, "DIM-1");
             file3.mkdirs();
             return new AnvilChunkLoader(file3);
         }
-        return new AnvilChunkLoader(file1);
+        else if (provider instanceof WorldProviderEnd)
+        {
+            File file2 = new File(file1, "DIM1");
+            file2.mkdirs();
+            return new AnvilChunkLoader(file2);
+        }
+        else
+        {
+            return new AnvilChunkLoader(file1);
+        }
     }
-    
-    @Override
-    public void saveWorldInfoWithPlayer(final WorldInfo worldInformation, final NBTTagCompound tagCompound) {
+
+    /**
+     * Saves the given World Info with the given NBTTagCompound as the Player.
+     */
+    public void saveWorldInfoWithPlayer(WorldInfo worldInformation, NBTTagCompound tagCompound)
+    {
         worldInformation.setSaveVersion(19133);
         super.saveWorldInfoWithPlayer(worldInformation, tagCompound);
     }
-    
-    @Override
-    public void flush() {
-        try {
+
+    /**
+     * Called to flush all changes to disk, waiting for them to complete.
+     */
+    public void flush()
+    {
+        try
+        {
             ThreadedFileIOBase.getThreadedIOInstance().waitForFinish();
         }
-        catch (InterruptedException interruptedexception) {
+        catch (InterruptedException interruptedexception)
+        {
             interruptedexception.printStackTrace();
         }
+
         RegionFileCache.clearRegionFileReferences();
     }
 }

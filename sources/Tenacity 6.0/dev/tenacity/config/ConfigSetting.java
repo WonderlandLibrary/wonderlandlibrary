@@ -1,23 +1,26 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package dev.tenacity.config;
 
-import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Expose;
 
-public class ConfigSetting
-{
+public final class ConfigSetting {
+
     @Expose
-    @SerializedName("name")
-    public String name;
+    private final String name;
+
     @Expose
-    @SerializedName("value")
-    public Object value;
-    
+    private final Object value;
+
     public ConfigSetting(final String name, final Object value) {
         this.name = name;
         this.value = value;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public Object getValue() {
+        return value;
+    }
 }
+

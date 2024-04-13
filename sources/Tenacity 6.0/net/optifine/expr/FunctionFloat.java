@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.expr;
 
 import net.optifine.shaders.uniform.Smoother;
@@ -10,49 +6,57 @@ public class FunctionFloat implements IExpressionFloat
 {
     private FunctionType type;
     private IExpression[] arguments;
-    private int smoothId;
-    
-    public FunctionFloat(final FunctionType type, final IExpression[] arguments) {
-        this.smoothId = -1;
+    private int smoothId = -1;
+
+    public FunctionFloat(FunctionType type, IExpression[] arguments)
+    {
         this.type = type;
         this.arguments = arguments;
     }
-    
-    @Override
-    public float eval() {
-        final IExpression[] aiexpression = this.arguments;
-        switch (this.type) {
-            case SMOOTH: {
-                final IExpression iexpression = aiexpression[0];
-                if (!(iexpression instanceof ConstantFloat)) {
-                    final float f = evalFloat(aiexpression, 0);
-                    final float f2 = (aiexpression.length > 1) ? evalFloat(aiexpression, 1) : 1.0f;
-                    final float f3 = (aiexpression.length > 2) ? evalFloat(aiexpression, 2) : f2;
-                    if (this.smoothId < 0) {
+
+    public float eval()
+    {
+        IExpression[] aiexpression = this.arguments;
+
+        switch (this.type)
+        {
+            case SMOOTH:
+                IExpression iexpression = aiexpression[0];
+
+                if (!(iexpression instanceof ConstantFloat))
+                {
+                    float f = evalFloat(aiexpression, 0);
+                    float f1 = aiexpression.length > 1 ? evalFloat(aiexpression, 1) : 1.0F;
+                    float f2 = aiexpression.length > 2 ? evalFloat(aiexpression, 2) : f1;
+
+                    if (this.smoothId < 0)
+                    {
                         this.smoothId = Smoother.getNextId();
                     }
-                    final float f4 = Smoother.getSmoothValue(this.smoothId, f, f2, f3);
-                    return f4;
+
+                    float f3 = Smoother.getSmoothValue(this.smoothId, f, f1, f2);
+                    return f3;
                 }
-                break;
-            }
+
+            default:
+                return this.type.evalFloat(this.arguments);
         }
-        return this.type.evalFloat(this.arguments);
     }
-    
-    private static float evalFloat(final IExpression[] exprs, final int index) {
-        final IExpressionFloat iexpressionfloat = (IExpressionFloat)exprs[index];
-        final float f = iexpressionfloat.eval();
+
+    private static float evalFloat(IExpression[] exprs, int index)
+    {
+        IExpressionFloat iexpressionfloat = (IExpressionFloat)exprs[index];
+        float f = iexpressionfloat.eval();
         return f;
     }
-    
-    @Override
-    public ExpressionType getExpressionType() {
+
+    public ExpressionType getExpressionType()
+    {
         return ExpressionType.FLOAT;
     }
-    
-    @Override
-    public String toString() {
+
+    public String toString()
+    {
         return "" + this.type + "()";
     }
 }

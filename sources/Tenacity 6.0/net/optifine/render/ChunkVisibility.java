@@ -1,179 +1,203 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.render;
 
-import java.util.List;
 import java.util.ArrayList;
-import net.minecraft.util.ClassInheritanceMultiMap;
-import java.util.Iterator;
-import net.minecraft.tileentity.TileEntity;
-import java.util.Map;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
-import net.minecraft.world.chunk.Chunk;
 import java.util.ConcurrentModificationException;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import java.util.List;
+import java.util.Map;
 import net.minecraft.entity.Entity;
-import net.minecraft.world.World;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
 public class ChunkVisibility
 {
     public static final int MASK_FACINGS = 63;
-    public static final EnumFacing[][] enumFacingArrays;
-    public static final EnumFacing[][] enumFacingOppositeArrays;
-    private static int counter;
-    private static int iMaxStatic;
-    private static int iMaxStaticFinal;
-    private static World worldLast;
-    private static int pcxLast;
-    private static int pczLast;
-    
-    public static int getMaxChunkY(final World world, final Entity viewEntity, final int renderDistanceChunks) {
-        final int i = MathHelper.floor_double(viewEntity.posX) >> 4;
-        final int j = MathHelper.floor_double(viewEntity.posY) >> 4;
-        final int k = MathHelper.floor_double(viewEntity.posZ) >> 4;
-        final Chunk chunk = world.getChunkFromChunkCoords(i, k);
+    public static final EnumFacing[][] enumFacingArrays = makeEnumFacingArrays(false);
+    public static final EnumFacing[][] enumFacingOppositeArrays = makeEnumFacingArrays(true);
+    private static int counter = 0;
+    private static int iMaxStatic = -1;
+    private static int iMaxStaticFinal = 16;
+    private static World worldLast = null;
+    private static int pcxLast = Integer.MIN_VALUE;
+    private static int pczLast = Integer.MIN_VALUE;
+
+    public static int getMaxChunkY(World world, Entity viewEntity, int renderDistanceChunks)
+    {
+        int i = MathHelper.floor_double(viewEntity.posX) >> 4;
+        int j = MathHelper.floor_double(viewEntity.posY) >> 4;
+        int k = MathHelper.floor_double(viewEntity.posZ) >> 4;
+        Chunk chunk = world.getChunkFromChunkCoords(i, k);
         int l = i - renderDistanceChunks;
-        int i2 = i + renderDistanceChunks;
-        int j2 = k - renderDistanceChunks;
-        int k2 = k + renderDistanceChunks;
-        if (world != ChunkVisibility.worldLast || i != ChunkVisibility.pcxLast || k != ChunkVisibility.pczLast) {
-            ChunkVisibility.counter = 0;
-            ChunkVisibility.iMaxStaticFinal = 16;
-            ChunkVisibility.worldLast = world;
-            ChunkVisibility.pcxLast = i;
-            ChunkVisibility.pczLast = k;
+        int i1 = i + renderDistanceChunks;
+        int j1 = k - renderDistanceChunks;
+        int k1 = k + renderDistanceChunks;
+
+        if (world != worldLast || i != pcxLast || k != pczLast)
+        {
+            counter = 0;
+            iMaxStaticFinal = 16;
+            worldLast = world;
+            pcxLast = i;
+            pczLast = k;
         }
-        if (ChunkVisibility.counter == 0) {
-            ChunkVisibility.iMaxStatic = -1;
+
+        if (counter == 0)
+        {
+            iMaxStatic = -1;
         }
-        int l2 = ChunkVisibility.iMaxStatic;
-        switch (ChunkVisibility.counter) {
-            case 0: {
-                i2 = i;
-                k2 = k;
+
+        int l1 = iMaxStatic;
+
+        switch (counter)
+        {
+            case 0:
+                i1 = i;
+                k1 = k;
                 break;
-            }
-            case 1: {
+
+            case 1:
                 l = i;
-                k2 = k;
+                k1 = k;
                 break;
-            }
-            case 2: {
-                i2 = i;
-                j2 = k;
+
+            case 2:
+                i1 = i;
+                j1 = k;
                 break;
-            }
-            case 3: {
+
+            case 3:
                 l = i;
-                j2 = k;
-                break;
-            }
+                j1 = k;
         }
-        for (int i3 = l; i3 < i2; ++i3) {
-            for (int j3 = j2; j3 < k2; ++j3) {
-                final Chunk chunk2 = world.getChunkFromChunkCoords(i3, j3);
-                if (!chunk2.isEmpty()) {
-                    final ExtendedBlockStorage[] aextendedblockstorage = chunk2.getBlockStorageArray();
-                    int k3 = aextendedblockstorage.length - 1;
-                    while (k3 > l2) {
-                        final ExtendedBlockStorage extendedblockstorage = aextendedblockstorage[k3];
-                        if (extendedblockstorage != null && !extendedblockstorage.isEmpty()) {
-                            if (k3 > l2) {
-                                l2 = k3;
-                                break;
+
+        for (int i2 = l; i2 < i1; ++i2)
+        {
+            for (int j2 = j1; j2 < k1; ++j2)
+            {
+                Chunk chunk1 = world.getChunkFromChunkCoords(i2, j2);
+
+                if (!chunk1.isEmpty())
+                {
+                    ExtendedBlockStorage[] aextendedblockstorage = chunk1.getBlockStorageArray();
+
+                    for (int k2 = aextendedblockstorage.length - 1; k2 > l1; --k2)
+                    {
+                        ExtendedBlockStorage extendedblockstorage = aextendedblockstorage[k2];
+
+                        if (extendedblockstorage != null && !extendedblockstorage.isEmpty())
+                        {
+                            if (k2 > l1)
+                            {
+                                l1 = k2;
                             }
+
                             break;
                         }
-                        else {
-                            --k3;
-                        }
                     }
-                    try {
-                        final Map<BlockPos, TileEntity> map = chunk2.getTileEntityMap();
-                        if (!map.isEmpty()) {
-                            for (final BlockPos blockpos : map.keySet()) {
-                                final int l3 = blockpos.getY() >> 4;
-                                if (l3 > l2) {
-                                    l2 = l3;
+
+                    try
+                    {
+                        Map<BlockPos, TileEntity> map = chunk1.getTileEntityMap();
+
+                        if (!map.isEmpty())
+                        {
+                            for (BlockPos blockpos : map.keySet())
+                            {
+                                int l2 = blockpos.getY() >> 4;
+
+                                if (l2 > l1)
+                                {
+                                    l1 = l2;
                                 }
                             }
                         }
                     }
-                    catch (ConcurrentModificationException ex) {}
-                    final ClassInheritanceMultiMap<Entity>[] classinheritancemultimap = chunk2.getEntityLists();
-                    int i4 = classinheritancemultimap.length - 1;
-                    while (i4 > l2) {
-                        final ClassInheritanceMultiMap<Entity> classinheritancemultimap2 = classinheritancemultimap[i4];
-                        if (!classinheritancemultimap2.isEmpty() && (chunk2 != chunk || i4 != j || classinheritancemultimap2.size() != 1)) {
-                            if (i4 > l2) {
-                                l2 = i4;
-                                break;
+                    catch (ConcurrentModificationException var21)
+                    {
+                        ;
+                    }
+
+                    ClassInheritanceMultiMap<Entity>[] classinheritancemultimap = chunk1.getEntityLists();
+
+                    for (int i3 = classinheritancemultimap.length - 1; i3 > l1; --i3)
+                    {
+                        ClassInheritanceMultiMap<Entity> classinheritancemultimap1 = classinheritancemultimap[i3];
+
+                        if (!classinheritancemultimap1.isEmpty() && (chunk1 != chunk || i3 != j || classinheritancemultimap1.size() != 1))
+                        {
+                            if (i3 > l1)
+                            {
+                                l1 = i3;
                             }
+
                             break;
-                        }
-                        else {
-                            --i4;
                         }
                     }
                 }
             }
         }
-        if (ChunkVisibility.counter < 3) {
-            ChunkVisibility.iMaxStatic = l2;
-            l2 = ChunkVisibility.iMaxStaticFinal;
+
+        if (counter < 3)
+        {
+            iMaxStatic = l1;
+            l1 = iMaxStaticFinal;
         }
-        else {
-            ChunkVisibility.iMaxStaticFinal = l2;
-            ChunkVisibility.iMaxStatic = -1;
+        else
+        {
+            iMaxStaticFinal = l1;
+            iMaxStatic = -1;
         }
-        ChunkVisibility.counter = (ChunkVisibility.counter + 1) % 4;
-        return l2 << 4;
+
+        counter = (counter + 1) % 4;
+        return l1 << 4;
     }
-    
-    public static boolean isFinished() {
-        return ChunkVisibility.counter == 0;
+
+    public static boolean isFinished()
+    {
+        return counter == 0;
     }
-    
-    private static EnumFacing[][] makeEnumFacingArrays(final boolean opposite) {
-        final int i = 64;
-        final EnumFacing[][] aenumfacing = new EnumFacing[i][];
-        for (int j = 0; j < i; ++j) {
-            final List<EnumFacing> list = new ArrayList<EnumFacing>();
-            for (int k = 0; k < EnumFacing.VALUES.length; ++k) {
-                final EnumFacing enumfacing = EnumFacing.VALUES[k];
-                final EnumFacing enumfacing2 = opposite ? enumfacing.getOpposite() : enumfacing;
-                final int l = 1 << enumfacing2.ordinal();
-                if ((j & l) != 0x0) {
+
+    private static EnumFacing[][] makeEnumFacingArrays(boolean opposite)
+    {
+        int i = 64;
+        EnumFacing[][] aenumfacing = new EnumFacing[i][];
+
+        for (int j = 0; j < i; ++j)
+        {
+            List<EnumFacing> list = new ArrayList();
+
+            for (int k = 0; k < EnumFacing.VALUES.length; ++k)
+            {
+                EnumFacing enumfacing = EnumFacing.VALUES[k];
+                EnumFacing enumfacing1 = opposite ? enumfacing.getOpposite() : enumfacing;
+                int l = 1 << enumfacing1.ordinal();
+
+                if ((j & l) != 0)
+                {
                     list.add(enumfacing);
                 }
             }
-            final EnumFacing[] aenumfacing2 = list.toArray(new EnumFacing[list.size()]);
-            aenumfacing[j] = aenumfacing2;
+
+            EnumFacing[] aenumfacing1 = (EnumFacing[])list.toArray(new EnumFacing[list.size()]);
+            aenumfacing[j] = aenumfacing1;
         }
+
         return aenumfacing;
     }
-    
-    public static EnumFacing[] getFacingsNotOpposite(final int setDisabled) {
-        final int i = ~setDisabled & 0x3F;
-        return ChunkVisibility.enumFacingOppositeArrays[i];
+
+    public static EnumFacing[] getFacingsNotOpposite(int setDisabled)
+    {
+        int i = ~setDisabled & 63;
+        return enumFacingOppositeArrays[i];
     }
-    
-    public static void reset() {
-        ChunkVisibility.worldLast = null;
-    }
-    
-    static {
-        enumFacingArrays = makeEnumFacingArrays(false);
-        enumFacingOppositeArrays = makeEnumFacingArrays(true);
-        ChunkVisibility.counter = 0;
-        ChunkVisibility.iMaxStatic = -1;
-        ChunkVisibility.iMaxStaticFinal = 16;
-        ChunkVisibility.worldLast = null;
-        ChunkVisibility.pcxLast = Integer.MIN_VALUE;
-        ChunkVisibility.pczLast = Integer.MIN_VALUE;
+
+    public static void reset()
+    {
+        worldLast = null;
     }
 }

@@ -1,147 +1,217 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 
 public class InventoryCrafting implements IInventory
 {
+    /** List of the stacks in the crafting matrix. */
     private final ItemStack[] stackList;
+
+    /** the width of the crafting inventory */
     private final int inventoryWidth;
     private final int inventoryHeight;
+
+    /**
+     * Class containing the callbacks for the events on_GUIClosed and on_CraftMaxtrixChanged.
+     */
     private final Container eventHandler;
-    
-    public InventoryCrafting(final Container eventHandlerIn, final int width, final int height) {
-        final int i = width * height;
+
+    public InventoryCrafting(Container eventHandlerIn, int width, int height)
+    {
+        int i = width * height;
         this.stackList = new ItemStack[i];
         this.eventHandler = eventHandlerIn;
         this.inventoryWidth = width;
         this.inventoryHeight = height;
     }
-    
-    @Override
-    public int getSizeInventory() {
+
+    /**
+     * Returns the number of slots in the inventory.
+     */
+    public int getSizeInventory()
+    {
         return this.stackList.length;
     }
-    
-    @Override
-    public ItemStack getStackInSlot(final int index) {
-        return (index >= this.getSizeInventory()) ? null : this.stackList[index];
+
+    /**
+     * Returns the stack in the given slot.
+     *  
+     * @param index The slot to retrieve from.
+     */
+    public ItemStack getStackInSlot(int index)
+    {
+        return index >= this.getSizeInventory() ? null : this.stackList[index];
     }
-    
-    public ItemStack getStackInRowAndColumn(final int row, final int column) {
-        return (row >= 0 && row < this.inventoryWidth && column >= 0 && column <= this.inventoryHeight) ? this.getStackInSlot(row + column * this.inventoryWidth) : null;
+
+    /**
+     * Returns the itemstack in the slot specified (Top left is 0, 0). Args: row, column
+     */
+    public ItemStack getStackInRowAndColumn(int row, int column)
+    {
+        return row >= 0 && row < this.inventoryWidth && column >= 0 && column <= this.inventoryHeight ? this.getStackInSlot(row + column * this.inventoryWidth) : null;
     }
-    
-    @Override
-    public String getName() {
+
+    /**
+     * Gets the name of this command sender (usually username, but possibly "Rcon")
+     */
+    public String getCommandSenderName()
+    {
         return "container.crafting";
     }
-    
-    @Override
-    public boolean hasCustomName() {
+
+    /**
+     * Returns true if this thing is named
+     */
+    public boolean hasCustomName()
+    {
         return false;
     }
-    
-    @Override
-    public IChatComponent getDisplayName() {
-        return this.hasCustomName() ? new ChatComponentText(this.getName()) : new ChatComponentTranslation(this.getName(), new Object[0]);
+
+    /**
+     * Get the formatted ChatComponent that will be used for the sender's username in chat
+     */
+    public IChatComponent getDisplayName()
+    {
+        return (IChatComponent)(this.hasCustomName() ? new ChatComponentText(this.getCommandSenderName()) : new ChatComponentTranslation(this.getCommandSenderName(), new Object[0]));
     }
-    
-    @Override
-    public ItemStack removeStackFromSlot(final int index) {
-        if (this.stackList[index] != null) {
-            final ItemStack itemstack = this.stackList[index];
+
+    /**
+     * Removes a stack from the given slot and returns it.
+     *  
+     * @param index The slot to remove a stack from.
+     */
+    public ItemStack getStackInSlotOnClosing(int index)
+    {
+        if (this.stackList[index] != null)
+        {
+            ItemStack itemstack = this.stackList[index];
             this.stackList[index] = null;
             return itemstack;
         }
-        return null;
-    }
-    
-    @Override
-    public ItemStack decrStackSize(final int index, final int count) {
-        if (this.stackList[index] == null) {
+        else
+        {
             return null;
         }
-        if (this.stackList[index].stackSize <= count) {
-            final ItemStack itemstack1 = this.stackList[index];
-            this.stackList[index] = null;
-            this.eventHandler.onCraftMatrixChanged(this);
-            return itemstack1;
-        }
-        final ItemStack itemstack2 = this.stackList[index].splitStack(count);
-        if (this.stackList[index].stackSize == 0) {
-            this.stackList[index] = null;
-        }
-        this.eventHandler.onCraftMatrixChanged(this);
-        return itemstack2;
     }
-    
-    @Override
-    public void setInventorySlotContents(final int index, final ItemStack stack) {
+
+    /**
+     * Removes up to a specified number of items from an inventory slot and returns them in a new stack.
+     *  
+     * @param index The slot to remove from.
+     * @param count The maximum amount of items to remove.
+     */
+    public ItemStack decrStackSize(int index, int count)
+    {
+        if (this.stackList[index] != null)
+        {
+            if (this.stackList[index].stackSize <= count)
+            {
+                ItemStack itemstack1 = this.stackList[index];
+                this.stackList[index] = null;
+                this.eventHandler.onCraftMatrixChanged(this);
+                return itemstack1;
+            }
+            else
+            {
+                ItemStack itemstack = this.stackList[index].splitStack(count);
+
+                if (this.stackList[index].stackSize == 0)
+                {
+                    this.stackList[index] = null;
+                }
+
+                this.eventHandler.onCraftMatrixChanged(this);
+                return itemstack;
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    /**
+     * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
+     */
+    public void setInventorySlotContents(int index, ItemStack stack)
+    {
         this.stackList[index] = stack;
         this.eventHandler.onCraftMatrixChanged(this);
     }
-    
-    @Override
-    public int getInventoryStackLimit() {
+
+    /**
+     * Returns the maximum stack size for a inventory slot. Seems to always be 64, possibly will be extended.
+     */
+    public int getInventoryStackLimit()
+    {
         return 64;
     }
-    
-    @Override
-    public void markDirty() {
+
+    /**
+     * For tile entities, ensures the chunk containing the tile entity is saved to disk later - the game won't think it
+     * hasn't changed and skip it.
+     */
+    public void markDirty()
+    {
     }
-    
-    @Override
-    public boolean isUseableByPlayer(final EntityPlayer player) {
+
+    /**
+     * Do not make give this method the name canInteractWith because it clashes with Container
+     */
+    public boolean isUseableByPlayer(EntityPlayer player)
+    {
         return true;
     }
-    
-    @Override
-    public void openInventory(final EntityPlayer player) {
+
+    public void openInventory(EntityPlayer player)
+    {
     }
-    
-    @Override
-    public void closeInventory(final EntityPlayer player) {
+
+    public void closeInventory(EntityPlayer player)
+    {
     }
-    
-    @Override
-    public boolean isItemValidForSlot(final int index, final ItemStack stack) {
+
+    /**
+     * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
+     */
+    public boolean isItemValidForSlot(int index, ItemStack stack)
+    {
         return true;
     }
-    
-    @Override
-    public int getField(final int id) {
+
+    public int getField(int id)
+    {
         return 0;
     }
-    
-    @Override
-    public void setField(final int id, final int value) {
+
+    public void setField(int id, int value)
+    {
     }
-    
-    @Override
-    public int getFieldCount() {
+
+    public int getFieldCount()
+    {
         return 0;
     }
-    
-    @Override
-    public void clear() {
-        for (int i = 0; i < this.stackList.length; ++i) {
+
+    public void clear()
+    {
+        for (int i = 0; i < this.stackList.length; ++i)
+        {
             this.stackList[i] = null;
         }
     }
-    
-    public int getHeight() {
+
+    public int getHeight()
+    {
         return this.inventoryHeight;
     }
-    
-    public int getWidth() {
+
+    public int getWidth()
+    {
         return this.inventoryWidth;
     }
 }

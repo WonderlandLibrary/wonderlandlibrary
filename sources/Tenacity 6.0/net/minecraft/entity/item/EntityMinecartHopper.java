@@ -1,180 +1,238 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.entity.item;
 
-import net.minecraft.inventory.ContainerHopper;
-import net.minecraft.inventory.Container;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.util.DamageSource;
 import java.util.List;
-import com.google.common.base.Predicate;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.tileentity.TileEntityHopper;
-import net.minecraft.entity.Entity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.world.World;
-import net.minecraft.util.BlockPos;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerHopper;
+import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.IHopper;
+import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntitySelectors;
+import net.minecraft.world.World;
 
 public class EntityMinecartHopper extends EntityMinecartContainer implements IHopper
 {
-    private boolean isBlocked;
-    private int transferTicker;
-    private BlockPos field_174900_c;
-    
-    public EntityMinecartHopper(final World worldIn) {
+    /** Whether this hopper minecart is being blocked by an activator rail. */
+    private boolean isBlocked = true;
+    private int transferTicker = -1;
+    private BlockPos field_174900_c = BlockPos.ORIGIN;
+
+    public EntityMinecartHopper(World worldIn)
+    {
         super(worldIn);
-        this.isBlocked = true;
-        this.transferTicker = -1;
-        this.field_174900_c = BlockPos.ORIGIN;
     }
-    
-    public EntityMinecartHopper(final World worldIn, final double x, final double y, final double z) {
-        super(worldIn, x, y, z);
-        this.isBlocked = true;
-        this.transferTicker = -1;
-        this.field_174900_c = BlockPos.ORIGIN;
+
+    public EntityMinecartHopper(World worldIn, double p_i1721_2_, double p_i1721_4_, double p_i1721_6_)
+    {
+        super(worldIn, p_i1721_2_, p_i1721_4_, p_i1721_6_);
     }
-    
-    @Override
-    public EnumMinecartType getMinecartType() {
-        return EnumMinecartType.HOPPER;
+
+    public EntityMinecart.EnumMinecartType getMinecartType()
+    {
+        return EntityMinecart.EnumMinecartType.HOPPER;
     }
-    
-    @Override
-    public IBlockState getDefaultDisplayTile() {
+
+    public IBlockState getDefaultDisplayTile()
+    {
         return Blocks.hopper.getDefaultState();
     }
-    
-    @Override
-    public int getDefaultDisplayTileOffset() {
+
+    public int getDefaultDisplayTileOffset()
+    {
         return 1;
     }
-    
-    @Override
-    public int getSizeInventory() {
+
+    /**
+     * Returns the number of slots in the inventory.
+     */
+    public int getSizeInventory()
+    {
         return 5;
     }
-    
-    @Override
-    public boolean interactFirst(final EntityPlayer playerIn) {
-        if (!this.worldObj.isRemote) {
+
+    /**
+     * First layer of player interaction
+     */
+    public boolean interactFirst(EntityPlayer playerIn)
+    {
+        if (!this.worldObj.isRemote)
+        {
             playerIn.displayGUIChest(this);
         }
+
         return true;
     }
-    
-    @Override
-    public void onActivatorRailPass(final int x, final int y, final int z, final boolean receivingPower) {
-        final boolean flag = !receivingPower;
-        if (flag != this.getBlocked()) {
+
+    /**
+     * Called every tick the minecart is on an activator rail. Args: x, y, z, is the rail receiving power
+     */
+    public void onActivatorRailPass(int x, int y, int z, boolean receivingPower)
+    {
+        boolean flag = !receivingPower;
+
+        if (flag != this.getBlocked())
+        {
             this.setBlocked(flag);
         }
     }
-    
-    public boolean getBlocked() {
+
+    /**
+     * Get whether this hopper minecart is being blocked by an activator rail.
+     */
+    public boolean getBlocked()
+    {
         return this.isBlocked;
     }
-    
-    public void setBlocked(final boolean p_96110_1_) {
+
+    /**
+     * Set whether this hopper minecart is being blocked by an activator rail.
+     */
+    public void setBlocked(boolean p_96110_1_)
+    {
         this.isBlocked = p_96110_1_;
     }
-    
-    @Override
-    public World getWorld() {
+
+    /**
+     * Returns the worldObj for this tileEntity.
+     */
+    public World getWorld()
+    {
         return this.worldObj;
     }
-    
-    @Override
-    public double getXPos() {
+
+    /**
+     * Gets the world X position for this hopper entity.
+     */
+    public double getXPos()
+    {
         return this.posX;
     }
-    
-    @Override
-    public double getYPos() {
-        return this.posY + 0.5;
+
+    /**
+     * Gets the world Y position for this hopper entity.
+     */
+    public double getYPos()
+    {
+        return this.posY + 0.5D;
     }
-    
-    @Override
-    public double getZPos() {
+
+    /**
+     * Gets the world Z position for this hopper entity.
+     */
+    public double getZPos()
+    {
         return this.posZ;
     }
-    
-    @Override
-    public void onUpdate() {
+
+    /**
+     * Called to update the entity's position/logic.
+     */
+    public void onUpdate()
+    {
         super.onUpdate();
-        if (!this.worldObj.isRemote && this.isEntityAlive() && this.getBlocked()) {
-            final BlockPos blockpos = new BlockPos(this);
-            if (blockpos.equals(this.field_174900_c)) {
+
+        if (!this.worldObj.isRemote && this.isEntityAlive() && this.getBlocked())
+        {
+            BlockPos blockpos = new BlockPos(this);
+
+            if (blockpos.equals(this.field_174900_c))
+            {
                 --this.transferTicker;
             }
-            else {
+            else
+            {
                 this.setTransferTicker(0);
             }
-            if (!this.canTransfer()) {
+
+            if (!this.canTransfer())
+            {
                 this.setTransferTicker(0);
-                if (this.func_96112_aD()) {
+
+                if (this.func_96112_aD())
+                {
                     this.setTransferTicker(4);
                     this.markDirty();
                 }
             }
         }
     }
-    
-    public boolean func_96112_aD() {
-        if (TileEntityHopper.captureDroppedItems(this)) {
+
+    public boolean func_96112_aD()
+    {
+        if (TileEntityHopper.captureDroppedItems(this))
+        {
             return true;
         }
-        final List<EntityItem> list = this.worldObj.getEntitiesWithinAABB((Class<? extends EntityItem>)EntityItem.class, this.getEntityBoundingBox().expand(0.25, 0.0, 0.25), (com.google.common.base.Predicate<? super EntityItem>)EntitySelectors.selectAnything);
-        if (list.size() > 0) {
-            TileEntityHopper.putDropInInventoryAllSlots(this, list.get(0));
-        }
-        return false;
-    }
-    
-    @Override
-    public void killMinecart(final DamageSource source) {
-        super.killMinecart(source);
-        if (this.worldObj.getGameRules().getBoolean("doEntityDrops")) {
-            this.dropItemWithOffset(Item.getItemFromBlock(Blocks.hopper), 1, 0.0f);
+        else
+        {
+            List<EntityItem> list = this.worldObj.<EntityItem>getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(0.25D, 0.0D, 0.25D), EntitySelectors.selectAnything);
+
+            if (list.size() > 0)
+            {
+                TileEntityHopper.putDropInInventoryAllSlots(this, (EntityItem)list.get(0));
+            }
+
+            return false;
         }
     }
-    
-    @Override
-    protected void writeEntityToNBT(final NBTTagCompound tagCompound) {
+
+    public void killMinecart(DamageSource p_94095_1_)
+    {
+        super.killMinecart(p_94095_1_);
+
+        if (this.worldObj.getGameRules().getGameRuleBooleanValue("doEntityDrops"))
+        {
+            this.dropItemWithOffset(Item.getItemFromBlock(Blocks.hopper), 1, 0.0F);
+        }
+    }
+
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    protected void writeEntityToNBT(NBTTagCompound tagCompound)
+    {
         super.writeEntityToNBT(tagCompound);
         tagCompound.setInteger("TransferCooldown", this.transferTicker);
     }
-    
-    @Override
-    protected void readEntityFromNBT(final NBTTagCompound tagCompund) {
+
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    protected void readEntityFromNBT(NBTTagCompound tagCompund)
+    {
         super.readEntityFromNBT(tagCompund);
         this.transferTicker = tagCompund.getInteger("TransferCooldown");
     }
-    
-    public void setTransferTicker(final int p_98042_1_) {
+
+    /**
+     * Sets the transfer ticker, used to determine the delay between transfers.
+     */
+    public void setTransferTicker(int p_98042_1_)
+    {
         this.transferTicker = p_98042_1_;
     }
-    
-    public boolean canTransfer() {
+
+    /**
+     * Returns whether the hopper cart can currently transfer an item.
+     */
+    public boolean canTransfer()
+    {
         return this.transferTicker > 0;
     }
-    
-    @Override
-    public String getGuiID() {
+
+    public String getGuiID()
+    {
         return "minecraft:hopper";
     }
-    
-    @Override
-    public Container createContainer(final InventoryPlayer playerInventory, final EntityPlayer playerIn) {
+
+    public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
+    {
         return new ContainerHopper(playerInventory, this, playerIn);
     }
 }

@@ -1,136 +1,175 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.entity;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.EntityHanging;
-import net.minecraft.client.renderer.Tessellator;
-import net.optifine.shaders.Shaders;
-import net.minecraft.src.Config;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.culling.ICamera;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.src.Config;
+import net.optifine.shaders.Shaders;
 
 public abstract class RenderLiving<T extends EntityLiving> extends RendererLivingEntity<T>
 {
-    public RenderLiving(final RenderManager rendermanagerIn, final ModelBase modelbaseIn, final float shadowsizeIn) {
+    public RenderLiving(RenderManager rendermanagerIn, ModelBase modelbaseIn, float shadowsizeIn)
+    {
         super(rendermanagerIn, modelbaseIn, shadowsizeIn);
     }
-    
-    @Override
-    protected boolean canRenderName(final T entity) {
-        return super.canRenderName(entity) && (entity.getAlwaysRenderNameTagForRender() || (entity.hasCustomName() && entity == this.renderManager.pointedEntity));
+
+    protected boolean canRenderName(T entity)
+    {
+        return super.canRenderName(entity) && (entity.getAlwaysRenderNameTagForRender() || entity.hasCustomName() && entity == this.renderManager.pointedEntity);
     }
-    
-    @Override
-    public boolean shouldRender(final T livingEntity, final ICamera camera, final double camX, final double camY, final double camZ) {
-        if (super.shouldRender(livingEntity, camera, camX, camY, camZ)) {
+
+    public boolean shouldRender(T livingEntity, ICamera camera, double camX, double camY, double camZ)
+    {
+        if (super.shouldRender(livingEntity, camera, camX, camY, camZ))
+        {
             return true;
         }
-        if (livingEntity.getLeashed() && livingEntity.getLeashedToEntity() != null) {
-            final Entity entity = livingEntity.getLeashedToEntity();
+        else if (livingEntity.getLeashed() && livingEntity.getLeashedToEntity() != null)
+        {
+            Entity entity = livingEntity.getLeashedToEntity();
             return camera.isBoundingBoxInFrustum(entity.getEntityBoundingBox());
         }
-        return false;
+        else
+        {
+            return false;
+        }
     }
-    
-    @Override
-    public void doRender(final T entity, final double x, final double y, final double z, final float entityYaw, final float partialTicks) {
+
+    /**
+     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
+     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
+     * (Render<T extends Entity>) and this method has signature public void doRender(T entity, double d, double d1,
+     * double d2, float f, float f1). But JAD is pre 1.5 so doe
+     *  
+     * @param entityYaw The yaw rotation of the passed entity
+     */
+    public void doRender(T entity, double x, double y, double z, float entityYaw, float partialTicks)
+    {
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
         this.renderLeash(entity, x, y, z, entityYaw, partialTicks);
     }
-    
-    public void setLightmap(final T entityLivingIn, final float partialTicks) {
-        final int i = entityLivingIn.getBrightnessForRender(partialTicks);
-        final int j = i % 65536;
-        final int k = i / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j / 1.0f, k / 1.0f);
+
+    public void func_177105_a(T entityLivingIn, float partialTicks)
+    {
+        int i = entityLivingIn.getBrightnessForRender(partialTicks);
+        int j = i % 65536;
+        int k = i / 65536;
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
     }
-    
-    private double interpolateValue(final double start, final double end, final double pct) {
+
+    /**
+     * Gets the value between start and end according to pct
+     */
+    private double interpolateValue(double start, double end, double pct)
+    {
         return start + (end - start) * pct;
     }
-    
-    protected void renderLeash(final T entityLivingIn, double x, double y, double z, final float entityYaw, final float partialTicks) {
-        if (!Config.isShaders() || !Shaders.isShadowPass) {
-            final Entity entity = entityLivingIn.getLeashedToEntity();
-            if (entity != null) {
-                y -= (1.6 - entityLivingIn.height) * 0.5;
-                final Tessellator tessellator = Tessellator.getInstance();
-                final WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-                final double d0 = this.interpolateValue(entity.prevRotationYaw, entity.rotationYaw, partialTicks * 0.5f) * 0.01745329238474369;
-                final double d2 = this.interpolateValue(entity.prevRotationPitch, entity.rotationPitch, partialTicks * 0.5f) * 0.01745329238474369;
-                double d3 = Math.cos(d0);
-                double d4 = Math.sin(d0);
-                double d5 = Math.sin(d2);
-                if (entity instanceof EntityHanging) {
-                    d3 = 0.0;
-                    d4 = 0.0;
-                    d5 = -1.0;
+
+    protected void renderLeash(T entityLivingIn, double x, double y, double z, float entityYaw, float partialTicks)
+    {
+        if (!Config.isShaders() || !Shaders.isShadowPass)
+        {
+            Entity entity = entityLivingIn.getLeashedToEntity();
+
+            if (entity != null)
+            {
+                y = y - (1.6D - (double)entityLivingIn.height) * 0.5D;
+                Tessellator tessellator = Tessellator.getInstance();
+                WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+                double d0 = this.interpolateValue((double)entity.prevRotationYaw, (double)entity.rotationYaw, (double)(partialTicks * 0.5F)) * 0.01745329238474369D;
+                double d1 = this.interpolateValue((double)entity.prevRotationPitch, (double)entity.rotationPitch, (double)(partialTicks * 0.5F)) * 0.01745329238474369D;
+                double d2 = Math.cos(d0);
+                double d3 = Math.sin(d0);
+                double d4 = Math.sin(d1);
+
+                if (entity instanceof EntityHanging)
+                {
+                    d2 = 0.0D;
+                    d3 = 0.0D;
+                    d4 = -1.0D;
                 }
-                final double d6 = Math.cos(d2);
-                final double d7 = this.interpolateValue(entity.prevPosX, entity.posX, partialTicks) - d3 * 0.7 - d4 * 0.5 * d6;
-                final double d8 = this.interpolateValue(entity.prevPosY + entity.getEyeHeight() * 0.7, entity.posY + entity.getEyeHeight() * 0.7, partialTicks) - d5 * 0.5 - 0.25;
-                final double d9 = this.interpolateValue(entity.prevPosZ, entity.posZ, partialTicks) - d4 * 0.7 + d3 * 0.5 * d6;
-                final double d10 = this.interpolateValue(entityLivingIn.prevRenderYawOffset, entityLivingIn.renderYawOffset, partialTicks) * 0.01745329238474369 + 1.5707963267948966;
-                d3 = Math.cos(d10) * entityLivingIn.width * 0.4;
-                d4 = Math.sin(d10) * entityLivingIn.width * 0.4;
-                final double d11 = this.interpolateValue(entityLivingIn.prevPosX, entityLivingIn.posX, partialTicks) + d3;
-                final double d12 = this.interpolateValue(entityLivingIn.prevPosY, entityLivingIn.posY, partialTicks);
-                final double d13 = this.interpolateValue(entityLivingIn.prevPosZ, entityLivingIn.posZ, partialTicks) + d4;
-                x += d3;
-                z += d4;
-                final double d14 = (float)(d7 - d11);
-                final double d15 = (float)(d8 - d12);
-                final double d16 = (float)(d9 - d13);
+
+                double d5 = Math.cos(d1);
+                double d6 = this.interpolateValue(entity.prevPosX, entity.posX, (double)partialTicks) - d2 * 0.7D - d3 * 0.5D * d5;
+                double d7 = this.interpolateValue(entity.prevPosY + (double)entity.getEyeHeight() * 0.7D, entity.posY + (double)entity.getEyeHeight() * 0.7D, (double)partialTicks) - d4 * 0.5D - 0.25D;
+                double d8 = this.interpolateValue(entity.prevPosZ, entity.posZ, (double)partialTicks) - d3 * 0.7D + d2 * 0.5D * d5;
+                double d9 = this.interpolateValue((double)entityLivingIn.prevRenderYawOffset, (double)entityLivingIn.renderYawOffset, (double)partialTicks) * 0.01745329238474369D + (Math.PI / 2D);
+                d2 = Math.cos(d9) * (double)entityLivingIn.width * 0.4D;
+                d3 = Math.sin(d9) * (double)entityLivingIn.width * 0.4D;
+                double d10 = this.interpolateValue(entityLivingIn.prevPosX, entityLivingIn.posX, (double)partialTicks) + d2;
+                double d11 = this.interpolateValue(entityLivingIn.prevPosY, entityLivingIn.posY, (double)partialTicks);
+                double d12 = this.interpolateValue(entityLivingIn.prevPosZ, entityLivingIn.posZ, (double)partialTicks) + d3;
+                x = x + d2;
+                z = z + d3;
+                double d13 = (double)((float)(d6 - d10));
+                double d14 = (double)((float)(d7 - d11));
+                double d15 = (double)((float)(d8 - d12));
                 GlStateManager.disableTexture2D();
                 GlStateManager.disableLighting();
                 GlStateManager.disableCull();
-                if (Config.isShaders()) {
+
+                if (Config.isShaders())
+                {
                     Shaders.beginLeash();
                 }
-                final int i = 24;
-                final double d17 = 0.025;
-                worldrenderer.begin(5, DefaultVertexFormats.POSITION_COLOR);
-                for (int j = 0; j <= 24; ++j) {
-                    float f = 0.5f;
-                    float f2 = 0.4f;
-                    float f3 = 0.3f;
-                    if (j % 2 == 0) {
-                        f *= 0.7f;
-                        f2 *= 0.7f;
-                        f3 *= 0.7f;
+
+                int i = 24;
+                double d16 = 0.025D;
+                worldrenderer.begin(5, DefaultVertexFormats.field_181706_f);
+
+                for (int j = 0; j <= 24; ++j)
+                {
+                    float f = 0.5F;
+                    float f1 = 0.4F;
+                    float f2 = 0.3F;
+
+                    if (j % 2 == 0)
+                    {
+                        f *= 0.7F;
+                        f1 *= 0.7F;
+                        f2 *= 0.7F;
                     }
-                    final float f4 = j / 24.0f;
-                    worldrenderer.pos(x + d14 * f4 + 0.0, y + d15 * (f4 * f4 + f4) * 0.5 + ((24.0f - j) / 18.0f + 0.125f), z + d16 * f4).color(f, f2, f3, 1.0f).endVertex();
-                    worldrenderer.pos(x + d14 * f4 + 0.025, y + d15 * (f4 * f4 + f4) * 0.5 + ((24.0f - j) / 18.0f + 0.125f) + 0.025, z + d16 * f4).color(f, f2, f3, 1.0f).endVertex();
+
+                    float f3 = (float)j / 24.0F;
+                    worldrenderer.pos(x + d13 * (double)f3 + 0.0D, y + d14 * (double)(f3 * f3 + f3) * 0.5D + (double)((24.0F - (float)j) / 18.0F + 0.125F), z + d15 * (double)f3).func_181666_a(f, f1, f2, 1.0F).endVertex();
+                    worldrenderer.pos(x + d13 * (double)f3 + 0.025D, y + d14 * (double)(f3 * f3 + f3) * 0.5D + (double)((24.0F - (float)j) / 18.0F + 0.125F) + 0.025D, z + d15 * (double)f3).func_181666_a(f, f1, f2, 1.0F).endVertex();
                 }
+
                 tessellator.draw();
-                worldrenderer.begin(5, DefaultVertexFormats.POSITION_COLOR);
-                for (int k = 0; k <= 24; ++k) {
-                    float f5 = 0.5f;
-                    float f6 = 0.4f;
-                    float f7 = 0.3f;
-                    if (k % 2 == 0) {
-                        f5 *= 0.7f;
-                        f6 *= 0.7f;
-                        f7 *= 0.7f;
+                worldrenderer.begin(5, DefaultVertexFormats.field_181706_f);
+
+                for (int k = 0; k <= 24; ++k)
+                {
+                    float f4 = 0.5F;
+                    float f5 = 0.4F;
+                    float f6 = 0.3F;
+
+                    if (k % 2 == 0)
+                    {
+                        f4 *= 0.7F;
+                        f5 *= 0.7F;
+                        f6 *= 0.7F;
                     }
-                    final float f8 = k / 24.0f;
-                    worldrenderer.pos(x + d14 * f8 + 0.0, y + d15 * (f8 * f8 + f8) * 0.5 + ((24.0f - k) / 18.0f + 0.125f) + 0.025, z + d16 * f8).color(f5, f6, f7, 1.0f).endVertex();
-                    worldrenderer.pos(x + d14 * f8 + 0.025, y + d15 * (f8 * f8 + f8) * 0.5 + ((24.0f - k) / 18.0f + 0.125f), z + d16 * f8 + 0.025).color(f5, f6, f7, 1.0f).endVertex();
+
+                    float f7 = (float)k / 24.0F;
+                    worldrenderer.pos(x + d13 * (double)f7 + 0.0D, y + d14 * (double)(f7 * f7 + f7) * 0.5D + (double)((24.0F - (float)k) / 18.0F + 0.125F) + 0.025D, z + d15 * (double)f7).func_181666_a(f4, f5, f6, 1.0F).endVertex();
+                    worldrenderer.pos(x + d13 * (double)f7 + 0.025D, y + d14 * (double)(f7 * f7 + f7) * 0.5D + (double)((24.0F - (float)k) / 18.0F + 0.125F), z + d15 * (double)f7 + 0.025D).func_181666_a(f4, f5, f6, 1.0F).endVertex();
                 }
+
                 tessellator.draw();
-                if (Config.isShaders()) {
+
+                if (Config.isShaders())
+                {
                     Shaders.endLeash();
                 }
+
                 GlStateManager.enableLighting();
                 GlStateManager.enableTexture2D();
                 GlStateManager.enableCull();

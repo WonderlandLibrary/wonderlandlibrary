@@ -1,39 +1,40 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.scoreboard;
 
-import java.util.Iterator;
-import net.minecraft.util.MathHelper;
-import net.minecraft.entity.player.EntityPlayer;
 import java.util.List;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.MathHelper;
 
 public class ScoreHealthCriteria extends ScoreDummyCriteria
 {
-    public ScoreHealthCriteria(final String name) {
+    public ScoreHealthCriteria(String name)
+    {
         super(name);
     }
-    
-    @Override
-    public int setScore(final List<EntityPlayer> p_96635_1_) {
-        float f = 0.0f;
-        for (final EntityPlayer entityplayer : p_96635_1_) {
+
+    public int func_96635_a(List<EntityPlayer> p_96635_1_)
+    {
+        float f = 0.0F;
+
+        for (EntityPlayer entityplayer : p_96635_1_)
+        {
             f += entityplayer.getHealth() + entityplayer.getAbsorptionAmount();
         }
-        if (p_96635_1_.size() > 0) {
-            f /= p_96635_1_.size();
+
+        if (p_96635_1_.size() > 0)
+        {
+            f /= (float)p_96635_1_.size();
         }
+
         return MathHelper.ceiling_float_int(f);
     }
-    
-    @Override
-    public boolean isReadOnly() {
+
+    public boolean isReadOnly()
+    {
         return true;
     }
-    
-    @Override
-    public IScoreObjectiveCriteria.EnumRenderType getRenderType() {
+
+    public IScoreObjectiveCriteria.EnumRenderType getRenderType()
+    {
         return IScoreObjectiveCriteria.EnumRenderType.HEARTS;
     }
 }

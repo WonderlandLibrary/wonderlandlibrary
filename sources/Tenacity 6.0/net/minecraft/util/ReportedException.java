@@ -1,30 +1,32 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.util;
 
 import net.minecraft.crash.CrashReport;
 
 public class ReportedException extends RuntimeException
 {
+    /** Instance of CrashReport. */
     private final CrashReport theReportedExceptionCrashReport;
-    
-    public ReportedException(final CrashReport report) {
+
+    public ReportedException(CrashReport report)
+    {
         this.theReportedExceptionCrashReport = report;
     }
-    
-    public CrashReport getCrashReport() {
+
+    /**
+     * Gets the CrashReport wrapped by this exception.
+     */
+    public CrashReport getCrashReport()
+    {
         return this.theReportedExceptionCrashReport;
     }
-    
-    @Override
-    public Throwable getCause() {
+
+    public Throwable getCause()
+    {
         return this.theReportedExceptionCrashReport.getCrashCause();
     }
-    
-    @Override
-    public String getMessage() {
+
+    public String getMessage()
+    {
         return this.theReportedExceptionCrashReport.getDescription();
     }
 }

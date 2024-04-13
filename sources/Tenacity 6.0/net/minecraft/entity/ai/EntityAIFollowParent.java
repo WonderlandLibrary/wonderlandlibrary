@@ -1,81 +1,110 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.entity.ai;
 
-import java.util.Iterator;
 import java.util.List;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityAnimal;
 
 public class EntityAIFollowParent extends EntityAIBase
 {
+    /** The child that is following its parent. */
     EntityAnimal childAnimal;
     EntityAnimal parentAnimal;
     double moveSpeed;
     private int delayCounter;
-    
-    public EntityAIFollowParent(final EntityAnimal animal, final double speed) {
+
+    public EntityAIFollowParent(EntityAnimal animal, double speed)
+    {
         this.childAnimal = animal;
         this.moveSpeed = speed;
     }
-    
-    @Override
-    public boolean shouldExecute() {
-        if (this.childAnimal.getGrowingAge() >= 0) {
+
+    /**
+     * Returns whether the EntityAIBase should begin execution.
+     */
+    public boolean shouldExecute()
+    {
+        if (this.childAnimal.getGrowingAge() >= 0)
+        {
             return false;
         }
-        final List<EntityAnimal> list = this.childAnimal.worldObj.getEntitiesWithinAABB(this.childAnimal.getClass(), this.childAnimal.getEntityBoundingBox().expand(8.0, 4.0, 8.0));
-        EntityAnimal entityanimal = null;
-        double d0 = Double.MAX_VALUE;
-        for (final EntityAnimal entityanimal2 : list) {
-            if (entityanimal2.getGrowingAge() >= 0) {
-                final double d2 = this.childAnimal.getDistanceSqToEntity(entityanimal2);
-                if (d2 > d0) {
-                    continue;
+        else
+        {
+            List<EntityAnimal> list = this.childAnimal.worldObj.<EntityAnimal>getEntitiesWithinAABB(this.childAnimal.getClass(), this.childAnimal.getEntityBoundingBox().expand(8.0D, 4.0D, 8.0D));
+            EntityAnimal entityanimal = null;
+            double d0 = Double.MAX_VALUE;
+
+            for (EntityAnimal entityanimal1 : list)
+            {
+                if (entityanimal1.getGrowingAge() >= 0)
+                {
+                    double d1 = this.childAnimal.getDistanceSqToEntity(entityanimal1);
+
+                    if (d1 <= d0)
+                    {
+                        d0 = d1;
+                        entityanimal = entityanimal1;
+                    }
                 }
-                d0 = d2;
-                entityanimal = entityanimal2;
+            }
+
+            if (entityanimal == null)
+            {
+                return false;
+            }
+            else if (d0 < 9.0D)
+            {
+                return false;
+            }
+            else
+            {
+                this.parentAnimal = entityanimal;
+                return true;
             }
         }
-        if (entityanimal == null) {
-            return false;
-        }
-        if (d0 < 9.0) {
-            return false;
-        }
-        this.parentAnimal = entityanimal;
-        return true;
     }
-    
-    @Override
-    public boolean continueExecuting() {
-        if (this.childAnimal.getGrowingAge() >= 0) {
+
+    /**
+     * Returns whether an in-progress EntityAIBase should continue executing
+     */
+    public boolean continueExecuting()
+    {
+        if (this.childAnimal.getGrowingAge() >= 0)
+        {
             return false;
         }
-        if (!this.parentAnimal.isEntityAlive()) {
+        else if (!this.parentAnimal.isEntityAlive())
+        {
             return false;
         }
-        final double d0 = this.childAnimal.getDistanceSqToEntity(this.parentAnimal);
-        return d0 >= 9.0 && d0 <= 256.0;
+        else
+        {
+            double d0 = this.childAnimal.getDistanceSqToEntity(this.parentAnimal);
+            return d0 >= 9.0D && d0 <= 256.0D;
+        }
     }
-    
-    @Override
-    public void startExecuting() {
+
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
+    {
         this.delayCounter = 0;
     }
-    
-    @Override
-    public void resetTask() {
+
+    /**
+     * Resets the task
+     */
+    public void resetTask()
+    {
         this.parentAnimal = null;
     }
-    
-    @Override
-    public void updateTask() {
-        final int delayCounter = this.delayCounter - 1;
-        this.delayCounter = delayCounter;
-        if (delayCounter <= 0) {
+
+    /**
+     * Updates the task
+     */
+    public void updateTask()
+    {
+        if (--this.delayCounter <= 0)
+        {
             this.delayCounter = 10;
             this.childAnimal.getNavigator().tryMoveToEntityLiving(this.parentAnimal, this.moveSpeed);
         }

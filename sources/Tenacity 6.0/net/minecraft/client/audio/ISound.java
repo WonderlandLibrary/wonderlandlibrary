@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.audio;
 
 import net.minecraft.util.ResourceLocation;
@@ -9,35 +5,37 @@ import net.minecraft.util.ResourceLocation;
 public interface ISound
 {
     ResourceLocation getSoundLocation();
-    
+
     boolean canRepeat();
-    
+
     int getRepeatDelay();
-    
+
     float getVolume();
-    
+
     float getPitch();
-    
+
     float getXPosF();
-    
+
     float getYPosF();
-    
+
     float getZPosF();
-    
-    AttenuationType getAttenuationType();
-    
-    public enum AttenuationType
+
+    ISound.AttenuationType getAttenuationType();
+
+    public static enum AttenuationType
     {
-        NONE(0), 
+        NONE(0),
         LINEAR(2);
-        
+
         private final int type;
-        
-        private AttenuationType(final int typeIn) {
+
+        private AttenuationType(int typeIn)
+        {
             this.type = typeIn;
         }
-        
-        public int getTypeInt() {
+
+        public int getTypeInt()
+        {
             return this.type;
         }
     }

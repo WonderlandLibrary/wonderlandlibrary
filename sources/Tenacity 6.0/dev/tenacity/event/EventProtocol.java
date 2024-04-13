@@ -1,44 +1,72 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
-package dev.tenacity.event;
-
-import java.util.Iterator;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.List;
-
-public class EventProtocol
-{
-    private final List<EventListener> listeners;
-    
-    public EventProtocol() {
-        this.listeners = new CopyOnWriteArrayList<EventListener>();
-    }
-    
-    public void register(final Object listener) {
-        if (!(listener instanceof EventListener)) {
-            throw new IllegalArgumentException("Listener must implement EventListener");
-        }
-        this.listeners.add((EventListener)listener);
-    }
-    
-    public void unregister(final Object listener) {
-        if (!(listener instanceof EventListener)) {
-            throw new IllegalArgumentException("Listener must implement EventListener");
-        }
-        this.listeners.remove(listener);
-    }
-    
-    public void handleEvent(final Event event) {
-        for (final EventListener listener : this.listeners) {
-            try {
-                listener.onEvent(event);
-            }
-            catch (Exception exception) {
-                exception.printStackTrace();
-                System.err.println("Error handling event " + event.getClass().getSimpleName() + " for listener " + listener.getClass().getSimpleName());
-            }
-        }
-    }
-}
+//package dev.tenacity.event;
+//
+//import java.lang.reflect.Field;
+//import java.lang.reflect.ParameterizedType;
+//import java.lang.reflect.Type;
+//import java.util.*;
+//
+//public class EventProtocol<T> {
+//
+//    //From Pandaware
+//
+//    private final Map<Type, List<EventStorage<T>>> storageMap = new HashMap<>();
+//    private final Map<Type, List<EventListener<T>>> callbackMap = new HashMap<>();
+//
+//    public void register(Object listeningObject) {
+//        for (Field declaredField : listeningObject.getClass().getDeclaredFields()) {
+//            try {
+//                if (declaredField.getType() == EventListener.class) {
+//                    boolean accessible = declaredField.isAccessible();
+//                    if (!accessible) {
+//                        declaredField.setAccessible(true);
+//                    }
+//
+//                    Type type = ((ParameterizedType) declaredField.getGenericType()).getActualTypeArguments()[0];
+//                    EventListener<T> callback = (EventListener<T>) declaredField.get(listeningObject);
+//                    declaredField.setAccessible(accessible);
+//
+//                    if (storageMap.containsKey(type)) {
+//                        List<EventStorage<T>> storages = storageMap.get(type);
+//                        storages.add(new EventStorage<>(listeningObject, callback));
+//                    } else {
+//                        storageMap.put(type, new ArrayList<>(Collections.singletonList(new EventStorage<>(listeningObject, callback))));
+//                    }
+//                }
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        updateCallbacks();
+//    }
+//
+//    public void unregister(Object listeningObject) {
+//        for (List<EventStorage<T>> value : storageMap.values()) {
+//            value.removeIf(eventCallbackStorage -> eventCallbackStorage.getOwner() == listeningObject);
+//        }
+//        updateCallbacks();
+//    }
+//
+//    public void dispatch(T t) {
+//        List<EventListener<T>> callbacks = callbackMap.get(t.getClass());
+//        if (callbacks != null) {
+//            for (EventListener<T> callback : callbacks) {
+//                callback.call(t);
+//            }
+//        }
+//    }
+//
+//
+//
+//
+//    private void updateCallbacks() {
+//        for (Type type : storageMap.keySet()) {
+//            List<EventStorage<T>> storages = storageMap.get(type);
+//            List<EventListener<T>> callbacks = new ArrayList<>(storages.size());
+//            for (EventStorage<T> storage : storages) {
+//                callbacks.add(storage.getCallback());
+//            }
+//            callbackMap.put(type, callbacks);
+//        }
+//    }
+//
+//}

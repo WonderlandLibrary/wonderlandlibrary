@@ -1,54 +1,65 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.resources.data;
 
+import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
-import java.util.List;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.google.common.collect.Lists;
-import net.minecraft.util.JsonUtils;
-import com.google.gson.JsonDeserializationContext;
 import java.lang.reflect.Type;
-import com.google.gson.JsonElement;
+import java.util.List;
+import net.minecraft.util.JsonUtils;
 
 public class TextureMetadataSectionSerializer extends BaseMetadataSectionSerializer<TextureMetadataSection>
 {
-    public TextureMetadataSection deserialize(final JsonElement p_deserialize_1_, final Type p_deserialize_2_, final JsonDeserializationContext p_deserialize_3_) throws JsonParseException {
-        final JsonObject jsonobject = p_deserialize_1_.getAsJsonObject();
-        final boolean flag = JsonUtils.getBoolean(jsonobject, "blur", false);
-        final boolean flag2 = JsonUtils.getBoolean(jsonobject, "clamp", false);
-        final List<Integer> list = (List<Integer>)Lists.newArrayList();
-        if (jsonobject.has("mipmaps")) {
-            try {
-                final JsonArray jsonarray = jsonobject.getAsJsonArray("mipmaps");
-                for (int i = 0; i < jsonarray.size(); ++i) {
-                    final JsonElement jsonelement = jsonarray.get(i);
-                    if (jsonelement.isJsonPrimitive()) {
-                        try {
-                            list.add(jsonelement.getAsInt());
-                            continue;
+    public TextureMetadataSection deserialize(JsonElement p_deserialize_1_, Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_) throws JsonParseException
+    {
+        JsonObject jsonobject = p_deserialize_1_.getAsJsonObject();
+        boolean flag = JsonUtils.getBoolean(jsonobject, "blur", false);
+        boolean flag1 = JsonUtils.getBoolean(jsonobject, "clamp", false);
+        List<Integer> list = Lists.<Integer>newArrayList();
+
+        if (jsonobject.has("mipmaps"))
+        {
+            try
+            {
+                JsonArray jsonarray = jsonobject.getAsJsonArray("mipmaps");
+
+                for (int i = 0; i < jsonarray.size(); ++i)
+                {
+                    JsonElement jsonelement = jsonarray.get(i);
+
+                    if (jsonelement.isJsonPrimitive())
+                    {
+                        try
+                        {
+                            list.add(Integer.valueOf(jsonelement.getAsInt()));
                         }
-                        catch (NumberFormatException numberformatexception) {
-                            throw new JsonParseException("Invalid texture->mipmap->" + i + ": expected number, was " + jsonelement, (Throwable)numberformatexception);
+                        catch (NumberFormatException numberformatexception)
+                        {
+                            throw new JsonParseException("Invalid texture->mipmap->" + i + ": expected number, was " + jsonelement, numberformatexception);
                         }
                     }
-                    if (jsonelement.isJsonObject()) {
+                    else if (jsonelement.isJsonObject())
+                    {
                         throw new JsonParseException("Invalid texture->mipmap->" + i + ": expected number, was " + jsonelement);
                     }
                 }
             }
-            catch (ClassCastException classcastexception) {
-                throw new JsonParseException("Invalid texture->mipmaps: expected array, was " + jsonobject.get("mipmaps"), (Throwable)classcastexception);
+            catch (ClassCastException classcastexception)
+            {
+                throw new JsonParseException("Invalid texture->mipmaps: expected array, was " + jsonobject.get("mipmaps"), classcastexception);
             }
         }
-        return new TextureMetadataSection(flag, flag2, list);
+
+        return new TextureMetadataSection(flag, flag1, list);
     }
-    
-    @Override
-    public String getSectionName() {
+
+    /**
+     * The name of this section type as it appears in JSON.
+     */
+    public String getSectionName()
+    {
         return "texture";
     }
 }

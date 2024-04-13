@@ -1,115 +1,132 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.block.state.BlockState;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.item.ItemStack;
 import java.util.List;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IStringSerializable;
 
 public class BlockSand extends BlockFalling
 {
-    public static final PropertyEnum<EnumType> VARIANT;
-    
-    public BlockSand() {
-        this.setDefaultState(this.blockState.getBaseState().withProperty(BlockSand.VARIANT, EnumType.SAND));
+    public static final PropertyEnum<BlockSand.EnumType> VARIANT = PropertyEnum.<BlockSand.EnumType>create("variant", BlockSand.EnumType.class);
+
+    public BlockSand()
+    {
+        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockSand.EnumType.SAND));
     }
-    
-    @Override
-    public int damageDropped(final IBlockState state) {
-        return state.getValue(BlockSand.VARIANT).getMetadata();
+
+    /**
+     * Gets the metadata of the item this Block can drop. This method is called when the block gets destroyed. It
+     * returns the metadata of the dropped item based on the old metadata of the block.
+     */
+    public int damageDropped(IBlockState state)
+    {
+        return ((BlockSand.EnumType)state.getValue(VARIANT)).getMetadata();
     }
-    
-    @Override
-    public void getSubBlocks(final Item itemIn, final CreativeTabs tab, final List<ItemStack> list) {
-        for (final EnumType blocksand$enumtype : EnumType.values()) {
+
+    /**
+     * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
+     */
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+    {
+        for (BlockSand.EnumType blocksand$enumtype : BlockSand.EnumType.values())
+        {
             list.add(new ItemStack(itemIn, 1, blocksand$enumtype.getMetadata()));
         }
     }
-    
-    @Override
-    public MapColor getMapColor(final IBlockState state) {
-        return state.getValue(BlockSand.VARIANT).getMapColor();
-    }
-    
-    @Override
-    public IBlockState getStateFromMeta(final int meta) {
-        return this.getDefaultState().withProperty(BlockSand.VARIANT, EnumType.byMetadata(meta));
-    }
-    
-    @Override
-    public int getMetaFromState(final IBlockState state) {
-        return state.getValue(BlockSand.VARIANT).getMetadata();
-    }
-    
-    @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, new IProperty[] { BlockSand.VARIANT });
-    }
-    
-    static {
-        VARIANT = PropertyEnum.create("variant", EnumType.class);
-    }
-    
-    public enum EnumType implements IStringSerializable
+
+    /**
+     * Get the MapColor for this Block and the given BlockState
+     */
+    public MapColor getMapColor(IBlockState state)
     {
-        SAND(0, "sand", "default", MapColor.sandColor), 
+        return ((BlockSand.EnumType)state.getValue(VARIANT)).getMapColor();
+    }
+
+    /**
+     * Convert the given metadata into a BlockState for this Block
+     */
+    public IBlockState getStateFromMeta(int meta)
+    {
+        return this.getDefaultState().withProperty(VARIANT, BlockSand.EnumType.byMetadata(meta));
+    }
+
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
+        return ((BlockSand.EnumType)state.getValue(VARIANT)).getMetadata();
+    }
+
+    protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {VARIANT});
+    }
+
+    public static enum EnumType implements IStringSerializable
+    {
+        SAND(0, "sand", "default", MapColor.sandColor),
         RED_SAND(1, "red_sand", "red", MapColor.adobeColor);
-        
-        private static final EnumType[] META_LOOKUP;
+
+        private static final BlockSand.EnumType[] META_LOOKUP = new BlockSand.EnumType[values().length];
         private final int meta;
         private final String name;
         private final MapColor mapColor;
         private final String unlocalizedName;
-        
-        private EnumType(final int meta, final String name, final String unlocalizedName, final MapColor mapColor) {
+
+        private EnumType(int meta, String name, String unlocalizedName, MapColor mapColor)
+        {
             this.meta = meta;
             this.name = name;
             this.mapColor = mapColor;
             this.unlocalizedName = unlocalizedName;
         }
-        
-        public int getMetadata() {
+
+        public int getMetadata()
+        {
             return this.meta;
         }
-        
-        @Override
-        public String toString() {
+
+        public String toString()
+        {
             return this.name;
         }
-        
-        public MapColor getMapColor() {
+
+        public MapColor getMapColor()
+        {
             return this.mapColor;
         }
-        
-        public static EnumType byMetadata(int meta) {
-            if (meta < 0 || meta >= EnumType.META_LOOKUP.length) {
+
+        public static BlockSand.EnumType byMetadata(int meta)
+        {
+            if (meta < 0 || meta >= META_LOOKUP.length)
+            {
                 meta = 0;
             }
-            return EnumType.META_LOOKUP[meta];
+
+            return META_LOOKUP[meta];
         }
-        
-        @Override
-        public String getName() {
+
+        public String getName()
+        {
             return this.name;
         }
-        
-        public String getUnlocalizedName() {
+
+        public String getUnlocalizedName()
+        {
             return this.unlocalizedName;
         }
-        
+
         static {
-            META_LOOKUP = new EnumType[values().length];
-            for (final EnumType blocksand$enumtype : values()) {
-                EnumType.META_LOOKUP[blocksand$enumtype.getMetadata()] = blocksand$enumtype;
+            for (BlockSand.EnumType blocksand$enumtype : values())
+            {
+                META_LOOKUP[blocksand$enumtype.getMetadata()] = blocksand$enumtype;
             }
         }
     }

@@ -1,56 +1,49 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.chunk;
 
-import net.minecraft.client.renderer.culling.ICamera;
-import net.minecraft.client.renderer.ViewFrustum;
-import net.minecraft.world.ChunkCache;
-import net.minecraft.client.renderer.RegionRenderCacheBuilder;
-import net.minecraft.block.BlockCactus;
-import net.minecraft.block.BlockRedstoneWire;
-import net.optifine.CustomBlockLayers;
-import net.minecraft.client.renderer.RegionRenderCache;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.renderer.GlStateManager;
-import net.optifine.render.RenderEnv;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import java.util.Iterator;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.optifine.override.ChunkCacheOF;
-import java.util.HashSet;
-import java.util.Collection;
-import java.util.BitSet;
-import net.optifine.shaders.SVertexBuilder;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.optifine.reflect.ReflectorForge;
-import net.optifine.BlockPosM;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.Vec3i;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.src.Config;
-import net.minecraft.client.renderer.GLAllocation;
 import com.google.common.collect.Sets;
-import net.optifine.render.AabbFrame;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.util.EnumWorldBlockLayer;
-import net.minecraft.util.EnumFacing;
-import java.util.EnumMap;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.client.renderer.vertex.VertexBuffer;
 import java.nio.FloatBuffer;
-import net.minecraft.tileentity.TileEntity;
+import java.util.BitSet;
+import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
-import net.minecraft.util.BlockPos;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockCactus;
+import net.minecraft.block.BlockRedstoneWire;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RegionRenderCache;
+import net.minecraft.client.renderer.RegionRenderCacheBuilder;
 import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.ViewFrustum;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.culling.ICamera;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexBuffer;
+import net.minecraft.src.Config;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.world.ChunkCache;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.optifine.BlockPosM;
+import net.optifine.CustomBlockLayers;
+import net.optifine.override.ChunkCacheOF;
+import net.optifine.reflect.Reflector;
+import net.optifine.reflect.ReflectorForge;
+import net.optifine.render.AabbFrame;
+import net.optifine.render.RenderEnv;
+import net.optifine.shaders.SVertexBuilder;
 
 public class RenderChunk
 {
@@ -58,533 +51,727 @@ public class RenderChunk
     private final RenderGlobal renderGlobal;
     public static int renderChunksUpdated;
     private BlockPos position;
-    public CompiledChunk compiledChunk;
-    private final ReentrantLock lockCompileTask;
-    private final ReentrantLock lockCompiledChunk;
-    private ChunkCompileTaskGenerator compileTask;
-    private final Set<TileEntity> setTileEntities;
+    public CompiledChunk compiledChunk = CompiledChunk.DUMMY;
+    private final ReentrantLock lockCompileTask = new ReentrantLock();
+    private final ReentrantLock lockCompiledChunk = new ReentrantLock();
+    private ChunkCompileTaskGenerator compileTask = null;
+    private final Set<TileEntity> field_181056_j = Sets.<TileEntity>newHashSet();
     private final int index;
-    private final FloatBuffer modelviewMatrix;
-    private final VertexBuffer[] vertexBuffers;
+    private final FloatBuffer modelviewMatrix = GLAllocation.createDirectFloatBuffer(16);
+    private final VertexBuffer[] vertexBuffers = new VertexBuffer[EnumWorldBlockLayer.values().length];
     public AxisAlignedBB boundingBox;
-    private int frameIndex;
-    private boolean needsUpdate;
-    private EnumMap<EnumFacing, BlockPos> mapEnumFacing;
-    private BlockPos[] positionOffsets16;
-    public static final EnumWorldBlockLayer[] ENUM_WORLD_BLOCK_LAYERS;
-    private final EnumWorldBlockLayer[] blockLayersSingle;
-    private final boolean isMipmaps;
-    private boolean playerUpdate;
+    private int frameIndex = -1;
+    private boolean needsUpdate = true;
+    private EnumMap<EnumFacing, BlockPos> field_181702_p = null;
+    private BlockPos[] positionOffsets16 = new BlockPos[EnumFacing.VALUES.length];
+    public static final EnumWorldBlockLayer[] ENUM_WORLD_BLOCK_LAYERS = EnumWorldBlockLayer.values();
+    private final EnumWorldBlockLayer[] blockLayersSingle = new EnumWorldBlockLayer[1];
+    private final boolean isMipmaps = Config.isMipmaps();
+    private final boolean fixBlockLayer = !Reflector.BetterFoliageClient.exists();
+    private boolean playerUpdate = false;
     public int regionX;
     public int regionZ;
-    private final RenderChunk[] renderChunksOfset16;
-    private boolean renderChunksOffset16Updated;
+    private final RenderChunk[] renderChunksOfset16 = new RenderChunk[6];
+    private boolean renderChunksOffset16Updated = false;
     private Chunk chunk;
-    private RenderChunk[] renderChunkNeighbours;
-    private RenderChunk[] renderChunkNeighboursValid;
-    private boolean renderChunkNeighboursUpated;
-    private RenderGlobal.ContainerLocalRenderInformation renderInfo;
+    private RenderChunk[] renderChunkNeighbours = new RenderChunk[EnumFacing.VALUES.length];
+    private RenderChunk[] renderChunkNeighboursValid = new RenderChunk[EnumFacing.VALUES.length];
+    private boolean renderChunkNeighboursUpated = false;
+    private RenderGlobal.ContainerLocalRenderInformation renderInfo = new RenderGlobal.ContainerLocalRenderInformation(this, (EnumFacing)null, 0);
     public AabbFrame boundingBoxParent;
-    
-    public RenderChunk(final World worldIn, final RenderGlobal renderGlobalIn, final BlockPos blockPosIn, final int indexIn) {
-        this.compiledChunk = CompiledChunk.DUMMY;
-        this.lockCompileTask = new ReentrantLock();
-        this.lockCompiledChunk = new ReentrantLock();
-        this.compileTask = null;
-        this.setTileEntities = (Set<TileEntity>)Sets.newHashSet();
-        this.modelviewMatrix = GLAllocation.createDirectFloatBuffer(16);
-        this.vertexBuffers = new VertexBuffer[EnumWorldBlockLayer.values().length];
-        this.frameIndex = -1;
-        this.needsUpdate = true;
-        this.mapEnumFacing = null;
-        this.positionOffsets16 = new BlockPos[EnumFacing.VALUES.length];
-        this.blockLayersSingle = new EnumWorldBlockLayer[1];
-        this.isMipmaps = Config.isMipmaps();
-        this.playerUpdate = false;
-        this.renderChunksOfset16 = new RenderChunk[6];
-        this.renderChunksOffset16Updated = false;
-        this.renderChunkNeighbours = new RenderChunk[EnumFacing.VALUES.length];
-        this.renderChunkNeighboursValid = new RenderChunk[EnumFacing.VALUES.length];
-        this.renderChunkNeighboursUpated = false;
-        this.renderInfo = new RenderGlobal.ContainerLocalRenderInformation(this, null, 0);
+
+    public RenderChunk(World worldIn, RenderGlobal renderGlobalIn, BlockPos blockPosIn, int indexIn)
+    {
         this.world = worldIn;
         this.renderGlobal = renderGlobalIn;
         this.index = indexIn;
-        if (!blockPosIn.equals(this.getPosition())) {
+
+        if (!blockPosIn.equals(this.getPosition()))
+        {
             this.setPosition(blockPosIn);
         }
-        if (OpenGlHelper.useVbo()) {
-            for (int i = 0; i < EnumWorldBlockLayer.values().length; ++i) {
+
+        if (OpenGlHelper.useVbo())
+        {
+            for (int i = 0; i < EnumWorldBlockLayer.values().length; ++i)
+            {
                 this.vertexBuffers[i] = new VertexBuffer(DefaultVertexFormats.BLOCK);
             }
         }
     }
-    
-    public boolean setFrameIndex(final int frameIndexIn) {
-        if (this.frameIndex == frameIndexIn) {
+
+    public boolean setFrameIndex(int frameIndexIn)
+    {
+        if (this.frameIndex == frameIndexIn)
+        {
             return false;
         }
-        this.frameIndex = frameIndexIn;
-        return true;
+        else
+        {
+            this.frameIndex = frameIndexIn;
+            return true;
+        }
     }
-    
-    public VertexBuffer getVertexBufferByLayer(final int layer) {
+
+    public VertexBuffer getVertexBufferByLayer(int layer)
+    {
         return this.vertexBuffers[layer];
     }
-    
-    public void setPosition(final BlockPos pos) {
+
+    public void setPosition(BlockPos pos)
+    {
         this.stopCompileTask();
         this.position = pos;
-        final int i = 8;
+        int i = 8;
         this.regionX = pos.getX() >> i << i;
         this.regionZ = pos.getZ() >> i << i;
         this.boundingBox = new AxisAlignedBB(pos, pos.add(16, 16, 16));
         this.initModelviewMatrix();
-        for (int j = 0; j < this.positionOffsets16.length; ++j) {
+
+        for (int j = 0; j < this.positionOffsets16.length; ++j)
+        {
             this.positionOffsets16[j] = null;
         }
+
         this.renderChunksOffset16Updated = false;
         this.renderChunkNeighboursUpated = false;
-        for (int k = 0; k < this.renderChunkNeighbours.length; ++k) {
-            final RenderChunk renderchunk = this.renderChunkNeighbours[k];
-            if (renderchunk != null) {
+
+        for (int k = 0; k < this.renderChunkNeighbours.length; ++k)
+        {
+            RenderChunk renderchunk = this.renderChunkNeighbours[k];
+
+            if (renderchunk != null)
+            {
                 renderchunk.renderChunkNeighboursUpated = false;
             }
         }
+
         this.chunk = null;
         this.boundingBoxParent = null;
     }
-    
-    public void resortTransparency(final float x, final float y, final float z, final ChunkCompileTaskGenerator generator) {
-        final CompiledChunk compiledchunk = generator.getCompiledChunk();
-        if (compiledchunk.getState() != null && !compiledchunk.isLayerEmpty(EnumWorldBlockLayer.TRANSLUCENT)) {
-            final WorldRenderer worldrenderer = generator.getRegionRenderCacheBuilder().getWorldRendererByLayer(EnumWorldBlockLayer.TRANSLUCENT);
+
+    public void resortTransparency(float x, float y, float z, ChunkCompileTaskGenerator generator)
+    {
+        CompiledChunk compiledchunk = generator.getCompiledChunk();
+
+        if (compiledchunk.getState() != null && !compiledchunk.isLayerEmpty(EnumWorldBlockLayer.TRANSLUCENT))
+        {
+            WorldRenderer worldrenderer = generator.getRegionRenderCacheBuilder().getWorldRendererByLayer(EnumWorldBlockLayer.TRANSLUCENT);
             this.preRenderBlocks(worldrenderer, this.position);
             worldrenderer.setVertexState(compiledchunk.getState());
             this.postRenderBlocks(EnumWorldBlockLayer.TRANSLUCENT, x, y, z, worldrenderer, compiledchunk);
         }
     }
-    
-    public void rebuildChunk(final float x, final float y, final float z, final ChunkCompileTaskGenerator generator) {
-        final CompiledChunk compiledchunk = new CompiledChunk();
-        final int i = 1;
-        final BlockPos blockpos = new BlockPos(this.position);
-        final BlockPos blockpos2 = blockpos.add(15, 15, 15);
+
+    public void rebuildChunk(float x, float y, float z, ChunkCompileTaskGenerator generator)
+    {
+        CompiledChunk compiledchunk = new CompiledChunk();
+        int i = 1;
+        BlockPos blockpos = new BlockPos(this.position);
+        BlockPos blockpos1 = blockpos.add(15, 15, 15);
         generator.getLock().lock();
-        try {
-            if (generator.getStatus() != ChunkCompileTaskGenerator.Status.COMPILING) {
+
+        try
+        {
+            if (generator.getStatus() != ChunkCompileTaskGenerator.Status.COMPILING)
+            {
                 return;
             }
+
             generator.setCompiledChunk(compiledchunk);
         }
-        finally {
+        finally
+        {
             generator.getLock().unlock();
         }
-        final VisGraph lvt_10_1_ = new VisGraph();
-        final HashSet lvt_11_1_ = Sets.newHashSet();
-        if (!this.isChunkRegionEmpty(blockpos)) {
-            ++RenderChunk.renderChunksUpdated;
-            final ChunkCacheOF chunkcacheof = this.makeChunkCacheOF(blockpos);
+
+        VisGraph lvt_10_1_ = new VisGraph();
+        HashSet lvt_11_1_ = Sets.newHashSet();
+
+        if (!this.isChunkRegionEmpty(blockpos))
+        {
+            ++renderChunksUpdated;
+            ChunkCacheOF chunkcacheof = this.makeChunkCacheOF(blockpos);
             chunkcacheof.renderStart();
-            final boolean[] aboolean = new boolean[RenderChunk.ENUM_WORLD_BLOCK_LAYERS.length];
-            final BlockRendererDispatcher blockrendererdispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
-            for (final Object blockposm0 : BlockPosM.getAllInBoxMutable(blockpos, blockpos2)) {
-                final BlockPosM blockposm2 = (BlockPosM)blockposm0;
-                final IBlockState iblockstate = chunkcacheof.getBlockState(blockposm2);
-                final Block block = iblockstate.getBlock();
-                if (block.isOpaqueCube()) {
-                    lvt_10_1_.func_178606_a(blockposm2);
+            boolean[] aboolean = new boolean[ENUM_WORLD_BLOCK_LAYERS.length];
+            BlockRendererDispatcher blockrendererdispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
+            boolean flag = Reflector.ForgeBlock_canRenderInLayer.exists();
+            boolean flag1 = Reflector.ForgeHooksClient_setRenderLayer.exists();
+
+            for (Object e : BlockPosM.getAllInBoxMutable(blockpos, blockpos1))
+            {
+                BlockPosM blockposm = (BlockPosM) e;
+                IBlockState iblockstate = chunkcacheof.getBlockState(blockposm);
+                Block block = iblockstate.getBlock();
+
+                if (block.isOpaqueCube())
+                {
+                    lvt_10_1_.func_178606_a(blockposm);
                 }
-                if (ReflectorForge.blockHasTileEntity(iblockstate)) {
-                    final TileEntity tileentity = chunkcacheof.getTileEntity(new BlockPos(blockposm2));
-                    final TileEntitySpecialRenderer<TileEntity> tileentityspecialrenderer = TileEntityRendererDispatcher.instance.getSpecialRenderer(tileentity);
-                    if (tileentity != null && tileentityspecialrenderer != null) {
+
+                if (ReflectorForge.blockHasTileEntity(iblockstate))
+                {
+                    TileEntity tileentity = chunkcacheof.getTileEntity(new BlockPos(blockposm));
+                    TileEntitySpecialRenderer<TileEntity> tileentityspecialrenderer = TileEntityRendererDispatcher.instance.<TileEntity>getSpecialRenderer(tileentity);
+
+                    if (tileentity != null && tileentityspecialrenderer != null)
+                    {
                         compiledchunk.addTileEntity(tileentity);
-                        if (tileentityspecialrenderer.forceTileEntityRender()) {
+
+                        if (tileentityspecialrenderer.func_181055_a())
+                        {
                             lvt_11_1_.add(tileentity);
                         }
                     }
                 }
-                final EnumWorldBlockLayer[] aenumworldblocklayer = this.blockLayersSingle;
-                aenumworldblocklayer[0] = block.getBlockLayer();
-                for (int j = 0; j < aenumworldblocklayer.length; ++j) {
+
+                EnumWorldBlockLayer[] aenumworldblocklayer;
+
+                if (flag)
+                {
+                    aenumworldblocklayer = ENUM_WORLD_BLOCK_LAYERS;
+                }
+                else
+                {
+                    aenumworldblocklayer = this.blockLayersSingle;
+                    aenumworldblocklayer[0] = block.getBlockLayer();
+                }
+
+                for (int j = 0; j < aenumworldblocklayer.length; ++j)
+                {
                     EnumWorldBlockLayer enumworldblocklayer = aenumworldblocklayer[j];
+
+                    if (flag)
+                    {
+                        boolean flag2 = Reflector.callBoolean(block, Reflector.ForgeBlock_canRenderInLayer, new Object[] {enumworldblocklayer});
+
+                        if (!flag2)
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (flag1)
+                    {
+                        Reflector.callVoid(Reflector.ForgeHooksClient_setRenderLayer, new Object[] {enumworldblocklayer});
+                    }
+
                     enumworldblocklayer = this.fixBlockLayer(iblockstate, enumworldblocklayer);
-                    final int k = enumworldblocklayer.ordinal();
-                    if (block.getRenderType() != -1) {
-                        final WorldRenderer worldrenderer = generator.getRegionRenderCacheBuilder().getWorldRendererByLayerId(k);
+                    int k = enumworldblocklayer.ordinal();
+
+                    if (block.getRenderType() != -1)
+                    {
+                        WorldRenderer worldrenderer = generator.getRegionRenderCacheBuilder().getWorldRendererByLayerId(k);
                         worldrenderer.setBlockLayer(enumworldblocklayer);
-                        final RenderEnv renderenv = worldrenderer.getRenderEnv(iblockstate, blockposm2);
+                        RenderEnv renderenv = worldrenderer.getRenderEnv(iblockstate, blockposm);
                         renderenv.setRegionRenderCacheBuilder(generator.getRegionRenderCacheBuilder());
-                        if (!compiledchunk.isLayerStarted(enumworldblocklayer)) {
+
+                        if (!compiledchunk.isLayerStarted(enumworldblocklayer))
+                        {
                             compiledchunk.setLayerStarted(enumworldblocklayer);
                             this.preRenderBlocks(worldrenderer, blockpos);
                         }
-                        final boolean[] array = aboolean;
-                        final int n = k;
-                        array[n] |= blockrendererdispatcher.renderBlock(iblockstate, blockposm2, chunkcacheof, worldrenderer);
-                        if (renderenv.isOverlaysRendered()) {
+
+                        aboolean[k] |= blockrendererdispatcher.renderBlock(iblockstate, blockposm, chunkcacheof, worldrenderer);
+
+                        if (renderenv.isOverlaysRendered())
+                        {
                             this.postRenderOverlays(generator.getRegionRenderCacheBuilder(), compiledchunk, aboolean);
                             renderenv.setOverlaysRendered(false);
                         }
                     }
                 }
-            }
-            for (final EnumWorldBlockLayer enumworldblocklayer2 : RenderChunk.ENUM_WORLD_BLOCK_LAYERS) {
-                if (aboolean[enumworldblocklayer2.ordinal()]) {
-                    compiledchunk.setLayerUsed(enumworldblocklayer2);
-                }
-                if (compiledchunk.isLayerStarted(enumworldblocklayer2)) {
-                    if (Config.isShaders()) {
-                        SVertexBuilder.calcNormalChunkLayer(generator.getRegionRenderCacheBuilder().getWorldRendererByLayer(enumworldblocklayer2));
-                    }
-                    final WorldRenderer worldrenderer2 = generator.getRegionRenderCacheBuilder().getWorldRendererByLayer(enumworldblocklayer2);
-                    this.postRenderBlocks(enumworldblocklayer2, x, y, z, worldrenderer2, compiledchunk);
-                    if (worldrenderer2.animatedSprites != null) {
-                        compiledchunk.setAnimatedSprites(enumworldblocklayer2, (BitSet)worldrenderer2.animatedSprites.clone());
-                    }
-                }
-                else {
-                    compiledchunk.setAnimatedSprites(enumworldblocklayer2, null);
+
+                if (flag1)
+                {
+                    Reflector.callVoid(Reflector.ForgeHooksClient_setRenderLayer, new Object[] {(Object)null});
                 }
             }
+
+            for (EnumWorldBlockLayer enumworldblocklayer1 : ENUM_WORLD_BLOCK_LAYERS)
+            {
+                if (aboolean[enumworldblocklayer1.ordinal()])
+                {
+                    compiledchunk.setLayerUsed(enumworldblocklayer1);
+                }
+
+                if (compiledchunk.isLayerStarted(enumworldblocklayer1))
+                {
+                    if (Config.isShaders())
+                    {
+                        SVertexBuilder.calcNormalChunkLayer(generator.getRegionRenderCacheBuilder().getWorldRendererByLayer(enumworldblocklayer1));
+                    }
+
+                    WorldRenderer worldrenderer1 = generator.getRegionRenderCacheBuilder().getWorldRendererByLayer(enumworldblocklayer1);
+                    this.postRenderBlocks(enumworldblocklayer1, x, y, z, worldrenderer1, compiledchunk);
+
+                    if (worldrenderer1.animatedSprites != null)
+                    {
+                        compiledchunk.setAnimatedSprites(enumworldblocklayer1, (BitSet)worldrenderer1.animatedSprites.clone());
+                    }
+                }
+                else
+                {
+                    compiledchunk.setAnimatedSprites(enumworldblocklayer1, (BitSet)null);
+                }
+            }
+
             chunkcacheof.renderFinish();
         }
+
         compiledchunk.setVisibility(lvt_10_1_.computeVisibility());
         this.lockCompileTask.lock();
-        try {
-            final Set<TileEntity> set = (Set<TileEntity>)Sets.newHashSet((Iterable)lvt_11_1_);
-            final Set<TileEntity> set2 = (Set<TileEntity>)Sets.newHashSet((Iterable)this.setTileEntities);
-            set.removeAll(this.setTileEntities);
-            set2.removeAll(lvt_11_1_);
-            this.setTileEntities.clear();
-            this.setTileEntities.addAll(lvt_11_1_);
-            this.renderGlobal.updateTileEntities(set2, set);
+
+        try
+        {
+            Set<TileEntity> set = Sets.newHashSet(lvt_11_1_);
+            Set<TileEntity> set1 = Sets.newHashSet(this.field_181056_j);
+            set.removeAll(this.field_181056_j);
+            set1.removeAll(lvt_11_1_);
+            this.field_181056_j.clear();
+            this.field_181056_j.addAll(lvt_11_1_);
+            this.renderGlobal.func_181023_a(set1, set);
         }
-        finally {
+        finally
+        {
             this.lockCompileTask.unlock();
         }
     }
-    
-    protected void finishCompileTask() {
+
+    protected void finishCompileTask()
+    {
         this.lockCompileTask.lock();
-        try {
-            if (this.compileTask != null && this.compileTask.getStatus() != ChunkCompileTaskGenerator.Status.DONE) {
+
+        try
+        {
+            if (this.compileTask != null && this.compileTask.getStatus() != ChunkCompileTaskGenerator.Status.DONE)
+            {
                 this.compileTask.finish();
                 this.compileTask = null;
             }
         }
-        finally {
+        finally
+        {
             this.lockCompileTask.unlock();
         }
     }
-    
-    public ReentrantLock getLockCompileTask() {
+
+    public ReentrantLock getLockCompileTask()
+    {
         return this.lockCompileTask;
     }
-    
-    public ChunkCompileTaskGenerator makeCompileTaskChunk() {
+
+    public ChunkCompileTaskGenerator makeCompileTaskChunk()
+    {
         this.lockCompileTask.lock();
         ChunkCompileTaskGenerator chunkcompiletaskgenerator;
-        try {
+
+        try
+        {
             this.finishCompileTask();
             this.compileTask = new ChunkCompileTaskGenerator(this, ChunkCompileTaskGenerator.Type.REBUILD_CHUNK);
             chunkcompiletaskgenerator = this.compileTask;
         }
-        finally {
+        finally
+        {
             this.lockCompileTask.unlock();
         }
+
         return chunkcompiletaskgenerator;
     }
-    
-    public ChunkCompileTaskGenerator makeCompileTaskTransparency() {
+
+    public ChunkCompileTaskGenerator makeCompileTaskTransparency()
+    {
         this.lockCompileTask.lock();
-        ChunkCompileTaskGenerator chunkcompiletaskgenerator4;
-        try {
-            if (this.compileTask != null && this.compileTask.getStatus() == ChunkCompileTaskGenerator.Status.PENDING) {
-                final ChunkCompileTaskGenerator chunkcompiletaskgenerator2 = null;
+        ChunkCompileTaskGenerator chunkcompiletaskgenerator1;
+
+        try
+        {
+            if (this.compileTask != null && this.compileTask.getStatus() == ChunkCompileTaskGenerator.Status.PENDING)
+            {
+                ChunkCompileTaskGenerator chunkcompiletaskgenerator2 = null;
                 return chunkcompiletaskgenerator2;
             }
-            if (this.compileTask != null && this.compileTask.getStatus() != ChunkCompileTaskGenerator.Status.DONE) {
+
+            if (this.compileTask != null && this.compileTask.getStatus() != ChunkCompileTaskGenerator.Status.DONE)
+            {
                 this.compileTask.finish();
                 this.compileTask = null;
             }
-            (this.compileTask = new ChunkCompileTaskGenerator(this, ChunkCompileTaskGenerator.Type.RESORT_TRANSPARENCY)).setCompiledChunk(this.compiledChunk);
-            final ChunkCompileTaskGenerator chunkcompiletaskgenerator3 = chunkcompiletaskgenerator4 = this.compileTask;
+
+            this.compileTask = new ChunkCompileTaskGenerator(this, ChunkCompileTaskGenerator.Type.RESORT_TRANSPARENCY);
+            this.compileTask.setCompiledChunk(this.compiledChunk);
+            ChunkCompileTaskGenerator chunkcompiletaskgenerator = this.compileTask;
+            chunkcompiletaskgenerator1 = chunkcompiletaskgenerator;
         }
-        finally {
+        finally
+        {
             this.lockCompileTask.unlock();
         }
-        return chunkcompiletaskgenerator4;
+
+        return chunkcompiletaskgenerator1;
     }
-    
-    private void preRenderBlocks(final WorldRenderer worldRendererIn, final BlockPos pos) {
+
+    private void preRenderBlocks(WorldRenderer worldRendererIn, BlockPos pos)
+    {
         worldRendererIn.begin(7, DefaultVertexFormats.BLOCK);
-        if (Config.isRenderRegions()) {
-            final int i = 8;
+
+        if (Config.isRenderRegions())
+        {
+            int i = 8;
             int j = pos.getX() >> i << i;
-            final int k = pos.getY() >> i << i;
+            int k = pos.getY() >> i << i;
             int l = pos.getZ() >> i << i;
             j = this.regionX;
             l = this.regionZ;
-            worldRendererIn.setTranslation(-j, -k, -l);
+            worldRendererIn.setTranslation((double)(-j), (double)(-k), (double)(-l));
         }
-        else {
-            worldRendererIn.setTranslation(-pos.getX(), -pos.getY(), -pos.getZ());
+        else
+        {
+            worldRendererIn.setTranslation((double)(-pos.getX()), (double)(-pos.getY()), (double)(-pos.getZ()));
         }
     }
-    
-    private void postRenderBlocks(final EnumWorldBlockLayer layer, final float x, final float y, final float z, final WorldRenderer worldRendererIn, final CompiledChunk compiledChunkIn) {
-        if (layer == EnumWorldBlockLayer.TRANSLUCENT && !compiledChunkIn.isLayerEmpty(layer)) {
-            worldRendererIn.sortVertexData(x, y, z);
-            compiledChunkIn.setState(worldRendererIn.getVertexState());
+
+    private void postRenderBlocks(EnumWorldBlockLayer layer, float x, float y, float z, WorldRenderer worldRendererIn, CompiledChunk compiledChunkIn)
+    {
+        if (layer == EnumWorldBlockLayer.TRANSLUCENT && !compiledChunkIn.isLayerEmpty(layer))
+        {
+            worldRendererIn.func_181674_a(x, y, z);
+            compiledChunkIn.setState(worldRendererIn.func_181672_a());
         }
+
         worldRendererIn.finishDrawing();
     }
-    
-    private void initModelviewMatrix() {
+
+    private void initModelviewMatrix()
+    {
         GlStateManager.pushMatrix();
         GlStateManager.loadIdentity();
-        final float f = 1.000001f;
-        GlStateManager.translate(-8.0f, -8.0f, -8.0f);
+        float f = 1.000001F;
+        GlStateManager.translate(-8.0F, -8.0F, -8.0F);
         GlStateManager.scale(f, f, f);
-        GlStateManager.translate(8.0f, 8.0f, 8.0f);
+        GlStateManager.translate(8.0F, 8.0F, 8.0F);
         GlStateManager.getFloat(2982, this.modelviewMatrix);
         GlStateManager.popMatrix();
     }
-    
-    public void multModelviewMatrix() {
+
+    public void multModelviewMatrix()
+    {
         GlStateManager.multMatrix(this.modelviewMatrix);
     }
-    
-    public CompiledChunk getCompiledChunk() {
+
+    public CompiledChunk getCompiledChunk()
+    {
         return this.compiledChunk;
     }
-    
-    public void setCompiledChunk(final CompiledChunk compiledChunkIn) {
+
+    public void setCompiledChunk(CompiledChunk compiledChunkIn)
+    {
         this.lockCompiledChunk.lock();
-        try {
+
+        try
+        {
             this.compiledChunk = compiledChunkIn;
         }
-        finally {
+        finally
+        {
             this.lockCompiledChunk.unlock();
         }
     }
-    
-    public void stopCompileTask() {
+
+    public void stopCompileTask()
+    {
         this.finishCompileTask();
         this.compiledChunk = CompiledChunk.DUMMY;
     }
-    
-    public void deleteGlResources() {
+
+    public void deleteGlResources()
+    {
         this.stopCompileTask();
-        for (int i = 0; i < EnumWorldBlockLayer.values().length; ++i) {
-            if (this.vertexBuffers[i] != null) {
+
+        for (int i = 0; i < EnumWorldBlockLayer.values().length; ++i)
+        {
+            if (this.vertexBuffers[i] != null)
+            {
                 this.vertexBuffers[i].deleteGlBuffers();
             }
         }
     }
-    
-    public BlockPos getPosition() {
+
+    public BlockPos getPosition()
+    {
         return this.position;
     }
-    
-    public void setNeedsUpdate(final boolean needsUpdateIn) {
+
+    public void setNeedsUpdate(boolean needsUpdateIn)
+    {
         this.needsUpdate = needsUpdateIn;
-        if (needsUpdateIn) {
-            if (this.isWorldPlayerUpdate()) {
+
+        if (needsUpdateIn)
+        {
+            if (this.isWorldPlayerUpdate())
+            {
                 this.playerUpdate = true;
             }
         }
-        else {
+        else
+        {
             this.playerUpdate = false;
         }
     }
-    
-    public boolean isNeedsUpdate() {
+
+    public boolean isNeedsUpdate()
+    {
         return this.needsUpdate;
     }
-    
-    public BlockPos getBlockPosOffset16(final EnumFacing p_181701_1_) {
+
+    public BlockPos func_181701_a(EnumFacing p_181701_1_)
+    {
         return this.getPositionOffset16(p_181701_1_);
     }
-    
-    public BlockPos getPositionOffset16(final EnumFacing p_getPositionOffset16_1_) {
-        final int i = p_getPositionOffset16_1_.getIndex();
+
+    public BlockPos getPositionOffset16(EnumFacing p_getPositionOffset16_1_)
+    {
+        int i = p_getPositionOffset16_1_.getIndex();
         BlockPos blockpos = this.positionOffsets16[i];
-        if (blockpos == null) {
+
+        if (blockpos == null)
+        {
             blockpos = this.getPosition().offset(p_getPositionOffset16_1_, 16);
             this.positionOffsets16[i] = blockpos;
         }
+
         return blockpos;
     }
-    
-    private boolean isWorldPlayerUpdate() {
-        if (this.world instanceof WorldClient) {
-            final WorldClient worldclient = (WorldClient)this.world;
+
+    private boolean isWorldPlayerUpdate()
+    {
+        if (this.world instanceof WorldClient)
+        {
+            WorldClient worldclient = (WorldClient)this.world;
             return worldclient.isPlayerUpdate();
         }
-        return false;
+        else
+        {
+            return false;
+        }
     }
-    
-    public boolean isPlayerUpdate() {
+
+    public boolean isPlayerUpdate()
+    {
         return this.playerUpdate;
     }
-    
-    protected RegionRenderCache createRegionRenderCache(final World p_createRegionRenderCache_1_, final BlockPos p_createRegionRenderCache_2_, final BlockPos p_createRegionRenderCache_3_, final int p_createRegionRenderCache_4_) {
+
+    protected RegionRenderCache createRegionRenderCache(World p_createRegionRenderCache_1_, BlockPos p_createRegionRenderCache_2_, BlockPos p_createRegionRenderCache_3_, int p_createRegionRenderCache_4_)
+    {
         return new RegionRenderCache(p_createRegionRenderCache_1_, p_createRegionRenderCache_2_, p_createRegionRenderCache_3_, p_createRegionRenderCache_4_);
     }
-    
-    private EnumWorldBlockLayer fixBlockLayer(final IBlockState p_fixBlockLayer_1_, final EnumWorldBlockLayer p_fixBlockLayer_2_) {
-        if (CustomBlockLayers.isActive()) {
-            final EnumWorldBlockLayer enumworldblocklayer = CustomBlockLayers.getRenderLayer(p_fixBlockLayer_1_);
-            if (enumworldblocklayer != null) {
+
+    private EnumWorldBlockLayer fixBlockLayer(IBlockState p_fixBlockLayer_1_, EnumWorldBlockLayer p_fixBlockLayer_2_)
+    {
+        if (CustomBlockLayers.isActive())
+        {
+            EnumWorldBlockLayer enumworldblocklayer = CustomBlockLayers.getRenderLayer(p_fixBlockLayer_1_);
+
+            if (enumworldblocklayer != null)
+            {
                 return enumworldblocklayer;
             }
         }
-        final boolean fixBlockLayer = true;
-        if (!fixBlockLayer) {
+
+        if (!this.fixBlockLayer)
+        {
             return p_fixBlockLayer_2_;
         }
-        if (this.isMipmaps) {
-            if (p_fixBlockLayer_2_ == EnumWorldBlockLayer.CUTOUT) {
-                final Block block = p_fixBlockLayer_1_.getBlock();
-                if (block instanceof BlockRedstoneWire) {
-                    return p_fixBlockLayer_2_;
+        else
+        {
+            if (this.isMipmaps)
+            {
+                if (p_fixBlockLayer_2_ == EnumWorldBlockLayer.CUTOUT)
+                {
+                    Block block = p_fixBlockLayer_1_.getBlock();
+
+                    if (block instanceof BlockRedstoneWire)
+                    {
+                        return p_fixBlockLayer_2_;
+                    }
+
+                    if (block instanceof BlockCactus)
+                    {
+                        return p_fixBlockLayer_2_;
+                    }
+
+                    return EnumWorldBlockLayer.CUTOUT_MIPPED;
                 }
-                if (block instanceof BlockCactus) {
-                    return p_fixBlockLayer_2_;
-                }
-                return EnumWorldBlockLayer.CUTOUT_MIPPED;
             }
+            else if (p_fixBlockLayer_2_ == EnumWorldBlockLayer.CUTOUT_MIPPED)
+            {
+                return EnumWorldBlockLayer.CUTOUT;
+            }
+
+            return p_fixBlockLayer_2_;
         }
-        else if (p_fixBlockLayer_2_ == EnumWorldBlockLayer.CUTOUT_MIPPED) {
-            return EnumWorldBlockLayer.CUTOUT;
-        }
-        return p_fixBlockLayer_2_;
     }
-    
-    private void postRenderOverlays(final RegionRenderCacheBuilder p_postRenderOverlays_1_, final CompiledChunk p_postRenderOverlays_2_, final boolean[] p_postRenderOverlays_3_) {
+
+    private void postRenderOverlays(RegionRenderCacheBuilder p_postRenderOverlays_1_, CompiledChunk p_postRenderOverlays_2_, boolean[] p_postRenderOverlays_3_)
+    {
         this.postRenderOverlay(EnumWorldBlockLayer.CUTOUT, p_postRenderOverlays_1_, p_postRenderOverlays_2_, p_postRenderOverlays_3_);
         this.postRenderOverlay(EnumWorldBlockLayer.CUTOUT_MIPPED, p_postRenderOverlays_1_, p_postRenderOverlays_2_, p_postRenderOverlays_3_);
         this.postRenderOverlay(EnumWorldBlockLayer.TRANSLUCENT, p_postRenderOverlays_1_, p_postRenderOverlays_2_, p_postRenderOverlays_3_);
     }
-    
-    private void postRenderOverlay(final EnumWorldBlockLayer p_postRenderOverlay_1_, final RegionRenderCacheBuilder p_postRenderOverlay_2_, final CompiledChunk p_postRenderOverlay_3_, final boolean[] p_postRenderOverlay_4_) {
-        final WorldRenderer worldrenderer = p_postRenderOverlay_2_.getWorldRendererByLayer(p_postRenderOverlay_1_);
-        if (worldrenderer.isDrawing()) {
+
+    private void postRenderOverlay(EnumWorldBlockLayer p_postRenderOverlay_1_, RegionRenderCacheBuilder p_postRenderOverlay_2_, CompiledChunk p_postRenderOverlay_3_, boolean[] p_postRenderOverlay_4_)
+    {
+        WorldRenderer worldrenderer = p_postRenderOverlay_2_.getWorldRendererByLayer(p_postRenderOverlay_1_);
+
+        if (worldrenderer.isDrawing())
+        {
             p_postRenderOverlay_3_.setLayerStarted(p_postRenderOverlay_1_);
             p_postRenderOverlay_4_[p_postRenderOverlay_1_.ordinal()] = true;
         }
     }
-    
-    private ChunkCacheOF makeChunkCacheOF(final BlockPos p_makeChunkCacheOF_1_) {
-        final BlockPos blockpos = p_makeChunkCacheOF_1_.add(-1, -1, -1);
-        final BlockPos blockpos2 = p_makeChunkCacheOF_1_.add(16, 16, 16);
-        final ChunkCache chunkcache = this.createRegionRenderCache(this.world, blockpos, blockpos2, 1);
-        final ChunkCacheOF chunkcacheof = new ChunkCacheOF(chunkcache, blockpos, blockpos2, 1);
+
+    private ChunkCacheOF makeChunkCacheOF(BlockPos p_makeChunkCacheOF_1_)
+    {
+        BlockPos blockpos = p_makeChunkCacheOF_1_.add(-1, -1, -1);
+        BlockPos blockpos1 = p_makeChunkCacheOF_1_.add(16, 16, 16);
+        ChunkCache chunkcache = this.createRegionRenderCache(this.world, blockpos, blockpos1, 1);
+
+        if (Reflector.MinecraftForgeClient_onRebuildChunk.exists())
+        {
+            Reflector.call(Reflector.MinecraftForgeClient_onRebuildChunk, new Object[] {this.world, p_makeChunkCacheOF_1_, chunkcache});
+        }
+
+        ChunkCacheOF chunkcacheof = new ChunkCacheOF(chunkcache, blockpos, blockpos1, 1);
         return chunkcacheof;
     }
-    
-    public RenderChunk getRenderChunkOffset16(final ViewFrustum p_getRenderChunkOffset16_1_, final EnumFacing p_getRenderChunkOffset16_2_) {
-        if (!this.renderChunksOffset16Updated) {
-            for (int i = 0; i < EnumFacing.VALUES.length; ++i) {
-                final EnumFacing enumfacing = EnumFacing.VALUES[i];
-                final BlockPos blockpos = this.getBlockPosOffset16(enumfacing);
+
+    public RenderChunk getRenderChunkOffset16(ViewFrustum p_getRenderChunkOffset16_1_, EnumFacing p_getRenderChunkOffset16_2_)
+    {
+        if (!this.renderChunksOffset16Updated)
+        {
+            for (int i = 0; i < EnumFacing.VALUES.length; ++i)
+            {
+                EnumFacing enumfacing = EnumFacing.VALUES[i];
+                BlockPos blockpos = this.func_181701_a(enumfacing);
                 this.renderChunksOfset16[i] = p_getRenderChunkOffset16_1_.getRenderChunk(blockpos);
             }
+
             this.renderChunksOffset16Updated = true;
         }
+
         return this.renderChunksOfset16[p_getRenderChunkOffset16_2_.ordinal()];
     }
-    
-    public Chunk getChunk() {
+
+    public Chunk getChunk()
+    {
         return this.getChunk(this.position);
     }
-    
-    private Chunk getChunk(final BlockPos p_getChunk_1_) {
+
+    private Chunk getChunk(BlockPos p_getChunk_1_)
+    {
         Chunk chunk = this.chunk;
-        if (chunk != null && chunk.isLoaded()) {
+
+        if (chunk != null && chunk.isLoaded())
+        {
             return chunk;
         }
-        chunk = this.world.getChunkFromBlockCoords(p_getChunk_1_);
-        return this.chunk = chunk;
+        else
+        {
+            chunk = this.world.getChunkFromBlockCoords(p_getChunk_1_);
+            this.chunk = chunk;
+            return chunk;
+        }
     }
-    
-    public boolean isChunkRegionEmpty() {
+
+    public boolean isChunkRegionEmpty()
+    {
         return this.isChunkRegionEmpty(this.position);
     }
-    
-    private boolean isChunkRegionEmpty(final BlockPos p_isChunkRegionEmpty_1_) {
-        final int i = p_isChunkRegionEmpty_1_.getY();
-        final int j = i + 15;
+
+    private boolean isChunkRegionEmpty(BlockPos p_isChunkRegionEmpty_1_)
+    {
+        int i = p_isChunkRegionEmpty_1_.getY();
+        int j = i + 15;
         return this.getChunk(p_isChunkRegionEmpty_1_).getAreLevelsEmpty(i, j);
     }
-    
-    public void setRenderChunkNeighbour(final EnumFacing p_setRenderChunkNeighbour_1_, final RenderChunk p_setRenderChunkNeighbour_2_) {
+
+    public void setRenderChunkNeighbour(EnumFacing p_setRenderChunkNeighbour_1_, RenderChunk p_setRenderChunkNeighbour_2_)
+    {
         this.renderChunkNeighbours[p_setRenderChunkNeighbour_1_.ordinal()] = p_setRenderChunkNeighbour_2_;
         this.renderChunkNeighboursValid[p_setRenderChunkNeighbour_1_.ordinal()] = p_setRenderChunkNeighbour_2_;
     }
-    
-    public RenderChunk getRenderChunkNeighbour(final EnumFacing p_getRenderChunkNeighbour_1_) {
-        if (!this.renderChunkNeighboursUpated) {
+
+    public RenderChunk getRenderChunkNeighbour(EnumFacing p_getRenderChunkNeighbour_1_)
+    {
+        if (!this.renderChunkNeighboursUpated)
+        {
             this.updateRenderChunkNeighboursValid();
         }
+
         return this.renderChunkNeighboursValid[p_getRenderChunkNeighbour_1_.ordinal()];
     }
-    
-    public RenderGlobal.ContainerLocalRenderInformation getRenderInfo() {
+
+    public RenderGlobal.ContainerLocalRenderInformation getRenderInfo()
+    {
         return this.renderInfo;
     }
-    
-    private void updateRenderChunkNeighboursValid() {
-        final int i = this.getPosition().getX();
-        final int j = this.getPosition().getZ();
-        final int k = EnumFacing.NORTH.ordinal();
-        final int l = EnumFacing.SOUTH.ordinal();
-        final int i2 = EnumFacing.WEST.ordinal();
-        final int j2 = EnumFacing.EAST.ordinal();
-        this.renderChunkNeighboursValid[k] = ((this.renderChunkNeighbours[k].getPosition().getZ() == j - 16) ? this.renderChunkNeighbours[k] : null);
-        this.renderChunkNeighboursValid[l] = ((this.renderChunkNeighbours[l].getPosition().getZ() == j + 16) ? this.renderChunkNeighbours[l] : null);
-        this.renderChunkNeighboursValid[i2] = ((this.renderChunkNeighbours[i2].getPosition().getX() == i - 16) ? this.renderChunkNeighbours[i2] : null);
-        this.renderChunkNeighboursValid[j2] = ((this.renderChunkNeighbours[j2].getPosition().getX() == i + 16) ? this.renderChunkNeighbours[j2] : null);
+
+    private void updateRenderChunkNeighboursValid()
+    {
+        int i = this.getPosition().getX();
+        int j = this.getPosition().getZ();
+        int k = EnumFacing.NORTH.ordinal();
+        int l = EnumFacing.SOUTH.ordinal();
+        int i1 = EnumFacing.WEST.ordinal();
+        int j1 = EnumFacing.EAST.ordinal();
+        this.renderChunkNeighboursValid[k] = this.renderChunkNeighbours[k].getPosition().getZ() == j - 16 ? this.renderChunkNeighbours[k] : null;
+        this.renderChunkNeighboursValid[l] = this.renderChunkNeighbours[l].getPosition().getZ() == j + 16 ? this.renderChunkNeighbours[l] : null;
+        this.renderChunkNeighboursValid[i1] = this.renderChunkNeighbours[i1].getPosition().getX() == i - 16 ? this.renderChunkNeighbours[i1] : null;
+        this.renderChunkNeighboursValid[j1] = this.renderChunkNeighbours[j1].getPosition().getX() == i + 16 ? this.renderChunkNeighbours[j1] : null;
         this.renderChunkNeighboursUpated = true;
     }
-    
-    public boolean isBoundingBoxInFrustum(final ICamera p_isBoundingBoxInFrustum_1_, final int p_isBoundingBoxInFrustum_2_) {
-        return this.getBoundingBoxParent().isBoundingBoxInFrustumFully(p_isBoundingBoxInFrustum_1_, p_isBoundingBoxInFrustum_2_) || p_isBoundingBoxInFrustum_1_.isBoundingBoxInFrustum(this.boundingBox);
+
+    public boolean isBoundingBoxInFrustum(ICamera p_isBoundingBoxInFrustum_1_, int p_isBoundingBoxInFrustum_2_)
+    {
+        return this.getBoundingBoxParent().isBoundingBoxInFrustumFully(p_isBoundingBoxInFrustum_1_, p_isBoundingBoxInFrustum_2_) ? true : p_isBoundingBoxInFrustum_1_.isBoundingBoxInFrustum(this.boundingBox);
     }
-    
-    public AabbFrame getBoundingBoxParent() {
-        if (this.boundingBoxParent == null) {
-            final BlockPos blockpos = this.getPosition();
-            final int i = blockpos.getX();
-            final int j = blockpos.getY();
-            final int k = blockpos.getZ();
-            final int l = 5;
-            final int i2 = i >> l << l;
-            final int j2 = j >> l << l;
-            final int k2 = k >> l << l;
-            if (i2 != i || j2 != j || k2 != k) {
-                final AabbFrame aabbframe = this.renderGlobal.getRenderChunk(new BlockPos(i2, j2, k2)).getBoundingBoxParent();
-                if (aabbframe != null && aabbframe.minX == i2 && aabbframe.minY == j2 && aabbframe.minZ == k2) {
+
+    public AabbFrame getBoundingBoxParent()
+    {
+        if (this.boundingBoxParent == null)
+        {
+            BlockPos blockpos = this.getPosition();
+            int i = blockpos.getX();
+            int j = blockpos.getY();
+            int k = blockpos.getZ();
+            int l = 5;
+            int i1 = i >> l << l;
+            int j1 = j >> l << l;
+            int k1 = k >> l << l;
+
+            if (i1 != i || j1 != j || k1 != k)
+            {
+                AabbFrame aabbframe = this.renderGlobal.getRenderChunk(new BlockPos(i1, j1, k1)).getBoundingBoxParent();
+
+                if (aabbframe != null && aabbframe.minX == (double)i1 && aabbframe.minY == (double)j1 && aabbframe.minZ == (double)k1)
+                {
                     this.boundingBoxParent = aabbframe;
                 }
             }
-            if (this.boundingBoxParent == null) {
-                final int l2 = 1 << l;
-                this.boundingBoxParent = new AabbFrame(i2, j2, k2, i2 + l2, j2 + l2, k2 + l2);
+
+            if (this.boundingBoxParent == null)
+            {
+                int l1 = 1 << l;
+                this.boundingBoxParent = new AabbFrame((double)i1, (double)j1, (double)k1, (double)(i1 + l1), (double)(j1 + l1), (double)(k1 + l1));
             }
         }
+
         return this.boundingBoxParent;
     }
-    
-    @Override
-    public String toString() {
+
+    public String toString()
+    {
         return "pos: " + this.getPosition() + ", frameIndex: " + this.frameIndex;
-    }
-    
-    static {
-        ENUM_WORLD_BLOCK_LAYERS = EnumWorldBlockLayer.values();
     }
 }

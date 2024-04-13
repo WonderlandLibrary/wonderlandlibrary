@@ -1,57 +1,84 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.command;
 
 import java.util.List;
-import net.minecraft.util.BlockPos;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 
 public class CommandServerKick extends CommandBase
 {
-    @Override
-    public String getCommandName() {
+    /**
+     * Gets the name of the command
+     */
+    public String getCommandName()
+    {
         return "kick";
     }
-    
-    @Override
-    public int getRequiredPermissionLevel() {
+
+    /**
+     * Return the required permission level for this command.
+     */
+    public int getRequiredPermissionLevel()
+    {
         return 3;
     }
-    
-    @Override
-    public String getCommandUsage(final ICommandSender sender) {
+
+    /**
+     * Gets the usage string for the command.
+     *  
+     * @param sender The {@link ICommandSender} who is requesting usage details.
+     */
+    public String getCommandUsage(ICommandSender sender)
+    {
         return "commands.kick.usage";
     }
-    
-    @Override
-    public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
-        if (args.length <= 0 || args[0].length() <= 1) {
+
+    /**
+     * Callback when the command is invoked
+     *  
+     * @param sender The {@link ICommandSender sender} who executed the command
+     * @param args The arguments that were passed with the command
+     */
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException
+    {
+        if (args.length > 0 && args[0].length() > 1)
+        {
+            EntityPlayerMP entityplayermp = MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(args[0]);
+            String s = "Kicked by an operator.";
+            boolean flag = false;
+
+            if (entityplayermp == null)
+            {
+                throw new PlayerNotFoundException();
+            }
+            else
+            {
+                if (args.length >= 2)
+                {
+                    s = getChatComponentFromNthArg(sender, args, 1).getUnformattedText();
+                    flag = true;
+                }
+
+                entityplayermp.playerNetServerHandler.kickPlayerFromServer(s);
+
+                if (flag)
+                {
+                    notifyOperators(sender, this, "commands.kick.success.reason", new Object[] {entityplayermp.getCommandSenderName(), s});
+                }
+                else
+                {
+                    notifyOperators(sender, this, "commands.kick.success", new Object[] {entityplayermp.getCommandSenderName()});
+                }
+            }
+        }
+        else
+        {
             throw new WrongUsageException("commands.kick.usage", new Object[0]);
         }
-        final EntityPlayerMP entityplayermp = MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(args[0]);
-        String s = "Kicked by an operator.";
-        boolean flag = false;
-        if (entityplayermp == null) {
-            throw new PlayerNotFoundException();
-        }
-        if (args.length >= 2) {
-            s = CommandBase.getChatComponentFromNthArg(sender, args, 1).getUnformattedText();
-            flag = true;
-        }
-        entityplayermp.playerNetServerHandler.kickPlayerFromServer(s);
-        if (flag) {
-            CommandBase.notifyOperators(sender, this, "commands.kick.success.reason", entityplayermp.getName(), s);
-        }
-        else {
-            CommandBase.notifyOperators(sender, this, "commands.kick.success", entityplayermp.getName());
-        }
     }
-    
-    @Override
-    public List<String> addTabCompletionOptions(final ICommandSender sender, final String[] args, final BlockPos pos) {
-        return (args.length >= 1) ? CommandBase.getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : null;
+
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
+    {
+        return args.length >= 1 ? getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : null;
     }
 }

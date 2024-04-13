@@ -1,60 +1,57 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.entity;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.client.model.ModelArmorStand;
+import net.minecraft.client.model.ModelArmorStandArmor;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.client.renderer.entity.layers.LayerCustomHead;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
-import net.minecraft.client.model.ModelArmorStandArmor;
-import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelArmorStand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.util.ResourceLocation;
 
 public class ArmorStandRenderer extends RendererLivingEntity<EntityArmorStand>
 {
-    public static final ResourceLocation TEXTURE_ARMOR_STAND;
-    
-    public ArmorStandRenderer(final RenderManager p_i46195_1_) {
-        super(p_i46195_1_, new ModelArmorStand(), 0.0f);
-        final LayerBipedArmor layerbipedarmor = new LayerBipedArmor(this) {
-            @Override
-            protected void initArmor() {
-                this.modelLeggings = (T)new ModelArmorStandArmor(0.5f);
-                this.modelArmor = (T)new ModelArmorStandArmor(1.0f);
+    /**
+     * A constant instance of the armor stand texture, wrapped inside a ResourceLocation wrapper.
+     */
+    public static final ResourceLocation TEXTURE_ARMOR_STAND = new ResourceLocation("textures/entity/armorstand/wood.png");
+
+    public ArmorStandRenderer(RenderManager p_i46195_1_)
+    {
+        super(p_i46195_1_, new ModelArmorStand(), 0.0F);
+        LayerBipedArmor layerbipedarmor = new LayerBipedArmor(this)
+        {
+            protected void initArmor()
+            {
+                this.field_177189_c = new ModelArmorStandArmor(0.5F);
+                this.field_177186_d = new ModelArmorStandArmor(1.0F);
             }
         };
-        ((RendererLivingEntity<EntityLivingBase>)this).addLayer(layerbipedarmor);
-        ((RendererLivingEntity<EntityLivingBase>)this).addLayer(new LayerHeldItem(this));
-        ((RendererLivingEntity<EntityLivingBase>)this).addLayer(new LayerCustomHead(this.getMainModel().bipedHead));
+        this.addLayer(layerbipedarmor);
+        this.addLayer(new LayerHeldItem(this));
+        this.addLayer(new LayerCustomHead(this.getMainModel().bipedHead));
     }
-    
-    @Override
-    protected ResourceLocation getEntityTexture(final EntityArmorStand entity) {
-        return ArmorStandRenderer.TEXTURE_ARMOR_STAND;
+
+    /**
+     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
+     */
+    protected ResourceLocation getEntityTexture(EntityArmorStand entity)
+    {
+        return TEXTURE_ARMOR_STAND;
     }
-    
-    @Override
-    public ModelArmorStand getMainModel() {
+
+    public ModelArmorStand getMainModel()
+    {
         return (ModelArmorStand)super.getMainModel();
     }
-    
-    @Override
-    protected void rotateCorpse(final EntityArmorStand bat, final float p_77043_2_, final float p_77043_3_, final float partialTicks) {
-        GlStateManager.rotate(180.0f - p_77043_3_, 0.0f, 1.0f, 0.0f);
+
+    protected void rotateCorpse(EntityArmorStand bat, float p_77043_2_, float p_77043_3_, float partialTicks)
+    {
+        GlStateManager.rotate(180.0F - p_77043_3_, 0.0F, 1.0F, 0.0F);
     }
-    
-    @Override
-    protected boolean canRenderName(final EntityArmorStand entity) {
+
+    protected boolean canRenderName(EntityArmorStand entity)
+    {
         return entity.getAlwaysRenderNameTag();
-    }
-    
-    static {
-        TEXTURE_ARMOR_STAND = new ResourceLocation("textures/entity/armorstand/wood.png");
     }
 }

@@ -1,28 +1,24 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.item;
 
 import com.google.common.collect.Sets;
-import net.minecraft.init.Blocks;
-import net.minecraft.block.Block;
 import java.util.Set;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 
 public class ItemSpade extends ItemTool
 {
-    private static final Set<Block> EFFECTIVE_ON;
-    
-    public ItemSpade(final ToolMaterial material) {
-        super(1.0f, material, ItemSpade.EFFECTIVE_ON);
+    private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet(new Block[] {Blocks.clay, Blocks.dirt, Blocks.farmland, Blocks.grass, Blocks.gravel, Blocks.mycelium, Blocks.sand, Blocks.snow, Blocks.snow_layer, Blocks.soul_sand});
+
+    public ItemSpade(Item.ToolMaterial material)
+    {
+        super(1.0F, material, EFFECTIVE_ON);
     }
-    
-    @Override
-    public boolean canHarvestBlock(final Block blockIn) {
-        return blockIn == Blocks.snow_layer || blockIn == Blocks.snow;
-    }
-    
-    static {
-        EFFECTIVE_ON = Sets.newHashSet((Object[])new Block[] { Blocks.clay, Blocks.dirt, Blocks.farmland, Blocks.grass, Blocks.gravel, Blocks.mycelium, Blocks.sand, Blocks.snow, Blocks.snow_layer, Blocks.soul_sand });
+
+    /**
+     * Check whether this Item can harvest the given Block
+     */
+    public boolean canHarvestBlock(Block blockIn)
+    {
+        return blockIn == Blocks.snow_layer ? true : blockIn == Blocks.snow;
     }
 }

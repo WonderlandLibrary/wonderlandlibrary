@@ -1,36 +1,48 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.command.server;
 
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommand;
-import net.minecraft.world.WorldSettings;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.WorldSettings;
 
 public class CommandPublishLocalServer extends CommandBase
 {
-    @Override
-    public String getCommandName() {
+    /**
+     * Gets the name of the command
+     */
+    public String getCommandName()
+    {
         return "publish";
     }
-    
-    @Override
-    public String getCommandUsage(final ICommandSender sender) {
+
+    /**
+     * Gets the usage string for the command.
+     *  
+     * @param sender The {@link ICommandSender} who is requesting usage details.
+     */
+    public String getCommandUsage(ICommandSender sender)
+    {
         return "commands.publish.usage";
     }
-    
-    @Override
-    public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
-        final String s = MinecraftServer.getServer().shareToLAN(WorldSettings.GameType.SURVIVAL, false);
-        if (s != null) {
-            CommandBase.notifyOperators(sender, this, "commands.publish.started", s);
+
+    /**
+     * Callback when the command is invoked
+     *  
+     * @param sender The {@link ICommandSender sender} who executed the command
+     * @param args The arguments that were passed with the command
+     */
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException
+    {
+        String s = MinecraftServer.getServer().shareToLAN(WorldSettings.GameType.SURVIVAL, false);
+
+        if (s != null)
+        {
+            notifyOperators(sender, this, "commands.publish.started", new Object[] {s});
         }
-        else {
-            CommandBase.notifyOperators(sender, this, "commands.publish.failed", new Object[0]);
+        else
+        {
+            notifyOperators(sender, this, "commands.publish.failed", new Object[0]);
         }
     }
 }

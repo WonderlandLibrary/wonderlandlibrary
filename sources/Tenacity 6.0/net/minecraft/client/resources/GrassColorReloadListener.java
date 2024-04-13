@@ -1,27 +1,23 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.resources;
 
 import java.io.IOException;
-import net.minecraft.world.ColorizerGrass;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.ColorizerGrass;
 
 public class GrassColorReloadListener implements IResourceManagerReloadListener
 {
-    private static final ResourceLocation LOC_GRASS_PNG;
-    
-    @Override
-    public void onResourceManagerReload(final IResourceManager resourceManager) {
-        try {
-            ColorizerGrass.setGrassBiomeColorizer(TextureUtil.readImageData(resourceManager, GrassColorReloadListener.LOC_GRASS_PNG));
+    private static final ResourceLocation LOC_GRASS_PNG = new ResourceLocation("textures/colormap/grass.png");
+
+    public void onResourceManagerReload(IResourceManager resourceManager)
+    {
+        try
+        {
+            ColorizerGrass.setGrassBiomeColorizer(TextureUtil.readImageData(resourceManager, LOC_GRASS_PNG));
         }
-        catch (IOException ex) {}
-    }
-    
-    static {
-        LOC_GRASS_PNG = new ResourceLocation("textures/colormap/grass.png");
+        catch (IOException var3)
+        {
+            ;
+        }
     }
 }

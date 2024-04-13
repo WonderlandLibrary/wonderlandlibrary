@@ -1,21 +1,17 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraftforge.client.model.pipeline;
 
-import net.minecraft.util.EnumFacing;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.util.EnumFacing;
 
 public interface IVertexConsumer
 {
     VertexFormat getVertexFormat();
-    
-    void setQuadTint(final int p0);
-    
-    void setQuadOrientation(final EnumFacing p0);
-    
+
+    void setQuadTint(int var1);
+
+    void setQuadOrientation(EnumFacing var1);
+
     void setQuadColored();
-    
-    void put(final int p0, final float... p1);
+
+    void put(int var1, float... var2);
 }

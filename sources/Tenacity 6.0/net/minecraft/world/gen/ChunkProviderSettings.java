@@ -1,21 +1,17 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.world.gen;
 
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonObject;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.util.JsonUtils;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonSerializer;
-import com.google.gson.JsonDeserializer;
-import java.lang.reflect.Type;
-import com.google.gson.GsonBuilder;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import java.lang.reflect.Type;
+import net.minecraft.util.JsonUtils;
+import net.minecraft.world.biome.BiomeGenBase;
 
 public class ChunkProviderSettings
 {
@@ -97,8 +93,9 @@ public class ChunkProviderSettings
     public final int lapisCount;
     public final int lapisCenterHeight;
     public final int lapisSpread;
-    
-    private ChunkProviderSettings(final Factory settingsFactory) {
+
+    private ChunkProviderSettings(ChunkProviderSettings.Factory settingsFactory)
+    {
         this.coordinateScale = settingsFactory.coordinateScale;
         this.heightScale = settingsFactory.heightScale;
         this.upperLimitScale = settingsFactory.upperLimitScale;
@@ -178,205 +175,136 @@ public class ChunkProviderSettings
         this.lapisCenterHeight = settingsFactory.lapisCenterHeight;
         this.lapisSpread = settingsFactory.lapisSpread;
     }
-    
+
     public static class Factory
     {
-        static final Gson JSON_ADAPTER;
-        public float coordinateScale;
-        public float heightScale;
-        public float upperLimitScale;
-        public float lowerLimitScale;
-        public float depthNoiseScaleX;
-        public float depthNoiseScaleZ;
-        public float depthNoiseScaleExponent;
-        public float mainNoiseScaleX;
-        public float mainNoiseScaleY;
-        public float mainNoiseScaleZ;
-        public float baseSize;
-        public float stretchY;
-        public float biomeDepthWeight;
-        public float biomeDepthOffset;
-        public float biomeScaleWeight;
-        public float biomeScaleOffset;
-        public int seaLevel;
-        public boolean useCaves;
-        public boolean useDungeons;
-        public int dungeonChance;
-        public boolean useStrongholds;
-        public boolean useVillages;
-        public boolean useMineShafts;
-        public boolean useTemples;
-        public boolean useMonuments;
-        public boolean useRavines;
-        public boolean useWaterLakes;
-        public int waterLakeChance;
-        public boolean useLavaLakes;
-        public int lavaLakeChance;
-        public boolean useLavaOceans;
-        public int fixedBiome;
-        public int biomeSize;
-        public int riverSize;
-        public int dirtSize;
-        public int dirtCount;
-        public int dirtMinHeight;
-        public int dirtMaxHeight;
-        public int gravelSize;
-        public int gravelCount;
-        public int gravelMinHeight;
-        public int gravelMaxHeight;
-        public int graniteSize;
-        public int graniteCount;
-        public int graniteMinHeight;
-        public int graniteMaxHeight;
-        public int dioriteSize;
-        public int dioriteCount;
-        public int dioriteMinHeight;
-        public int dioriteMaxHeight;
-        public int andesiteSize;
-        public int andesiteCount;
-        public int andesiteMinHeight;
-        public int andesiteMaxHeight;
-        public int coalSize;
-        public int coalCount;
-        public int coalMinHeight;
-        public int coalMaxHeight;
-        public int ironSize;
-        public int ironCount;
-        public int ironMinHeight;
-        public int ironMaxHeight;
-        public int goldSize;
-        public int goldCount;
-        public int goldMinHeight;
-        public int goldMaxHeight;
-        public int redstoneSize;
-        public int redstoneCount;
-        public int redstoneMinHeight;
-        public int redstoneMaxHeight;
-        public int diamondSize;
-        public int diamondCount;
-        public int diamondMinHeight;
-        public int diamondMaxHeight;
-        public int lapisSize;
-        public int lapisCount;
-        public int lapisCenterHeight;
-        public int lapisSpread;
-        
-        public static Factory jsonToFactory(final String p_177865_0_) {
-            if (p_177865_0_.length() == 0) {
-                return new Factory();
+        static final Gson JSON_ADAPTER = (new GsonBuilder()).registerTypeAdapter(ChunkProviderSettings.Factory.class, new ChunkProviderSettings.Serializer()).create();
+        public float coordinateScale = 684.412F;
+        public float heightScale = 684.412F;
+        public float upperLimitScale = 512.0F;
+        public float lowerLimitScale = 512.0F;
+        public float depthNoiseScaleX = 200.0F;
+        public float depthNoiseScaleZ = 200.0F;
+        public float depthNoiseScaleExponent = 0.5F;
+        public float mainNoiseScaleX = 80.0F;
+        public float mainNoiseScaleY = 160.0F;
+        public float mainNoiseScaleZ = 80.0F;
+        public float baseSize = 8.5F;
+        public float stretchY = 12.0F;
+        public float biomeDepthWeight = 1.0F;
+        public float biomeDepthOffset = 0.0F;
+        public float biomeScaleWeight = 1.0F;
+        public float biomeScaleOffset = 0.0F;
+        public int seaLevel = 63;
+        public boolean useCaves = true;
+        public boolean useDungeons = true;
+        public int dungeonChance = 8;
+        public boolean useStrongholds = true;
+        public boolean useVillages = true;
+        public boolean useMineShafts = true;
+        public boolean useTemples = true;
+        public boolean useMonuments = true;
+        public boolean useRavines = true;
+        public boolean useWaterLakes = true;
+        public int waterLakeChance = 4;
+        public boolean useLavaLakes = true;
+        public int lavaLakeChance = 80;
+        public boolean useLavaOceans = false;
+        public int fixedBiome = -1;
+        public int biomeSize = 4;
+        public int riverSize = 4;
+        public int dirtSize = 33;
+        public int dirtCount = 10;
+        public int dirtMinHeight = 0;
+        public int dirtMaxHeight = 256;
+        public int gravelSize = 33;
+        public int gravelCount = 8;
+        public int gravelMinHeight = 0;
+        public int gravelMaxHeight = 256;
+        public int graniteSize = 33;
+        public int graniteCount = 10;
+        public int graniteMinHeight = 0;
+        public int graniteMaxHeight = 80;
+        public int dioriteSize = 33;
+        public int dioriteCount = 10;
+        public int dioriteMinHeight = 0;
+        public int dioriteMaxHeight = 80;
+        public int andesiteSize = 33;
+        public int andesiteCount = 10;
+        public int andesiteMinHeight = 0;
+        public int andesiteMaxHeight = 80;
+        public int coalSize = 17;
+        public int coalCount = 20;
+        public int coalMinHeight = 0;
+        public int coalMaxHeight = 128;
+        public int ironSize = 9;
+        public int ironCount = 20;
+        public int ironMinHeight = 0;
+        public int ironMaxHeight = 64;
+        public int goldSize = 9;
+        public int goldCount = 2;
+        public int goldMinHeight = 0;
+        public int goldMaxHeight = 32;
+        public int redstoneSize = 8;
+        public int redstoneCount = 8;
+        public int redstoneMinHeight = 0;
+        public int redstoneMaxHeight = 16;
+        public int diamondSize = 8;
+        public int diamondCount = 1;
+        public int diamondMinHeight = 0;
+        public int diamondMaxHeight = 16;
+        public int lapisSize = 7;
+        public int lapisCount = 1;
+        public int lapisCenterHeight = 16;
+        public int lapisSpread = 16;
+
+        public static ChunkProviderSettings.Factory jsonToFactory(String p_177865_0_)
+        {
+            if (p_177865_0_.length() == 0)
+            {
+                return new ChunkProviderSettings.Factory();
             }
-            try {
-                return (Factory)Factory.JSON_ADAPTER.fromJson(p_177865_0_, (Class)Factory.class);
-            }
-            catch (Exception var2) {
-                return new Factory();
+            else
+            {
+                try
+                {
+                    return (ChunkProviderSettings.Factory)JSON_ADAPTER.fromJson(p_177865_0_, ChunkProviderSettings.Factory.class);
+                }
+                catch (Exception var2)
+                {
+                    return new ChunkProviderSettings.Factory();
+                }
             }
         }
-        
-        @Override
-        public String toString() {
-            return Factory.JSON_ADAPTER.toJson((Object)this);
+
+        public String toString()
+        {
+            return JSON_ADAPTER.toJson((Object)this);
         }
-        
-        public Factory() {
-            this.coordinateScale = 684.412f;
-            this.heightScale = 684.412f;
-            this.upperLimitScale = 512.0f;
-            this.lowerLimitScale = 512.0f;
-            this.depthNoiseScaleX = 200.0f;
-            this.depthNoiseScaleZ = 200.0f;
-            this.depthNoiseScaleExponent = 0.5f;
-            this.mainNoiseScaleX = 80.0f;
-            this.mainNoiseScaleY = 160.0f;
-            this.mainNoiseScaleZ = 80.0f;
-            this.baseSize = 8.5f;
-            this.stretchY = 12.0f;
-            this.biomeDepthWeight = 1.0f;
-            this.biomeDepthOffset = 0.0f;
-            this.biomeScaleWeight = 1.0f;
-            this.biomeScaleOffset = 0.0f;
-            this.seaLevel = 63;
-            this.useCaves = true;
-            this.useDungeons = true;
-            this.dungeonChance = 8;
-            this.useStrongholds = true;
-            this.useVillages = true;
-            this.useMineShafts = true;
-            this.useTemples = true;
-            this.useMonuments = true;
-            this.useRavines = true;
-            this.useWaterLakes = true;
-            this.waterLakeChance = 4;
-            this.useLavaLakes = true;
-            this.lavaLakeChance = 80;
-            this.useLavaOceans = false;
-            this.fixedBiome = -1;
-            this.biomeSize = 4;
-            this.riverSize = 4;
-            this.dirtSize = 33;
-            this.dirtCount = 10;
-            this.dirtMinHeight = 0;
-            this.dirtMaxHeight = 256;
-            this.gravelSize = 33;
-            this.gravelCount = 8;
-            this.gravelMinHeight = 0;
-            this.gravelMaxHeight = 256;
-            this.graniteSize = 33;
-            this.graniteCount = 10;
-            this.graniteMinHeight = 0;
-            this.graniteMaxHeight = 80;
-            this.dioriteSize = 33;
-            this.dioriteCount = 10;
-            this.dioriteMinHeight = 0;
-            this.dioriteMaxHeight = 80;
-            this.andesiteSize = 33;
-            this.andesiteCount = 10;
-            this.andesiteMinHeight = 0;
-            this.andesiteMaxHeight = 80;
-            this.coalSize = 17;
-            this.coalCount = 20;
-            this.coalMinHeight = 0;
-            this.coalMaxHeight = 128;
-            this.ironSize = 9;
-            this.ironCount = 20;
-            this.ironMinHeight = 0;
-            this.ironMaxHeight = 64;
-            this.goldSize = 9;
-            this.goldCount = 2;
-            this.goldMinHeight = 0;
-            this.goldMaxHeight = 32;
-            this.redstoneSize = 8;
-            this.redstoneCount = 8;
-            this.redstoneMinHeight = 0;
-            this.redstoneMaxHeight = 16;
-            this.diamondSize = 8;
-            this.diamondCount = 1;
-            this.diamondMinHeight = 0;
-            this.diamondMaxHeight = 16;
-            this.lapisSize = 7;
-            this.lapisCount = 1;
-            this.lapisCenterHeight = 16;
-            this.lapisSpread = 16;
+
+        public Factory()
+        {
             this.func_177863_a();
         }
-        
-        public void func_177863_a() {
-            this.coordinateScale = 684.412f;
-            this.heightScale = 684.412f;
-            this.upperLimitScale = 512.0f;
-            this.lowerLimitScale = 512.0f;
-            this.depthNoiseScaleX = 200.0f;
-            this.depthNoiseScaleZ = 200.0f;
-            this.depthNoiseScaleExponent = 0.5f;
-            this.mainNoiseScaleX = 80.0f;
-            this.mainNoiseScaleY = 160.0f;
-            this.mainNoiseScaleZ = 80.0f;
-            this.baseSize = 8.5f;
-            this.stretchY = 12.0f;
-            this.biomeDepthWeight = 1.0f;
-            this.biomeDepthOffset = 0.0f;
-            this.biomeScaleWeight = 1.0f;
-            this.biomeScaleOffset = 0.0f;
+
+        public void func_177863_a()
+        {
+            this.coordinateScale = 684.412F;
+            this.heightScale = 684.412F;
+            this.upperLimitScale = 512.0F;
+            this.lowerLimitScale = 512.0F;
+            this.depthNoiseScaleX = 200.0F;
+            this.depthNoiseScaleZ = 200.0F;
+            this.depthNoiseScaleExponent = 0.5F;
+            this.mainNoiseScaleX = 80.0F;
+            this.mainNoiseScaleY = 160.0F;
+            this.mainNoiseScaleZ = 80.0F;
+            this.baseSize = 8.5F;
+            this.stretchY = 12.0F;
+            this.biomeDepthWeight = 1.0F;
+            this.biomeDepthOffset = 0.0F;
+            this.biomeScaleWeight = 1.0F;
+            this.biomeScaleOffset = 0.0F;
             this.seaLevel = 63;
             this.useCaves = true;
             this.useDungeons = true;
@@ -440,37 +368,42 @@ public class ChunkProviderSettings
             this.lapisCenterHeight = 16;
             this.lapisSpread = 16;
         }
-        
-        @Override
-        public boolean equals(final Object p_equals_1_) {
-            if (this == p_equals_1_) {
+
+        public boolean equals(Object p_equals_1_)
+        {
+            if (this == p_equals_1_)
+            {
                 return true;
             }
-            if (p_equals_1_ != null && this.getClass() == p_equals_1_.getClass()) {
-                final Factory chunkprovidersettings$factory = (Factory)p_equals_1_;
-                return this.andesiteCount == chunkprovidersettings$factory.andesiteCount && this.andesiteMaxHeight == chunkprovidersettings$factory.andesiteMaxHeight && this.andesiteMinHeight == chunkprovidersettings$factory.andesiteMinHeight && this.andesiteSize == chunkprovidersettings$factory.andesiteSize && Float.compare(chunkprovidersettings$factory.baseSize, this.baseSize) == 0 && Float.compare(chunkprovidersettings$factory.biomeDepthOffset, this.biomeDepthOffset) == 0 && Float.compare(chunkprovidersettings$factory.biomeDepthWeight, this.biomeDepthWeight) == 0 && Float.compare(chunkprovidersettings$factory.biomeScaleOffset, this.biomeScaleOffset) == 0 && Float.compare(chunkprovidersettings$factory.biomeScaleWeight, this.biomeScaleWeight) == 0 && this.biomeSize == chunkprovidersettings$factory.biomeSize && this.coalCount == chunkprovidersettings$factory.coalCount && this.coalMaxHeight == chunkprovidersettings$factory.coalMaxHeight && this.coalMinHeight == chunkprovidersettings$factory.coalMinHeight && this.coalSize == chunkprovidersettings$factory.coalSize && Float.compare(chunkprovidersettings$factory.coordinateScale, this.coordinateScale) == 0 && Float.compare(chunkprovidersettings$factory.depthNoiseScaleExponent, this.depthNoiseScaleExponent) == 0 && Float.compare(chunkprovidersettings$factory.depthNoiseScaleX, this.depthNoiseScaleX) == 0 && Float.compare(chunkprovidersettings$factory.depthNoiseScaleZ, this.depthNoiseScaleZ) == 0 && this.diamondCount == chunkprovidersettings$factory.diamondCount && this.diamondMaxHeight == chunkprovidersettings$factory.diamondMaxHeight && this.diamondMinHeight == chunkprovidersettings$factory.diamondMinHeight && this.diamondSize == chunkprovidersettings$factory.diamondSize && this.dioriteCount == chunkprovidersettings$factory.dioriteCount && this.dioriteMaxHeight == chunkprovidersettings$factory.dioriteMaxHeight && this.dioriteMinHeight == chunkprovidersettings$factory.dioriteMinHeight && this.dioriteSize == chunkprovidersettings$factory.dioriteSize && this.dirtCount == chunkprovidersettings$factory.dirtCount && this.dirtMaxHeight == chunkprovidersettings$factory.dirtMaxHeight && this.dirtMinHeight == chunkprovidersettings$factory.dirtMinHeight && this.dirtSize == chunkprovidersettings$factory.dirtSize && this.dungeonChance == chunkprovidersettings$factory.dungeonChance && this.fixedBiome == chunkprovidersettings$factory.fixedBiome && this.goldCount == chunkprovidersettings$factory.goldCount && this.goldMaxHeight == chunkprovidersettings$factory.goldMaxHeight && this.goldMinHeight == chunkprovidersettings$factory.goldMinHeight && this.goldSize == chunkprovidersettings$factory.goldSize && this.graniteCount == chunkprovidersettings$factory.graniteCount && this.graniteMaxHeight == chunkprovidersettings$factory.graniteMaxHeight && this.graniteMinHeight == chunkprovidersettings$factory.graniteMinHeight && this.graniteSize == chunkprovidersettings$factory.graniteSize && this.gravelCount == chunkprovidersettings$factory.gravelCount && this.gravelMaxHeight == chunkprovidersettings$factory.gravelMaxHeight && this.gravelMinHeight == chunkprovidersettings$factory.gravelMinHeight && this.gravelSize == chunkprovidersettings$factory.gravelSize && Float.compare(chunkprovidersettings$factory.heightScale, this.heightScale) == 0 && this.ironCount == chunkprovidersettings$factory.ironCount && this.ironMaxHeight == chunkprovidersettings$factory.ironMaxHeight && this.ironMinHeight == chunkprovidersettings$factory.ironMinHeight && this.ironSize == chunkprovidersettings$factory.ironSize && this.lapisCenterHeight == chunkprovidersettings$factory.lapisCenterHeight && this.lapisCount == chunkprovidersettings$factory.lapisCount && this.lapisSize == chunkprovidersettings$factory.lapisSize && this.lapisSpread == chunkprovidersettings$factory.lapisSpread && this.lavaLakeChance == chunkprovidersettings$factory.lavaLakeChance && Float.compare(chunkprovidersettings$factory.lowerLimitScale, this.lowerLimitScale) == 0 && Float.compare(chunkprovidersettings$factory.mainNoiseScaleX, this.mainNoiseScaleX) == 0 && Float.compare(chunkprovidersettings$factory.mainNoiseScaleY, this.mainNoiseScaleY) == 0 && Float.compare(chunkprovidersettings$factory.mainNoiseScaleZ, this.mainNoiseScaleZ) == 0 && this.redstoneCount == chunkprovidersettings$factory.redstoneCount && this.redstoneMaxHeight == chunkprovidersettings$factory.redstoneMaxHeight && this.redstoneMinHeight == chunkprovidersettings$factory.redstoneMinHeight && this.redstoneSize == chunkprovidersettings$factory.redstoneSize && this.riverSize == chunkprovidersettings$factory.riverSize && this.seaLevel == chunkprovidersettings$factory.seaLevel && Float.compare(chunkprovidersettings$factory.stretchY, this.stretchY) == 0 && Float.compare(chunkprovidersettings$factory.upperLimitScale, this.upperLimitScale) == 0 && this.useCaves == chunkprovidersettings$factory.useCaves && this.useDungeons == chunkprovidersettings$factory.useDungeons && this.useLavaLakes == chunkprovidersettings$factory.useLavaLakes && this.useLavaOceans == chunkprovidersettings$factory.useLavaOceans && this.useMineShafts == chunkprovidersettings$factory.useMineShafts && this.useRavines == chunkprovidersettings$factory.useRavines && this.useStrongholds == chunkprovidersettings$factory.useStrongholds && this.useTemples == chunkprovidersettings$factory.useTemples && this.useMonuments == chunkprovidersettings$factory.useMonuments && this.useVillages == chunkprovidersettings$factory.useVillages && this.useWaterLakes == chunkprovidersettings$factory.useWaterLakes && this.waterLakeChance == chunkprovidersettings$factory.waterLakeChance;
+            else if (p_equals_1_ != null && this.getClass() == p_equals_1_.getClass())
+            {
+                ChunkProviderSettings.Factory chunkprovidersettings$factory = (ChunkProviderSettings.Factory)p_equals_1_;
+                return this.andesiteCount != chunkprovidersettings$factory.andesiteCount ? false : (this.andesiteMaxHeight != chunkprovidersettings$factory.andesiteMaxHeight ? false : (this.andesiteMinHeight != chunkprovidersettings$factory.andesiteMinHeight ? false : (this.andesiteSize != chunkprovidersettings$factory.andesiteSize ? false : (Float.compare(chunkprovidersettings$factory.baseSize, this.baseSize) != 0 ? false : (Float.compare(chunkprovidersettings$factory.biomeDepthOffset, this.biomeDepthOffset) != 0 ? false : (Float.compare(chunkprovidersettings$factory.biomeDepthWeight, this.biomeDepthWeight) != 0 ? false : (Float.compare(chunkprovidersettings$factory.biomeScaleOffset, this.biomeScaleOffset) != 0 ? false : (Float.compare(chunkprovidersettings$factory.biomeScaleWeight, this.biomeScaleWeight) != 0 ? false : (this.biomeSize != chunkprovidersettings$factory.biomeSize ? false : (this.coalCount != chunkprovidersettings$factory.coalCount ? false : (this.coalMaxHeight != chunkprovidersettings$factory.coalMaxHeight ? false : (this.coalMinHeight != chunkprovidersettings$factory.coalMinHeight ? false : (this.coalSize != chunkprovidersettings$factory.coalSize ? false : (Float.compare(chunkprovidersettings$factory.coordinateScale, this.coordinateScale) != 0 ? false : (Float.compare(chunkprovidersettings$factory.depthNoiseScaleExponent, this.depthNoiseScaleExponent) != 0 ? false : (Float.compare(chunkprovidersettings$factory.depthNoiseScaleX, this.depthNoiseScaleX) != 0 ? false : (Float.compare(chunkprovidersettings$factory.depthNoiseScaleZ, this.depthNoiseScaleZ) != 0 ? false : (this.diamondCount != chunkprovidersettings$factory.diamondCount ? false : (this.diamondMaxHeight != chunkprovidersettings$factory.diamondMaxHeight ? false : (this.diamondMinHeight != chunkprovidersettings$factory.diamondMinHeight ? false : (this.diamondSize != chunkprovidersettings$factory.diamondSize ? false : (this.dioriteCount != chunkprovidersettings$factory.dioriteCount ? false : (this.dioriteMaxHeight != chunkprovidersettings$factory.dioriteMaxHeight ? false : (this.dioriteMinHeight != chunkprovidersettings$factory.dioriteMinHeight ? false : (this.dioriteSize != chunkprovidersettings$factory.dioriteSize ? false : (this.dirtCount != chunkprovidersettings$factory.dirtCount ? false : (this.dirtMaxHeight != chunkprovidersettings$factory.dirtMaxHeight ? false : (this.dirtMinHeight != chunkprovidersettings$factory.dirtMinHeight ? false : (this.dirtSize != chunkprovidersettings$factory.dirtSize ? false : (this.dungeonChance != chunkprovidersettings$factory.dungeonChance ? false : (this.fixedBiome != chunkprovidersettings$factory.fixedBiome ? false : (this.goldCount != chunkprovidersettings$factory.goldCount ? false : (this.goldMaxHeight != chunkprovidersettings$factory.goldMaxHeight ? false : (this.goldMinHeight != chunkprovidersettings$factory.goldMinHeight ? false : (this.goldSize != chunkprovidersettings$factory.goldSize ? false : (this.graniteCount != chunkprovidersettings$factory.graniteCount ? false : (this.graniteMaxHeight != chunkprovidersettings$factory.graniteMaxHeight ? false : (this.graniteMinHeight != chunkprovidersettings$factory.graniteMinHeight ? false : (this.graniteSize != chunkprovidersettings$factory.graniteSize ? false : (this.gravelCount != chunkprovidersettings$factory.gravelCount ? false : (this.gravelMaxHeight != chunkprovidersettings$factory.gravelMaxHeight ? false : (this.gravelMinHeight != chunkprovidersettings$factory.gravelMinHeight ? false : (this.gravelSize != chunkprovidersettings$factory.gravelSize ? false : (Float.compare(chunkprovidersettings$factory.heightScale, this.heightScale) != 0 ? false : (this.ironCount != chunkprovidersettings$factory.ironCount ? false : (this.ironMaxHeight != chunkprovidersettings$factory.ironMaxHeight ? false : (this.ironMinHeight != chunkprovidersettings$factory.ironMinHeight ? false : (this.ironSize != chunkprovidersettings$factory.ironSize ? false : (this.lapisCenterHeight != chunkprovidersettings$factory.lapisCenterHeight ? false : (this.lapisCount != chunkprovidersettings$factory.lapisCount ? false : (this.lapisSize != chunkprovidersettings$factory.lapisSize ? false : (this.lapisSpread != chunkprovidersettings$factory.lapisSpread ? false : (this.lavaLakeChance != chunkprovidersettings$factory.lavaLakeChance ? false : (Float.compare(chunkprovidersettings$factory.lowerLimitScale, this.lowerLimitScale) != 0 ? false : (Float.compare(chunkprovidersettings$factory.mainNoiseScaleX, this.mainNoiseScaleX) != 0 ? false : (Float.compare(chunkprovidersettings$factory.mainNoiseScaleY, this.mainNoiseScaleY) != 0 ? false : (Float.compare(chunkprovidersettings$factory.mainNoiseScaleZ, this.mainNoiseScaleZ) != 0 ? false : (this.redstoneCount != chunkprovidersettings$factory.redstoneCount ? false : (this.redstoneMaxHeight != chunkprovidersettings$factory.redstoneMaxHeight ? false : (this.redstoneMinHeight != chunkprovidersettings$factory.redstoneMinHeight ? false : (this.redstoneSize != chunkprovidersettings$factory.redstoneSize ? false : (this.riverSize != chunkprovidersettings$factory.riverSize ? false : (this.seaLevel != chunkprovidersettings$factory.seaLevel ? false : (Float.compare(chunkprovidersettings$factory.stretchY, this.stretchY) != 0 ? false : (Float.compare(chunkprovidersettings$factory.upperLimitScale, this.upperLimitScale) != 0 ? false : (this.useCaves != chunkprovidersettings$factory.useCaves ? false : (this.useDungeons != chunkprovidersettings$factory.useDungeons ? false : (this.useLavaLakes != chunkprovidersettings$factory.useLavaLakes ? false : (this.useLavaOceans != chunkprovidersettings$factory.useLavaOceans ? false : (this.useMineShafts != chunkprovidersettings$factory.useMineShafts ? false : (this.useRavines != chunkprovidersettings$factory.useRavines ? false : (this.useStrongholds != chunkprovidersettings$factory.useStrongholds ? false : (this.useTemples != chunkprovidersettings$factory.useTemples ? false : (this.useMonuments != chunkprovidersettings$factory.useMonuments ? false : (this.useVillages != chunkprovidersettings$factory.useVillages ? false : (this.useWaterLakes != chunkprovidersettings$factory.useWaterLakes ? false : this.waterLakeChance == chunkprovidersettings$factory.waterLakeChance))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
             }
-            return false;
+            else
+            {
+                return false;
+            }
         }
-        
-        @Override
-        public int hashCode() {
-            int i = (this.coordinateScale != 0.0f) ? Float.floatToIntBits(this.coordinateScale) : 0;
-            i = 31 * i + ((this.heightScale != 0.0f) ? Float.floatToIntBits(this.heightScale) : 0);
-            i = 31 * i + ((this.upperLimitScale != 0.0f) ? Float.floatToIntBits(this.upperLimitScale) : 0);
-            i = 31 * i + ((this.lowerLimitScale != 0.0f) ? Float.floatToIntBits(this.lowerLimitScale) : 0);
-            i = 31 * i + ((this.depthNoiseScaleX != 0.0f) ? Float.floatToIntBits(this.depthNoiseScaleX) : 0);
-            i = 31 * i + ((this.depthNoiseScaleZ != 0.0f) ? Float.floatToIntBits(this.depthNoiseScaleZ) : 0);
-            i = 31 * i + ((this.depthNoiseScaleExponent != 0.0f) ? Float.floatToIntBits(this.depthNoiseScaleExponent) : 0);
-            i = 31 * i + ((this.mainNoiseScaleX != 0.0f) ? Float.floatToIntBits(this.mainNoiseScaleX) : 0);
-            i = 31 * i + ((this.mainNoiseScaleY != 0.0f) ? Float.floatToIntBits(this.mainNoiseScaleY) : 0);
-            i = 31 * i + ((this.mainNoiseScaleZ != 0.0f) ? Float.floatToIntBits(this.mainNoiseScaleZ) : 0);
-            i = 31 * i + ((this.baseSize != 0.0f) ? Float.floatToIntBits(this.baseSize) : 0);
-            i = 31 * i + ((this.stretchY != 0.0f) ? Float.floatToIntBits(this.stretchY) : 0);
-            i = 31 * i + ((this.biomeDepthWeight != 0.0f) ? Float.floatToIntBits(this.biomeDepthWeight) : 0);
-            i = 31 * i + ((this.biomeDepthOffset != 0.0f) ? Float.floatToIntBits(this.biomeDepthOffset) : 0);
-            i = 31 * i + ((this.biomeScaleWeight != 0.0f) ? Float.floatToIntBits(this.biomeScaleWeight) : 0);
-            i = 31 * i + ((this.biomeScaleOffset != 0.0f) ? Float.floatToIntBits(this.biomeScaleOffset) : 0);
+
+        public int hashCode()
+        {
+            int i = this.coordinateScale != 0.0F ? Float.floatToIntBits(this.coordinateScale) : 0;
+            i = 31 * i + (this.heightScale != 0.0F ? Float.floatToIntBits(this.heightScale) : 0);
+            i = 31 * i + (this.upperLimitScale != 0.0F ? Float.floatToIntBits(this.upperLimitScale) : 0);
+            i = 31 * i + (this.lowerLimitScale != 0.0F ? Float.floatToIntBits(this.lowerLimitScale) : 0);
+            i = 31 * i + (this.depthNoiseScaleX != 0.0F ? Float.floatToIntBits(this.depthNoiseScaleX) : 0);
+            i = 31 * i + (this.depthNoiseScaleZ != 0.0F ? Float.floatToIntBits(this.depthNoiseScaleZ) : 0);
+            i = 31 * i + (this.depthNoiseScaleExponent != 0.0F ? Float.floatToIntBits(this.depthNoiseScaleExponent) : 0);
+            i = 31 * i + (this.mainNoiseScaleX != 0.0F ? Float.floatToIntBits(this.mainNoiseScaleX) : 0);
+            i = 31 * i + (this.mainNoiseScaleY != 0.0F ? Float.floatToIntBits(this.mainNoiseScaleY) : 0);
+            i = 31 * i + (this.mainNoiseScaleZ != 0.0F ? Float.floatToIntBits(this.mainNoiseScaleZ) : 0);
+            i = 31 * i + (this.baseSize != 0.0F ? Float.floatToIntBits(this.baseSize) : 0);
+            i = 31 * i + (this.stretchY != 0.0F ? Float.floatToIntBits(this.stretchY) : 0);
+            i = 31 * i + (this.biomeDepthWeight != 0.0F ? Float.floatToIntBits(this.biomeDepthWeight) : 0);
+            i = 31 * i + (this.biomeDepthOffset != 0.0F ? Float.floatToIntBits(this.biomeDepthOffset) : 0);
+            i = 31 * i + (this.biomeScaleWeight != 0.0F ? Float.floatToIntBits(this.biomeScaleWeight) : 0);
+            i = 31 * i + (this.biomeScaleOffset != 0.0F ? Float.floatToIntBits(this.biomeScaleOffset) : 0);
             i = 31 * i + this.seaLevel;
             i = 31 * i + (this.useCaves ? 1 : 0);
             i = 31 * i + (this.useDungeons ? 1 : 0);
@@ -535,22 +468,22 @@ public class ChunkProviderSettings
             i = 31 * i + this.lapisSpread;
             return i;
         }
-        
-        public ChunkProviderSettings func_177864_b() {
-            return new ChunkProviderSettings(this, null);
-        }
-        
-        static {
-            JSON_ADAPTER = new GsonBuilder().registerTypeAdapter((Type)Factory.class, (Object)new Serializer()).create();
+
+        public ChunkProviderSettings func_177864_b()
+        {
+            return new ChunkProviderSettings(this);
         }
     }
-    
-    public static class Serializer implements JsonDeserializer<Factory>, JsonSerializer<Factory>
+
+    public static class Serializer implements JsonDeserializer<ChunkProviderSettings.Factory>, JsonSerializer<ChunkProviderSettings.Factory>
     {
-        public Factory deserialize(final JsonElement p_deserialize_1_, final Type p_deserialize_2_, final JsonDeserializationContext p_deserialize_3_) throws JsonParseException {
-            final JsonObject jsonobject = p_deserialize_1_.getAsJsonObject();
-            final Factory chunkprovidersettings$factory = new Factory();
-            try {
+        public ChunkProviderSettings.Factory deserialize(JsonElement p_deserialize_1_, Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_) throws JsonParseException
+        {
+            JsonObject jsonobject = p_deserialize_1_.getAsJsonObject();
+            ChunkProviderSettings.Factory chunkprovidersettings$factory = new ChunkProviderSettings.Factory();
+
+            try
+            {
                 chunkprovidersettings$factory.coordinateScale = JsonUtils.getFloat(jsonobject, "coordinateScale", chunkprovidersettings$factory.coordinateScale);
                 chunkprovidersettings$factory.heightScale = JsonUtils.getFloat(jsonobject, "heightScale", chunkprovidersettings$factory.heightScale);
                 chunkprovidersettings$factory.lowerLimitScale = JsonUtils.getFloat(jsonobject, "lowerLimitScale", chunkprovidersettings$factory.lowerLimitScale);
@@ -583,15 +516,19 @@ public class ChunkProviderSettings
                 chunkprovidersettings$factory.lavaLakeChance = JsonUtils.getInt(jsonobject, "lavaLakeChance", chunkprovidersettings$factory.lavaLakeChance);
                 chunkprovidersettings$factory.useLavaOceans = JsonUtils.getBoolean(jsonobject, "useLavaOceans", chunkprovidersettings$factory.useLavaOceans);
                 chunkprovidersettings$factory.fixedBiome = JsonUtils.getInt(jsonobject, "fixedBiome", chunkprovidersettings$factory.fixedBiome);
-                if (chunkprovidersettings$factory.fixedBiome < 38 && chunkprovidersettings$factory.fixedBiome >= -1) {
-                    if (chunkprovidersettings$factory.fixedBiome >= BiomeGenBase.hell.biomeID) {
-                        final Factory factory = chunkprovidersettings$factory;
-                        factory.fixedBiome += 2;
+
+                if (chunkprovidersettings$factory.fixedBiome < 38 && chunkprovidersettings$factory.fixedBiome >= -1)
+                {
+                    if (chunkprovidersettings$factory.fixedBiome >= BiomeGenBase.hell.biomeID)
+                    {
+                        chunkprovidersettings$factory.fixedBiome += 2;
                     }
                 }
-                else {
+                else
+                {
                     chunkprovidersettings$factory.fixedBiome = -1;
                 }
+
                 chunkprovidersettings$factory.biomeSize = JsonUtils.getInt(jsonobject, "biomeSize", chunkprovidersettings$factory.biomeSize);
                 chunkprovidersettings$factory.riverSize = JsonUtils.getInt(jsonobject, "riverSize", chunkprovidersettings$factory.riverSize);
                 chunkprovidersettings$factory.dirtSize = JsonUtils.getInt(jsonobject, "dirtSize", chunkprovidersettings$factory.dirtSize);
@@ -639,32 +576,37 @@ public class ChunkProviderSettings
                 chunkprovidersettings$factory.lapisCenterHeight = JsonUtils.getInt(jsonobject, "lapisCenterHeight", chunkprovidersettings$factory.lapisCenterHeight);
                 chunkprovidersettings$factory.lapisSpread = JsonUtils.getInt(jsonobject, "lapisSpread", chunkprovidersettings$factory.lapisSpread);
             }
-            catch (Exception ex) {}
+            catch (Exception var7)
+            {
+                ;
+            }
+
             return chunkprovidersettings$factory;
         }
-        
-        public JsonElement serialize(final Factory p_serialize_1_, final Type p_serialize_2_, final JsonSerializationContext p_serialize_3_) {
-            final JsonObject jsonobject = new JsonObject();
-            jsonobject.addProperty("coordinateScale", (Number)p_serialize_1_.coordinateScale);
-            jsonobject.addProperty("heightScale", (Number)p_serialize_1_.heightScale);
-            jsonobject.addProperty("lowerLimitScale", (Number)p_serialize_1_.lowerLimitScale);
-            jsonobject.addProperty("upperLimitScale", (Number)p_serialize_1_.upperLimitScale);
-            jsonobject.addProperty("depthNoiseScaleX", (Number)p_serialize_1_.depthNoiseScaleX);
-            jsonobject.addProperty("depthNoiseScaleZ", (Number)p_serialize_1_.depthNoiseScaleZ);
-            jsonobject.addProperty("depthNoiseScaleExponent", (Number)p_serialize_1_.depthNoiseScaleExponent);
-            jsonobject.addProperty("mainNoiseScaleX", (Number)p_serialize_1_.mainNoiseScaleX);
-            jsonobject.addProperty("mainNoiseScaleY", (Number)p_serialize_1_.mainNoiseScaleY);
-            jsonobject.addProperty("mainNoiseScaleZ", (Number)p_serialize_1_.mainNoiseScaleZ);
-            jsonobject.addProperty("baseSize", (Number)p_serialize_1_.baseSize);
-            jsonobject.addProperty("stretchY", (Number)p_serialize_1_.stretchY);
-            jsonobject.addProperty("biomeDepthWeight", (Number)p_serialize_1_.biomeDepthWeight);
-            jsonobject.addProperty("biomeDepthOffset", (Number)p_serialize_1_.biomeDepthOffset);
-            jsonobject.addProperty("biomeScaleWeight", (Number)p_serialize_1_.biomeScaleWeight);
-            jsonobject.addProperty("biomeScaleOffset", (Number)p_serialize_1_.biomeScaleOffset);
-            jsonobject.addProperty("seaLevel", (Number)p_serialize_1_.seaLevel);
+
+        public JsonElement serialize(ChunkProviderSettings.Factory p_serialize_1_, Type p_serialize_2_, JsonSerializationContext p_serialize_3_)
+        {
+            JsonObject jsonobject = new JsonObject();
+            jsonobject.addProperty("coordinateScale", (Number)Float.valueOf(p_serialize_1_.coordinateScale));
+            jsonobject.addProperty("heightScale", (Number)Float.valueOf(p_serialize_1_.heightScale));
+            jsonobject.addProperty("lowerLimitScale", (Number)Float.valueOf(p_serialize_1_.lowerLimitScale));
+            jsonobject.addProperty("upperLimitScale", (Number)Float.valueOf(p_serialize_1_.upperLimitScale));
+            jsonobject.addProperty("depthNoiseScaleX", (Number)Float.valueOf(p_serialize_1_.depthNoiseScaleX));
+            jsonobject.addProperty("depthNoiseScaleZ", (Number)Float.valueOf(p_serialize_1_.depthNoiseScaleZ));
+            jsonobject.addProperty("depthNoiseScaleExponent", (Number)Float.valueOf(p_serialize_1_.depthNoiseScaleExponent));
+            jsonobject.addProperty("mainNoiseScaleX", (Number)Float.valueOf(p_serialize_1_.mainNoiseScaleX));
+            jsonobject.addProperty("mainNoiseScaleY", (Number)Float.valueOf(p_serialize_1_.mainNoiseScaleY));
+            jsonobject.addProperty("mainNoiseScaleZ", (Number)Float.valueOf(p_serialize_1_.mainNoiseScaleZ));
+            jsonobject.addProperty("baseSize", (Number)Float.valueOf(p_serialize_1_.baseSize));
+            jsonobject.addProperty("stretchY", (Number)Float.valueOf(p_serialize_1_.stretchY));
+            jsonobject.addProperty("biomeDepthWeight", (Number)Float.valueOf(p_serialize_1_.biomeDepthWeight));
+            jsonobject.addProperty("biomeDepthOffset", (Number)Float.valueOf(p_serialize_1_.biomeDepthOffset));
+            jsonobject.addProperty("biomeScaleWeight", (Number)Float.valueOf(p_serialize_1_.biomeScaleWeight));
+            jsonobject.addProperty("biomeScaleOffset", (Number)Float.valueOf(p_serialize_1_.biomeScaleOffset));
+            jsonobject.addProperty("seaLevel", (Number)Integer.valueOf(p_serialize_1_.seaLevel));
             jsonobject.addProperty("useCaves", Boolean.valueOf(p_serialize_1_.useCaves));
             jsonobject.addProperty("useDungeons", Boolean.valueOf(p_serialize_1_.useDungeons));
-            jsonobject.addProperty("dungeonChance", (Number)p_serialize_1_.dungeonChance);
+            jsonobject.addProperty("dungeonChance", (Number)Integer.valueOf(p_serialize_1_.dungeonChance));
             jsonobject.addProperty("useStrongholds", Boolean.valueOf(p_serialize_1_.useStrongholds));
             jsonobject.addProperty("useVillages", Boolean.valueOf(p_serialize_1_.useVillages));
             jsonobject.addProperty("useMineShafts", Boolean.valueOf(p_serialize_1_.useMineShafts));
@@ -672,58 +614,58 @@ public class ChunkProviderSettings
             jsonobject.addProperty("useMonuments", Boolean.valueOf(p_serialize_1_.useMonuments));
             jsonobject.addProperty("useRavines", Boolean.valueOf(p_serialize_1_.useRavines));
             jsonobject.addProperty("useWaterLakes", Boolean.valueOf(p_serialize_1_.useWaterLakes));
-            jsonobject.addProperty("waterLakeChance", (Number)p_serialize_1_.waterLakeChance);
+            jsonobject.addProperty("waterLakeChance", (Number)Integer.valueOf(p_serialize_1_.waterLakeChance));
             jsonobject.addProperty("useLavaLakes", Boolean.valueOf(p_serialize_1_.useLavaLakes));
-            jsonobject.addProperty("lavaLakeChance", (Number)p_serialize_1_.lavaLakeChance);
+            jsonobject.addProperty("lavaLakeChance", (Number)Integer.valueOf(p_serialize_1_.lavaLakeChance));
             jsonobject.addProperty("useLavaOceans", Boolean.valueOf(p_serialize_1_.useLavaOceans));
-            jsonobject.addProperty("fixedBiome", (Number)p_serialize_1_.fixedBiome);
-            jsonobject.addProperty("biomeSize", (Number)p_serialize_1_.biomeSize);
-            jsonobject.addProperty("riverSize", (Number)p_serialize_1_.riverSize);
-            jsonobject.addProperty("dirtSize", (Number)p_serialize_1_.dirtSize);
-            jsonobject.addProperty("dirtCount", (Number)p_serialize_1_.dirtCount);
-            jsonobject.addProperty("dirtMinHeight", (Number)p_serialize_1_.dirtMinHeight);
-            jsonobject.addProperty("dirtMaxHeight", (Number)p_serialize_1_.dirtMaxHeight);
-            jsonobject.addProperty("gravelSize", (Number)p_serialize_1_.gravelSize);
-            jsonobject.addProperty("gravelCount", (Number)p_serialize_1_.gravelCount);
-            jsonobject.addProperty("gravelMinHeight", (Number)p_serialize_1_.gravelMinHeight);
-            jsonobject.addProperty("gravelMaxHeight", (Number)p_serialize_1_.gravelMaxHeight);
-            jsonobject.addProperty("graniteSize", (Number)p_serialize_1_.graniteSize);
-            jsonobject.addProperty("graniteCount", (Number)p_serialize_1_.graniteCount);
-            jsonobject.addProperty("graniteMinHeight", (Number)p_serialize_1_.graniteMinHeight);
-            jsonobject.addProperty("graniteMaxHeight", (Number)p_serialize_1_.graniteMaxHeight);
-            jsonobject.addProperty("dioriteSize", (Number)p_serialize_1_.dioriteSize);
-            jsonobject.addProperty("dioriteCount", (Number)p_serialize_1_.dioriteCount);
-            jsonobject.addProperty("dioriteMinHeight", (Number)p_serialize_1_.dioriteMinHeight);
-            jsonobject.addProperty("dioriteMaxHeight", (Number)p_serialize_1_.dioriteMaxHeight);
-            jsonobject.addProperty("andesiteSize", (Number)p_serialize_1_.andesiteSize);
-            jsonobject.addProperty("andesiteCount", (Number)p_serialize_1_.andesiteCount);
-            jsonobject.addProperty("andesiteMinHeight", (Number)p_serialize_1_.andesiteMinHeight);
-            jsonobject.addProperty("andesiteMaxHeight", (Number)p_serialize_1_.andesiteMaxHeight);
-            jsonobject.addProperty("coalSize", (Number)p_serialize_1_.coalSize);
-            jsonobject.addProperty("coalCount", (Number)p_serialize_1_.coalCount);
-            jsonobject.addProperty("coalMinHeight", (Number)p_serialize_1_.coalMinHeight);
-            jsonobject.addProperty("coalMaxHeight", (Number)p_serialize_1_.coalMaxHeight);
-            jsonobject.addProperty("ironSize", (Number)p_serialize_1_.ironSize);
-            jsonobject.addProperty("ironCount", (Number)p_serialize_1_.ironCount);
-            jsonobject.addProperty("ironMinHeight", (Number)p_serialize_1_.ironMinHeight);
-            jsonobject.addProperty("ironMaxHeight", (Number)p_serialize_1_.ironMaxHeight);
-            jsonobject.addProperty("goldSize", (Number)p_serialize_1_.goldSize);
-            jsonobject.addProperty("goldCount", (Number)p_serialize_1_.goldCount);
-            jsonobject.addProperty("goldMinHeight", (Number)p_serialize_1_.goldMinHeight);
-            jsonobject.addProperty("goldMaxHeight", (Number)p_serialize_1_.goldMaxHeight);
-            jsonobject.addProperty("redstoneSize", (Number)p_serialize_1_.redstoneSize);
-            jsonobject.addProperty("redstoneCount", (Number)p_serialize_1_.redstoneCount);
-            jsonobject.addProperty("redstoneMinHeight", (Number)p_serialize_1_.redstoneMinHeight);
-            jsonobject.addProperty("redstoneMaxHeight", (Number)p_serialize_1_.redstoneMaxHeight);
-            jsonobject.addProperty("diamondSize", (Number)p_serialize_1_.diamondSize);
-            jsonobject.addProperty("diamondCount", (Number)p_serialize_1_.diamondCount);
-            jsonobject.addProperty("diamondMinHeight", (Number)p_serialize_1_.diamondMinHeight);
-            jsonobject.addProperty("diamondMaxHeight", (Number)p_serialize_1_.diamondMaxHeight);
-            jsonobject.addProperty("lapisSize", (Number)p_serialize_1_.lapisSize);
-            jsonobject.addProperty("lapisCount", (Number)p_serialize_1_.lapisCount);
-            jsonobject.addProperty("lapisCenterHeight", (Number)p_serialize_1_.lapisCenterHeight);
-            jsonobject.addProperty("lapisSpread", (Number)p_serialize_1_.lapisSpread);
-            return (JsonElement)jsonobject;
+            jsonobject.addProperty("fixedBiome", (Number)Integer.valueOf(p_serialize_1_.fixedBiome));
+            jsonobject.addProperty("biomeSize", (Number)Integer.valueOf(p_serialize_1_.biomeSize));
+            jsonobject.addProperty("riverSize", (Number)Integer.valueOf(p_serialize_1_.riverSize));
+            jsonobject.addProperty("dirtSize", (Number)Integer.valueOf(p_serialize_1_.dirtSize));
+            jsonobject.addProperty("dirtCount", (Number)Integer.valueOf(p_serialize_1_.dirtCount));
+            jsonobject.addProperty("dirtMinHeight", (Number)Integer.valueOf(p_serialize_1_.dirtMinHeight));
+            jsonobject.addProperty("dirtMaxHeight", (Number)Integer.valueOf(p_serialize_1_.dirtMaxHeight));
+            jsonobject.addProperty("gravelSize", (Number)Integer.valueOf(p_serialize_1_.gravelSize));
+            jsonobject.addProperty("gravelCount", (Number)Integer.valueOf(p_serialize_1_.gravelCount));
+            jsonobject.addProperty("gravelMinHeight", (Number)Integer.valueOf(p_serialize_1_.gravelMinHeight));
+            jsonobject.addProperty("gravelMaxHeight", (Number)Integer.valueOf(p_serialize_1_.gravelMaxHeight));
+            jsonobject.addProperty("graniteSize", (Number)Integer.valueOf(p_serialize_1_.graniteSize));
+            jsonobject.addProperty("graniteCount", (Number)Integer.valueOf(p_serialize_1_.graniteCount));
+            jsonobject.addProperty("graniteMinHeight", (Number)Integer.valueOf(p_serialize_1_.graniteMinHeight));
+            jsonobject.addProperty("graniteMaxHeight", (Number)Integer.valueOf(p_serialize_1_.graniteMaxHeight));
+            jsonobject.addProperty("dioriteSize", (Number)Integer.valueOf(p_serialize_1_.dioriteSize));
+            jsonobject.addProperty("dioriteCount", (Number)Integer.valueOf(p_serialize_1_.dioriteCount));
+            jsonobject.addProperty("dioriteMinHeight", (Number)Integer.valueOf(p_serialize_1_.dioriteMinHeight));
+            jsonobject.addProperty("dioriteMaxHeight", (Number)Integer.valueOf(p_serialize_1_.dioriteMaxHeight));
+            jsonobject.addProperty("andesiteSize", (Number)Integer.valueOf(p_serialize_1_.andesiteSize));
+            jsonobject.addProperty("andesiteCount", (Number)Integer.valueOf(p_serialize_1_.andesiteCount));
+            jsonobject.addProperty("andesiteMinHeight", (Number)Integer.valueOf(p_serialize_1_.andesiteMinHeight));
+            jsonobject.addProperty("andesiteMaxHeight", (Number)Integer.valueOf(p_serialize_1_.andesiteMaxHeight));
+            jsonobject.addProperty("coalSize", (Number)Integer.valueOf(p_serialize_1_.coalSize));
+            jsonobject.addProperty("coalCount", (Number)Integer.valueOf(p_serialize_1_.coalCount));
+            jsonobject.addProperty("coalMinHeight", (Number)Integer.valueOf(p_serialize_1_.coalMinHeight));
+            jsonobject.addProperty("coalMaxHeight", (Number)Integer.valueOf(p_serialize_1_.coalMaxHeight));
+            jsonobject.addProperty("ironSize", (Number)Integer.valueOf(p_serialize_1_.ironSize));
+            jsonobject.addProperty("ironCount", (Number)Integer.valueOf(p_serialize_1_.ironCount));
+            jsonobject.addProperty("ironMinHeight", (Number)Integer.valueOf(p_serialize_1_.ironMinHeight));
+            jsonobject.addProperty("ironMaxHeight", (Number)Integer.valueOf(p_serialize_1_.ironMaxHeight));
+            jsonobject.addProperty("goldSize", (Number)Integer.valueOf(p_serialize_1_.goldSize));
+            jsonobject.addProperty("goldCount", (Number)Integer.valueOf(p_serialize_1_.goldCount));
+            jsonobject.addProperty("goldMinHeight", (Number)Integer.valueOf(p_serialize_1_.goldMinHeight));
+            jsonobject.addProperty("goldMaxHeight", (Number)Integer.valueOf(p_serialize_1_.goldMaxHeight));
+            jsonobject.addProperty("redstoneSize", (Number)Integer.valueOf(p_serialize_1_.redstoneSize));
+            jsonobject.addProperty("redstoneCount", (Number)Integer.valueOf(p_serialize_1_.redstoneCount));
+            jsonobject.addProperty("redstoneMinHeight", (Number)Integer.valueOf(p_serialize_1_.redstoneMinHeight));
+            jsonobject.addProperty("redstoneMaxHeight", (Number)Integer.valueOf(p_serialize_1_.redstoneMaxHeight));
+            jsonobject.addProperty("diamondSize", (Number)Integer.valueOf(p_serialize_1_.diamondSize));
+            jsonobject.addProperty("diamondCount", (Number)Integer.valueOf(p_serialize_1_.diamondCount));
+            jsonobject.addProperty("diamondMinHeight", (Number)Integer.valueOf(p_serialize_1_.diamondMinHeight));
+            jsonobject.addProperty("diamondMaxHeight", (Number)Integer.valueOf(p_serialize_1_.diamondMaxHeight));
+            jsonobject.addProperty("lapisSize", (Number)Integer.valueOf(p_serialize_1_.lapisSize));
+            jsonobject.addProperty("lapisCount", (Number)Integer.valueOf(p_serialize_1_.lapisCount));
+            jsonobject.addProperty("lapisCenterHeight", (Number)Integer.valueOf(p_serialize_1_.lapisCenterHeight));
+            jsonobject.addProperty("lapisSpread", (Number)Integer.valueOf(p_serialize_1_.lapisSpread));
+            return jsonobject;
         }
     }
 }

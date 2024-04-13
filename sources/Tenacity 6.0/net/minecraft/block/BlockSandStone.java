@@ -1,113 +1,129 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.block.state.BlockState;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.item.ItemStack;
 import java.util.List;
-import net.minecraft.item.Item;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IStringSerializable;
 
 public class BlockSandStone extends Block
 {
-    public static final PropertyEnum<EnumType> TYPE;
-    
-    public BlockSandStone() {
+    public static final PropertyEnum<BlockSandStone.EnumType> TYPE = PropertyEnum.<BlockSandStone.EnumType>create("type", BlockSandStone.EnumType.class);
+
+    public BlockSandStone()
+    {
         super(Material.rock);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(BlockSandStone.TYPE, EnumType.DEFAULT));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(TYPE, BlockSandStone.EnumType.DEFAULT));
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
-    
-    @Override
-    public int damageDropped(final IBlockState state) {
-        return state.getValue(BlockSandStone.TYPE).getMetadata();
+
+    /**
+     * Gets the metadata of the item this Block can drop. This method is called when the block gets destroyed. It
+     * returns the metadata of the dropped item based on the old metadata of the block.
+     */
+    public int damageDropped(IBlockState state)
+    {
+        return ((BlockSandStone.EnumType)state.getValue(TYPE)).getMetadata();
     }
-    
-    @Override
-    public void getSubBlocks(final Item itemIn, final CreativeTabs tab, final List<ItemStack> list) {
-        for (final EnumType blocksandstone$enumtype : EnumType.values()) {
+
+    /**
+     * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
+     */
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+    {
+        for (BlockSandStone.EnumType blocksandstone$enumtype : BlockSandStone.EnumType.values())
+        {
             list.add(new ItemStack(itemIn, 1, blocksandstone$enumtype.getMetadata()));
         }
     }
-    
-    @Override
-    public MapColor getMapColor(final IBlockState state) {
+
+    /**
+     * Get the MapColor for this Block and the given BlockState
+     */
+    public MapColor getMapColor(IBlockState state)
+    {
         return MapColor.sandColor;
     }
-    
-    @Override
-    public IBlockState getStateFromMeta(final int meta) {
-        return this.getDefaultState().withProperty(BlockSandStone.TYPE, EnumType.byMetadata(meta));
-    }
-    
-    @Override
-    public int getMetaFromState(final IBlockState state) {
-        return state.getValue(BlockSandStone.TYPE).getMetadata();
-    }
-    
-    @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, new IProperty[] { BlockSandStone.TYPE });
-    }
-    
-    static {
-        TYPE = PropertyEnum.create("type", EnumType.class);
-    }
-    
-    public enum EnumType implements IStringSerializable
+
+    /**
+     * Convert the given metadata into a BlockState for this Block
+     */
+    public IBlockState getStateFromMeta(int meta)
     {
-        DEFAULT(0, "sandstone", "default"), 
-        CHISELED(1, "chiseled_sandstone", "chiseled"), 
+        return this.getDefaultState().withProperty(TYPE, BlockSandStone.EnumType.byMetadata(meta));
+    }
+
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
+        return ((BlockSandStone.EnumType)state.getValue(TYPE)).getMetadata();
+    }
+
+    protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {TYPE});
+    }
+
+    public static enum EnumType implements IStringSerializable
+    {
+        DEFAULT(0, "sandstone", "default"),
+        CHISELED(1, "chiseled_sandstone", "chiseled"),
         SMOOTH(2, "smooth_sandstone", "smooth");
-        
-        private static final EnumType[] META_LOOKUP;
+
+        private static final BlockSandStone.EnumType[] META_LOOKUP = new BlockSandStone.EnumType[values().length];
         private final int metadata;
         private final String name;
         private final String unlocalizedName;
-        
-        private EnumType(final int meta, final String name, final String unlocalizedName) {
+
+        private EnumType(int meta, String name, String unlocalizedName)
+        {
             this.metadata = meta;
             this.name = name;
             this.unlocalizedName = unlocalizedName;
         }
-        
-        public int getMetadata() {
+
+        public int getMetadata()
+        {
             return this.metadata;
         }
-        
-        @Override
-        public String toString() {
+
+        public String toString()
+        {
             return this.name;
         }
-        
-        public static EnumType byMetadata(int meta) {
-            if (meta < 0 || meta >= EnumType.META_LOOKUP.length) {
+
+        public static BlockSandStone.EnumType byMetadata(int meta)
+        {
+            if (meta < 0 || meta >= META_LOOKUP.length)
+            {
                 meta = 0;
             }
-            return EnumType.META_LOOKUP[meta];
+
+            return META_LOOKUP[meta];
         }
-        
-        @Override
-        public String getName() {
+
+        public String getName()
+        {
             return this.name;
         }
-        
-        public String getUnlocalizedName() {
+
+        public String getUnlocalizedName()
+        {
             return this.unlocalizedName;
         }
-        
+
         static {
-            META_LOOKUP = new EnumType[values().length];
-            for (final EnumType blocksandstone$enumtype : values()) {
-                EnumType.META_LOOKUP[blocksandstone$enumtype.getMetadata()] = blocksandstone$enumtype;
+            for (BlockSandStone.EnumType blocksandstone$enumtype : values())
+            {
+                META_LOOKUP[blocksandstone$enumtype.getMetadata()] = blocksandstone$enumtype;
             }
         }
     }

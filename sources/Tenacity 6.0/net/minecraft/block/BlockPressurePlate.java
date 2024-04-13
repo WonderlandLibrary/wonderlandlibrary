@@ -1,92 +1,96 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
-import net.minecraft.block.state.BlockState;
-import java.util.Iterator;
 import java.util.List;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyBool;
 
 public class BlockPressurePlate extends BlockBasePressurePlate
 {
-    public static final PropertyBool POWERED;
-    private final Sensitivity sensitivity;
-    
-    protected BlockPressurePlate(final Material materialIn, final Sensitivity sensitivityIn) {
+    public static final PropertyBool POWERED = PropertyBool.create("powered");
+    private final BlockPressurePlate.Sensitivity sensitivity;
+
+    protected BlockPressurePlate(Material materialIn, BlockPressurePlate.Sensitivity sensitivityIn)
+    {
         super(materialIn);
-        this.setDefaultState(this.blockState.getBaseState().withProperty((IProperty<Comparable>)BlockPressurePlate.POWERED, false));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(POWERED, Boolean.valueOf(false)));
         this.sensitivity = sensitivityIn;
     }
-    
-    @Override
-    protected int getRedstoneStrength(final IBlockState state) {
-        return state.getValue((IProperty<Boolean>)BlockPressurePlate.POWERED) ? 15 : 0;
+
+    protected int getRedstoneStrength(IBlockState state)
+    {
+        return ((Boolean)state.getValue(POWERED)).booleanValue() ? 15 : 0;
     }
-    
-    @Override
-    protected IBlockState setRedstoneStrength(final IBlockState state, final int strength) {
-        return state.withProperty((IProperty<Comparable>)BlockPressurePlate.POWERED, strength > 0);
+
+    protected IBlockState setRedstoneStrength(IBlockState state, int strength)
+    {
+        return state.withProperty(POWERED, Boolean.valueOf(strength > 0));
     }
-    
-    @Override
-    protected int computeRedstoneStrength(final World worldIn, final BlockPos pos) {
-        final AxisAlignedBB axisalignedbb = this.getSensitiveAABB(pos);
-        List<? extends Entity> list = null;
-        switch (this.sensitivity) {
-            case EVERYTHING: {
-                list = worldIn.getEntitiesWithinAABBExcludingEntity(null, axisalignedbb);
+
+    protected int computeRedstoneStrength(World worldIn, BlockPos pos)
+    {
+        AxisAlignedBB axisalignedbb = this.getSensitiveAABB(pos);
+        List <? extends Entity > list;
+
+        switch (this.sensitivity)
+        {
+            case EVERYTHING:
+                list = worldIn.getEntitiesWithinAABBExcludingEntity((Entity)null, axisalignedbb);
                 break;
-            }
-            case MOBS: {
-                list = worldIn.getEntitiesWithinAABB((Class<? extends Entity>)EntityLivingBase.class, axisalignedbb);
+
+            case MOBS:
+                list = worldIn.<Entity>getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
                 break;
-            }
-            default: {
+
+            default:
                 return 0;
-            }
         }
-        if (!list.isEmpty()) {
-            for (final Entity entity : list) {
-                if (!entity.doesEntityNotTriggerPressurePlate()) {
+
+        if (!list.isEmpty())
+        {
+            for (Entity entity : list)
+            {
+                if (!entity.doesEntityNotTriggerPressurePlate())
+                {
                     return 15;
                 }
             }
         }
+
         return 0;
     }
-    
-    @Override
-    public IBlockState getStateFromMeta(final int meta) {
-        return this.getDefaultState().withProperty((IProperty<Comparable>)BlockPressurePlate.POWERED, meta == 1);
-    }
-    
-    @Override
-    public int getMetaFromState(final IBlockState state) {
-        return ((boolean)state.getValue((IProperty<Boolean>)BlockPressurePlate.POWERED)) ? 1 : 0;
-    }
-    
-    @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, new IProperty[] { BlockPressurePlate.POWERED });
-    }
-    
-    static {
-        POWERED = PropertyBool.create("powered");
-    }
-    
-    public enum Sensitivity
+
+    /**
+     * Convert the given metadata into a BlockState for this Block
+     */
+    public IBlockState getStateFromMeta(int meta)
     {
-        EVERYTHING, 
+        return this.getDefaultState().withProperty(POWERED, Boolean.valueOf(meta == 1));
+    }
+
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
+        return ((Boolean)state.getValue(POWERED)).booleanValue() ? 1 : 0;
+    }
+
+    protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {POWERED});
+    }
+
+    public static enum Sensitivity
+    {
+        EVERYTHING,
         MOBS;
     }
 }

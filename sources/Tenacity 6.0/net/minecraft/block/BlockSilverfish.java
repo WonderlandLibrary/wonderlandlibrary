@@ -1,207 +1,237 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.block.state.BlockState;
 import java.util.List;
-import net.minecraft.item.Item;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.EntitySilverfish;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.item.ItemStack;
-import net.minecraft.init.Blocks;
-import net.minecraft.block.state.IBlockState;
 import java.util.Random;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.monster.EntitySilverfish;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.world.World;
 
 public class BlockSilverfish extends Block
 {
-    public static final PropertyEnum<EnumType> VARIANT;
-    
-    public BlockSilverfish() {
+    public static final PropertyEnum<BlockSilverfish.EnumType> VARIANT = PropertyEnum.<BlockSilverfish.EnumType>create("variant", BlockSilverfish.EnumType.class);
+
+    public BlockSilverfish()
+    {
         super(Material.clay);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(BlockSilverfish.VARIANT, EnumType.STONE));
-        this.setHardness(0.0f);
+        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockSilverfish.EnumType.STONE));
+        this.setHardness(0.0F);
         this.setCreativeTab(CreativeTabs.tabDecorations);
     }
-    
-    @Override
-    public int quantityDropped(final Random random) {
+
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random random)
+    {
         return 0;
     }
-    
-    public static boolean canContainSilverfish(final IBlockState blockState) {
-        final Block block = blockState.getBlock();
+
+    public static boolean canContainSilverfish(IBlockState blockState)
+    {
+        Block block = blockState.getBlock();
         return blockState == Blocks.stone.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.STONE) || block == Blocks.cobblestone || block == Blocks.stonebrick;
     }
-    
-    @Override
-    protected ItemStack createStackedBlock(final IBlockState state) {
-        switch (state.getValue(BlockSilverfish.VARIANT)) {
-            case COBBLESTONE: {
+
+    protected ItemStack createStackedBlock(IBlockState state)
+    {
+        switch ((BlockSilverfish.EnumType)state.getValue(VARIANT))
+        {
+            case COBBLESTONE:
                 return new ItemStack(Blocks.cobblestone);
-            }
-            case STONEBRICK: {
+
+            case STONEBRICK:
                 return new ItemStack(Blocks.stonebrick);
-            }
-            case MOSSY_STONEBRICK: {
+
+            case MOSSY_STONEBRICK:
                 return new ItemStack(Blocks.stonebrick, 1, BlockStoneBrick.EnumType.MOSSY.getMetadata());
-            }
-            case CRACKED_STONEBRICK: {
+
+            case CRACKED_STONEBRICK:
                 return new ItemStack(Blocks.stonebrick, 1, BlockStoneBrick.EnumType.CRACKED.getMetadata());
-            }
-            case CHISELED_STONEBRICK: {
+
+            case CHISELED_STONEBRICK:
                 return new ItemStack(Blocks.stonebrick, 1, BlockStoneBrick.EnumType.CHISELED.getMetadata());
-            }
-            default: {
+
+            default:
                 return new ItemStack(Blocks.stone);
-            }
         }
     }
-    
-    @Override
-    public void dropBlockAsItemWithChance(final World worldIn, final BlockPos pos, final IBlockState state, final float chance, final int fortune) {
-        if (!worldIn.isRemote && worldIn.getGameRules().getBoolean("doTileDrops")) {
-            final EntitySilverfish entitysilverfish = new EntitySilverfish(worldIn);
-            entitysilverfish.setLocationAndAngles(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0.0f, 0.0f);
+
+    /**
+     * Spawns this Block's drops into the World as EntityItems.
+     *  
+     * @param chance The chance that each Item is actually spawned (1.0 = always, 0.0 = never)
+     * @param fortune The player's fortune level
+     */
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
+    {
+        if (!worldIn.isRemote && worldIn.getGameRules().getGameRuleBooleanValue("doTileDrops"))
+        {
+            EntitySilverfish entitysilverfish = new EntitySilverfish(worldIn);
+            entitysilverfish.setLocationAndAngles((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, 0.0F, 0.0F);
             worldIn.spawnEntityInWorld(entitysilverfish);
             entitysilverfish.spawnExplosionParticle();
         }
     }
-    
-    @Override
-    public int getDamageValue(final World worldIn, final BlockPos pos) {
-        final IBlockState iblockstate = worldIn.getBlockState(pos);
+
+    public int getDamageValue(World worldIn, BlockPos pos)
+    {
+        IBlockState iblockstate = worldIn.getBlockState(pos);
         return iblockstate.getBlock().getMetaFromState(iblockstate);
     }
-    
-    @Override
-    public void getSubBlocks(final Item itemIn, final CreativeTabs tab, final List<ItemStack> list) {
-        for (final EnumType blocksilverfish$enumtype : EnumType.values()) {
+
+    /**
+     * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
+     */
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+    {
+        for (BlockSilverfish.EnumType blocksilverfish$enumtype : BlockSilverfish.EnumType.values())
+        {
             list.add(new ItemStack(itemIn, 1, blocksilverfish$enumtype.getMetadata()));
         }
     }
-    
-    @Override
-    public IBlockState getStateFromMeta(final int meta) {
-        return this.getDefaultState().withProperty(BlockSilverfish.VARIANT, EnumType.byMetadata(meta));
-    }
-    
-    @Override
-    public int getMetaFromState(final IBlockState state) {
-        return state.getValue(BlockSilverfish.VARIANT).getMetadata();
-    }
-    
-    @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, new IProperty[] { BlockSilverfish.VARIANT });
-    }
-    
-    static {
-        VARIANT = PropertyEnum.create("variant", EnumType.class);
-    }
-    
-    public enum EnumType implements IStringSerializable
+
+    /**
+     * Convert the given metadata into a BlockState for this Block
+     */
+    public IBlockState getStateFromMeta(int meta)
     {
-        STONE(0, "stone") {
-            @Override
-            public IBlockState getModelBlock() {
+        return this.getDefaultState().withProperty(VARIANT, BlockSilverfish.EnumType.byMetadata(meta));
+    }
+
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
+        return ((BlockSilverfish.EnumType)state.getValue(VARIANT)).getMetadata();
+    }
+
+    protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {VARIANT});
+    }
+
+    public static enum EnumType implements IStringSerializable
+    {
+        STONE(0, "stone")
+        {
+            public IBlockState getModelBlock()
+            {
                 return Blocks.stone.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.STONE);
             }
-        }, 
-        COBBLESTONE(1, "cobblestone", "cobble") {
-            @Override
-            public IBlockState getModelBlock() {
+        },
+        COBBLESTONE(1, "cobblestone", "cobble")
+        {
+            public IBlockState getModelBlock()
+            {
                 return Blocks.cobblestone.getDefaultState();
             }
-        }, 
-        STONEBRICK(2, "stone_brick", "brick") {
-            @Override
-            public IBlockState getModelBlock() {
+        },
+        STONEBRICK(2, "stone_brick", "brick")
+        {
+            public IBlockState getModelBlock()
+            {
                 return Blocks.stonebrick.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.DEFAULT);
             }
-        }, 
-        MOSSY_STONEBRICK(3, "mossy_brick", "mossybrick") {
-            @Override
-            public IBlockState getModelBlock() {
+        },
+        MOSSY_STONEBRICK(3, "mossy_brick", "mossybrick")
+        {
+            public IBlockState getModelBlock()
+            {
                 return Blocks.stonebrick.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.MOSSY);
             }
-        }, 
-        CRACKED_STONEBRICK(4, "cracked_brick", "crackedbrick") {
-            @Override
-            public IBlockState getModelBlock() {
+        },
+        CRACKED_STONEBRICK(4, "cracked_brick", "crackedbrick")
+        {
+            public IBlockState getModelBlock()
+            {
                 return Blocks.stonebrick.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED);
             }
-        }, 
-        CHISELED_STONEBRICK(5, "chiseled_brick", "chiseledbrick") {
-            @Override
-            public IBlockState getModelBlock() {
+        },
+        CHISELED_STONEBRICK(5, "chiseled_brick", "chiseledbrick")
+        {
+            public IBlockState getModelBlock()
+            {
                 return Blocks.stonebrick.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CHISELED);
             }
         };
-        
-        private static final EnumType[] META_LOOKUP;
+
+        private static final BlockSilverfish.EnumType[] META_LOOKUP = new BlockSilverfish.EnumType[values().length];
         private final int meta;
         private final String name;
         private final String unlocalizedName;
-        
-        private EnumType(final int meta, final String name) {
+
+        private EnumType(int meta, String name)
+        {
             this(meta, name, name);
         }
-        
-        private EnumType(final int meta, final String name, final String unlocalizedName) {
+
+        private EnumType(int meta, String name, String unlocalizedName)
+        {
             this.meta = meta;
             this.name = name;
             this.unlocalizedName = unlocalizedName;
         }
-        
-        public int getMetadata() {
+
+        public int getMetadata()
+        {
             return this.meta;
         }
-        
-        @Override
-        public String toString() {
+
+        public String toString()
+        {
             return this.name;
         }
-        
-        public static EnumType byMetadata(int meta) {
-            if (meta < 0 || meta >= EnumType.META_LOOKUP.length) {
+
+        public static BlockSilverfish.EnumType byMetadata(int meta)
+        {
+            if (meta < 0 || meta >= META_LOOKUP.length)
+            {
                 meta = 0;
             }
-            return EnumType.META_LOOKUP[meta];
+
+            return META_LOOKUP[meta];
         }
-        
-        @Override
-        public String getName() {
+
+        public String getName()
+        {
             return this.name;
         }
-        
-        public String getUnlocalizedName() {
+
+        public String getUnlocalizedName()
+        {
             return this.unlocalizedName;
         }
-        
+
         public abstract IBlockState getModelBlock();
-        
-        public static EnumType forModelBlock(final IBlockState model) {
-            for (final EnumType blocksilverfish$enumtype : values()) {
-                if (model == blocksilverfish$enumtype.getModelBlock()) {
+
+        public static BlockSilverfish.EnumType forModelBlock(IBlockState model)
+        {
+            for (BlockSilverfish.EnumType blocksilverfish$enumtype : values())
+            {
+                if (model == blocksilverfish$enumtype.getModelBlock())
+                {
                     return blocksilverfish$enumtype;
                 }
             }
-            return EnumType.STONE;
+
+            return STONE;
         }
-        
+
         static {
-            META_LOOKUP = new EnumType[values().length];
-            for (final EnumType blocksilverfish$enumtype : values()) {
-                EnumType.META_LOOKUP[blocksilverfish$enumtype.getMetadata()] = blocksilverfish$enumtype;
+            for (BlockSilverfish.EnumType blocksilverfish$enumtype : values())
+            {
+                META_LOOKUP[blocksilverfish$enumtype.getMetadata()] = blocksilverfish$enumtype;
             }
         }
     }

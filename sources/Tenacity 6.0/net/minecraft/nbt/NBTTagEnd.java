@@ -1,36 +1,41 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.nbt;
 
+import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.io.DataInput;
 
 public class NBTTagEnd extends NBTBase
 {
-    @Override
-    void read(final DataInput input, final int depth, final NBTSizeTracker sizeTracker) throws IOException {
+    void read(DataInput input, int depth, NBTSizeTracker sizeTracker) throws IOException
+    {
         sizeTracker.read(64L);
     }
-    
-    @Override
-    void write(final DataOutput output) throws IOException {
+
+    /**
+     * Write the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void write(DataOutput output) throws IOException
+    {
     }
-    
-    @Override
-    public byte getId() {
-        return 0;
+
+    /**
+     * Gets the type byte for the tag.
+     */
+    public byte getId()
+    {
+        return (byte)0;
     }
-    
-    @Override
-    public String toString() {
+
+    public String toString()
+    {
         return "END";
     }
-    
-    @Override
-    public NBTBase copy() {
+
+    /**
+     * Creates a clone of the tag.
+     */
+    public NBTBase copy()
+    {
         return new NBTTagEnd();
     }
 }

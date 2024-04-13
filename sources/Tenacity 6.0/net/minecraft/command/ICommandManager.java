@@ -1,20 +1,16 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.command;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.util.BlockPos;
 
 public interface ICommandManager
 {
-    int executeCommand(final ICommandSender p0, final String p1);
-    
-    List<String> getTabCompletionOptions(final ICommandSender p0, final String p1, final BlockPos p2);
-    
-    List<ICommand> getPossibleCommands(final ICommandSender p0);
-    
+    int executeCommand(ICommandSender sender, String rawCommand);
+
+    List<String> getTabCompletionOptions(ICommandSender sender, String input, BlockPos pos);
+
+    List<ICommand> getPossibleCommands(ICommandSender sender);
+
     Map<String, ICommand> getCommands();
 }

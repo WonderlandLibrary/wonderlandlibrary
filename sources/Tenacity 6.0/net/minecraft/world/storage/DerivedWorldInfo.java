@@ -1,219 +1,310 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.world.storage;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.WorldType;
-import net.minecraft.util.BlockPos;
 import net.minecraft.world.WorldSettings;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.WorldType;
 
 public class DerivedWorldInfo extends WorldInfo
 {
+    /** Instance of WorldInfo. */
     private final WorldInfo theWorldInfo;
-    
-    public DerivedWorldInfo(final WorldInfo p_i2145_1_) {
+
+    public DerivedWorldInfo(WorldInfo p_i2145_1_)
+    {
         this.theWorldInfo = p_i2145_1_;
     }
-    
-    @Override
-    public NBTTagCompound getNBTTagCompound() {
+
+    /**
+     * Gets the NBTTagCompound for the worldInfo
+     */
+    public NBTTagCompound getNBTTagCompound()
+    {
         return this.theWorldInfo.getNBTTagCompound();
     }
-    
-    @Override
-    public NBTTagCompound cloneNBTCompound(final NBTTagCompound nbt) {
+
+    /**
+     * Creates a new NBTTagCompound for the world, with the given NBTTag as the "Player"
+     */
+    public NBTTagCompound cloneNBTCompound(NBTTagCompound nbt)
+    {
         return this.theWorldInfo.cloneNBTCompound(nbt);
     }
-    
-    @Override
-    public long getSeed() {
+
+    /**
+     * Returns the seed of current world.
+     */
+    public long getSeed()
+    {
         return this.theWorldInfo.getSeed();
     }
-    
-    @Override
-    public int getSpawnX() {
+
+    /**
+     * Returns the x spawn position
+     */
+    public int getSpawnX()
+    {
         return this.theWorldInfo.getSpawnX();
     }
-    
-    @Override
-    public int getSpawnY() {
+
+    /**
+     * Return the Y axis spawning point of the player.
+     */
+    public int getSpawnY()
+    {
         return this.theWorldInfo.getSpawnY();
     }
-    
-    @Override
-    public int getSpawnZ() {
+
+    /**
+     * Returns the z spawn position
+     */
+    public int getSpawnZ()
+    {
         return this.theWorldInfo.getSpawnZ();
     }
-    
-    @Override
-    public long getWorldTotalTime() {
+
+    public long getWorldTotalTime()
+    {
         return this.theWorldInfo.getWorldTotalTime();
     }
-    
-    @Override
-    public long getWorldTime() {
+
+    /**
+     * Get current world time
+     */
+    public long getWorldTime()
+    {
         return this.theWorldInfo.getWorldTime();
     }
-    
-    @Override
-    public long getSizeOnDisk() {
+
+    public long getSizeOnDisk()
+    {
         return this.theWorldInfo.getSizeOnDisk();
     }
-    
-    @Override
-    public NBTTagCompound getPlayerNBTTagCompound() {
+
+    /**
+     * Returns the player's NBTTagCompound to be loaded
+     */
+    public NBTTagCompound getPlayerNBTTagCompound()
+    {
         return this.theWorldInfo.getPlayerNBTTagCompound();
     }
-    
-    @Override
-    public String getWorldName() {
+
+    /**
+     * Get current world name
+     */
+    public String getWorldName()
+    {
         return this.theWorldInfo.getWorldName();
     }
-    
-    @Override
-    public int getSaveVersion() {
+
+    /**
+     * Returns the save version of this world
+     */
+    public int getSaveVersion()
+    {
         return this.theWorldInfo.getSaveVersion();
     }
-    
-    @Override
-    public long getLastTimePlayed() {
+
+    /**
+     * Return the last time the player was in this world.
+     */
+    public long getLastTimePlayed()
+    {
         return this.theWorldInfo.getLastTimePlayed();
     }
-    
-    @Override
-    public boolean isThundering() {
+
+    /**
+     * Returns true if it is thundering, false otherwise.
+     */
+    public boolean isThundering()
+    {
         return this.theWorldInfo.isThundering();
     }
-    
-    @Override
-    public int getThunderTime() {
+
+    /**
+     * Returns the number of ticks until next thunderbolt.
+     */
+    public int getThunderTime()
+    {
         return this.theWorldInfo.getThunderTime();
     }
-    
-    @Override
-    public boolean isRaining() {
+
+    /**
+     * Returns true if it is raining, false otherwise.
+     */
+    public boolean isRaining()
+    {
         return this.theWorldInfo.isRaining();
     }
-    
-    @Override
-    public int getRainTime() {
+
+    /**
+     * Return the number of ticks until rain.
+     */
+    public int getRainTime()
+    {
         return this.theWorldInfo.getRainTime();
     }
-    
-    @Override
-    public WorldSettings.GameType getGameType() {
+
+    /**
+     * Gets the GameType.
+     */
+    public WorldSettings.GameType getGameType()
+    {
         return this.theWorldInfo.getGameType();
     }
-    
-    @Override
-    public void setSpawnX(final int x) {
+
+    /**
+     * Set the x spawn position to the passed in value
+     */
+    public void setSpawnX(int x)
+    {
     }
-    
-    @Override
-    public void setSpawnY(final int y) {
+
+    /**
+     * Sets the y spawn position
+     */
+    public void setSpawnY(int y)
+    {
     }
-    
-    @Override
-    public void setSpawnZ(final int z) {
+
+    /**
+     * Set the z spawn position to the passed in value
+     */
+    public void setSpawnZ(int z)
+    {
     }
-    
-    @Override
-    public void setWorldTotalTime(final long time) {
+
+    public void setWorldTotalTime(long time)
+    {
     }
-    
-    @Override
-    public void setWorldTime(final long time) {
+
+    /**
+     * Set current world time
+     */
+    public void setWorldTime(long time)
+    {
     }
-    
-    @Override
-    public void setSpawn(final BlockPos spawnPoint) {
+
+    public void setSpawn(BlockPos spawnPoint)
+    {
     }
-    
-    @Override
-    public void setWorldName(final String worldName) {
+
+    public void setWorldName(String worldName)
+    {
     }
-    
-    @Override
-    public void setSaveVersion(final int version) {
+
+    /**
+     * Sets the save version of the world
+     */
+    public void setSaveVersion(int version)
+    {
     }
-    
-    @Override
-    public void setThundering(final boolean thunderingIn) {
+
+    /**
+     * Sets whether it is thundering or not.
+     */
+    public void setThundering(boolean thunderingIn)
+    {
     }
-    
-    @Override
-    public void setThunderTime(final int time) {
+
+    /**
+     * Defines the number of ticks until next thunderbolt.
+     */
+    public void setThunderTime(int time)
+    {
     }
-    
-    @Override
-    public void setRaining(final boolean isRaining) {
+
+    /**
+     * Sets whether it is raining or not.
+     */
+    public void setRaining(boolean isRaining)
+    {
     }
-    
-    @Override
-    public void setRainTime(final int time) {
+
+    /**
+     * Sets the number of ticks until rain.
+     */
+    public void setRainTime(int time)
+    {
     }
-    
-    @Override
-    public boolean isMapFeaturesEnabled() {
+
+    /**
+     * Get whether the map features (e.g. strongholds) generation is enabled or disabled.
+     */
+    public boolean isMapFeaturesEnabled()
+    {
         return this.theWorldInfo.isMapFeaturesEnabled();
     }
-    
-    @Override
-    public boolean isHardcoreModeEnabled() {
+
+    /**
+     * Returns true if hardcore mode is enabled, otherwise false
+     */
+    public boolean isHardcoreModeEnabled()
+    {
         return this.theWorldInfo.isHardcoreModeEnabled();
     }
-    
-    @Override
-    public WorldType getTerrainType() {
+
+    public WorldType getTerrainType()
+    {
         return this.theWorldInfo.getTerrainType();
     }
-    
-    @Override
-    public void setTerrainType(final WorldType type) {
+
+    public void setTerrainType(WorldType type)
+    {
     }
-    
-    @Override
-    public boolean areCommandsAllowed() {
+
+    /**
+     * Returns true if commands are allowed on this World.
+     */
+    public boolean areCommandsAllowed()
+    {
         return this.theWorldInfo.areCommandsAllowed();
     }
-    
-    @Override
-    public void setAllowCommands(final boolean allow) {
+
+    public void setAllowCommands(boolean allow)
+    {
     }
-    
-    @Override
-    public boolean isInitialized() {
+
+    /**
+     * Returns true if the World is initialized.
+     */
+    public boolean isInitialized()
+    {
         return this.theWorldInfo.isInitialized();
     }
-    
-    @Override
-    public void setServerInitialized(final boolean initializedIn) {
+
+    /**
+     * Sets the initialization status of the World.
+     */
+    public void setServerInitialized(boolean initializedIn)
+    {
     }
-    
-    @Override
-    public GameRules getGameRulesInstance() {
+
+    /**
+     * Gets the GameRules class Instance.
+     */
+    public GameRules getGameRulesInstance()
+    {
         return this.theWorldInfo.getGameRulesInstance();
     }
-    
-    @Override
-    public EnumDifficulty getDifficulty() {
+
+    public EnumDifficulty getDifficulty()
+    {
         return this.theWorldInfo.getDifficulty();
     }
-    
-    @Override
-    public void setDifficulty(final EnumDifficulty newDifficulty) {
+
+    public void setDifficulty(EnumDifficulty newDifficulty)
+    {
     }
-    
-    @Override
-    public boolean isDifficultyLocked() {
+
+    public boolean isDifficultyLocked()
+    {
         return this.theWorldInfo.isDifficultyLocked();
     }
-    
-    @Override
-    public void setDifficultyLocked(final boolean locked) {
+
+    public void setDifficultyLocked(boolean locked)
+    {
     }
 }

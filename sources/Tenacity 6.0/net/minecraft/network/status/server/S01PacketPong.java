@@ -1,38 +1,44 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.network.status.server;
 
-import net.minecraft.network.INetHandler;
 import java.io.IOException;
+import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.status.INetHandlerStatusClient;
-import net.minecraft.network.Packet;
 
 public class S01PacketPong implements Packet<INetHandlerStatusClient>
 {
     private long clientTime;
-    
-    public S01PacketPong() {
+
+    public S01PacketPong()
+    {
     }
-    
-    public S01PacketPong(final long time) {
+
+    public S01PacketPong(long time)
+    {
         this.clientTime = time;
     }
-    
-    @Override
-    public void readPacketData(final PacketBuffer buf) throws IOException {
+
+    /**
+     * Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(PacketBuffer buf) throws IOException
+    {
         this.clientTime = buf.readLong();
     }
-    
-    @Override
-    public void writePacketData(final PacketBuffer buf) throws IOException {
+
+    /**
+     * Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(PacketBuffer buf) throws IOException
+    {
         buf.writeLong(this.clientTime);
     }
-    
-    @Override
-    public void processPacket(final INetHandlerStatusClient handler) {
+
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(INetHandlerStatusClient handler)
+    {
         handler.handlePong(this);
     }
 }

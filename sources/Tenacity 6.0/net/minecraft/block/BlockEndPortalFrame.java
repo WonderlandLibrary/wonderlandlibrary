@@ -1,100 +1,123 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
-import com.google.common.base.Predicate;
-import net.minecraft.block.state.BlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
-import java.util.Random;
-import net.minecraft.entity.Entity;
 import java.util.List;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.util.EnumFacing;
+import java.util.Random;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 
 public class BlockEndPortalFrame extends Block
 {
-    public static final PropertyDirection FACING;
-    public static final PropertyBool EYE;
-    
-    public BlockEndPortalFrame() {
+    public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+    public static final PropertyBool EYE = PropertyBool.create("eye");
+
+    public BlockEndPortalFrame()
+    {
         super(Material.rock, MapColor.greenColor);
-        this.setDefaultState(this.blockState.getBaseState().withProperty((IProperty<Comparable>)BlockEndPortalFrame.FACING, EnumFacing.NORTH).withProperty((IProperty<Comparable>)BlockEndPortalFrame.EYE, false));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(EYE, Boolean.valueOf(false)));
     }
-    
-    @Override
-    public boolean isOpaqueCube() {
+
+    /**
+     * Used to determine ambient occlusion and culling when rebuilding chunks for render
+     */
+    public boolean isOpaqueCube()
+    {
         return false;
     }
-    
-    @Override
-    public void setBlockBoundsForItemRender() {
-        this.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 0.8125f, 1.0f);
+
+    /**
+     * Sets the block's bounds for rendering it as an item
+     */
+    public void setBlockBoundsForItemRender()
+    {
+        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.8125F, 1.0F);
     }
-    
-    @Override
-    public void addCollisionBoxesToList(final World worldIn, final BlockPos pos, final IBlockState state, final AxisAlignedBB mask, final List<AxisAlignedBB> list, final Entity collidingEntity) {
-        this.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 0.8125f, 1.0f);
+
+    /**
+     * Add all collision boxes of this Block to the list that intersect with the given mask.
+     *  
+     * @param collidingEntity the Entity colliding with this Block
+     */
+    public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
+    {
+        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.8125F, 1.0F);
         super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
-        if (worldIn.getBlockState(pos).getValue((IProperty<Boolean>)BlockEndPortalFrame.EYE)) {
-            this.setBlockBounds(0.3125f, 0.8125f, 0.3125f, 0.6875f, 1.0f, 0.6875f);
+
+        if (((Boolean)worldIn.getBlockState(pos).getValue(EYE)).booleanValue())
+        {
+            this.setBlockBounds(0.3125F, 0.8125F, 0.3125F, 0.6875F, 1.0F, 0.6875F);
             super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
         }
+
         this.setBlockBoundsForItemRender();
     }
-    
-    @Override
-    public Item getItemDropped(final IBlockState state, final Random rand, final int fortune) {
+
+    /**
+     * Get the Item that this Block should drop when harvested.
+     *  
+     * @param fortune the level of the Fortune enchantment on the player's tool
+     */
+    public Item getItemDropped(IBlockState state, Random rand, int fortune)
+    {
         return null;
     }
-    
-    @Override
-    public IBlockState onBlockPlaced(final World worldIn, final BlockPos pos, final EnumFacing facing, final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer) {
-        return this.getDefaultState().withProperty((IProperty<Comparable>)BlockEndPortalFrame.FACING, placer.getHorizontalFacing().getOpposite()).withProperty((IProperty<Comparable>)BlockEndPortalFrame.EYE, false);
+
+    /**
+     * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
+     * IBlockstate
+     */
+    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    {
+        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(EYE, Boolean.valueOf(false));
     }
-    
-    @Override
-    public boolean hasComparatorInputOverride() {
+
+    public boolean hasComparatorInputOverride()
+    {
         return true;
     }
-    
-    @Override
-    public int getComparatorInputOverride(final World worldIn, final BlockPos pos) {
-        return worldIn.getBlockState(pos).getValue((IProperty<Boolean>)BlockEndPortalFrame.EYE) ? 15 : 0;
+
+    public int getComparatorInputOverride(World worldIn, BlockPos pos)
+    {
+        return ((Boolean)worldIn.getBlockState(pos).getValue(EYE)).booleanValue() ? 15 : 0;
     }
-    
-    @Override
-    public IBlockState getStateFromMeta(final int meta) {
-        return this.getDefaultState().withProperty((IProperty<Comparable>)BlockEndPortalFrame.EYE, (meta & 0x4) != 0x0).withProperty((IProperty<Comparable>)BlockEndPortalFrame.FACING, EnumFacing.getHorizontal(meta & 0x3));
+
+    /**
+     * Convert the given metadata into a BlockState for this Block
+     */
+    public IBlockState getStateFromMeta(int meta)
+    {
+        return this.getDefaultState().withProperty(EYE, Boolean.valueOf((meta & 4) != 0)).withProperty(FACING, EnumFacing.getHorizontal(meta & 3));
     }
-    
-    @Override
-    public int getMetaFromState(final IBlockState state) {
+
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
         int i = 0;
-        i |= state.getValue((IProperty<EnumFacing>)BlockEndPortalFrame.FACING).getHorizontalIndex();
-        if (state.getValue((IProperty<Boolean>)BlockEndPortalFrame.EYE)) {
-            i |= 0x4;
+        i = i | ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
+
+        if (((Boolean)state.getValue(EYE)).booleanValue())
+        {
+            i |= 4;
         }
+
         return i;
     }
-    
-    @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, new IProperty[] { BlockEndPortalFrame.FACING, BlockEndPortalFrame.EYE });
-    }
-    
-    static {
-        FACING = PropertyDirection.create("facing", (Predicate<EnumFacing>)EnumFacing.Plane.HORIZONTAL);
-        EYE = PropertyBool.create("eye");
+
+    protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {FACING, EYE});
     }
 }

@@ -1,39 +1,34 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.shaders.config;
 
 import net.optifine.Lang;
 
 public class PropertyDefaultTrueFalse extends Property
 {
-    public static final String[] PROPERTY_VALUES;
-    public static final String[] USER_VALUES;
-    
-    public PropertyDefaultTrueFalse(final String propertyName, final String userName, final int defaultValue) {
-        super(propertyName, PropertyDefaultTrueFalse.PROPERTY_VALUES, userName, PropertyDefaultTrueFalse.USER_VALUES, defaultValue);
+    public static final String[] PROPERTY_VALUES = new String[] {"default", "true", "false"};
+    public static final String[] USER_VALUES = new String[] {"Default", "ON", "OFF"};
+
+    public PropertyDefaultTrueFalse(String propertyName, String userName, int defaultValue)
+    {
+        super(propertyName, PROPERTY_VALUES, userName, USER_VALUES, defaultValue);
     }
-    
-    @Override
-    public String getUserValue() {
+
+    public String getUserValue()
+    {
         return this.isDefault() ? Lang.getDefault() : (this.isTrue() ? Lang.getOn() : (this.isFalse() ? Lang.getOff() : super.getUserValue()));
     }
-    
-    public boolean isDefault() {
+
+    public boolean isDefault()
+    {
         return this.getValue() == 0;
     }
-    
-    public boolean isTrue() {
+
+    public boolean isTrue()
+    {
         return this.getValue() == 1;
     }
-    
-    public boolean isFalse() {
+
+    public boolean isFalse()
+    {
         return this.getValue() == 2;
-    }
-    
-    static {
-        PROPERTY_VALUES = new String[] { "default", "true", "false" };
-        USER_VALUES = new String[] { "Default", "ON", "OFF" };
     }
 }

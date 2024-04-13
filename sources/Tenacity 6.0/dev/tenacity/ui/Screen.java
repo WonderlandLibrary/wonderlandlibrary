@@ -1,23 +1,18 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package dev.tenacity.ui;
 
-import dev.tenacity.utils.Utils;
+import dev.tenacity.util.Utils;
+import net.minecraft.client.Minecraft;
 
-public interface Screen extends Utils
-{
-    default void onDrag(final int mouseX, final int mouseY) {
-    }
-    
+public interface Screen extends Utils {
+
     void initGui();
-    
-    void keyTyped(final char p0, final int p1);
-    
-    void drawScreen(final int p0, final int p1);
-    
-    void mouseClicked(final int p0, final int p1, final int p2);
-    
-    void mouseReleased(final int p0, final int p1, final int p2);
+
+    void keyTyped(char typedChar, int keyCode);
+
+    void drawScreen(int mouseX, int mouseY);
+
+    void mouseClicked(int mouseX, int mouseY, int button);
+
+    void mouseReleased(int mouseX, int mouseY, int state);
+
 }

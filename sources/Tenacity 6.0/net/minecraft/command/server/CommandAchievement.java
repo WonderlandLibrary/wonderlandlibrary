@@ -1,147 +1,215 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.command.server;
 
-import java.util.Collection;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
-import java.util.Iterator;
-import com.google.common.collect.Iterators;
-import net.minecraft.entity.player.EntityPlayerMP;
 import com.google.common.base.Predicate;
-import java.util.List;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
-import net.minecraft.command.ICommand;
-import net.minecraft.stats.StatBase;
+import java.util.List;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.Achievement;
 import net.minecraft.stats.AchievementList;
-import net.minecraft.command.CommandException;
+import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatList;
-import net.minecraft.command.WrongUsageException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.CommandBase;
+import net.minecraft.util.BlockPos;
 
 public class CommandAchievement extends CommandBase
 {
-    @Override
-    public String getCommandName() {
+    /**
+     * Gets the name of the command
+     */
+    public String getCommandName()
+    {
         return "achievement";
     }
-    
-    @Override
-    public int getRequiredPermissionLevel() {
+
+    /**
+     * Return the required permission level for this command.
+     */
+    public int getRequiredPermissionLevel()
+    {
         return 2;
     }
-    
-    @Override
-    public String getCommandUsage(final ICommandSender sender) {
+
+    /**
+     * Gets the usage string for the command.
+     *  
+     * @param sender The {@link ICommandSender} who is requesting usage details.
+     */
+    public String getCommandUsage(ICommandSender sender)
+    {
         return "commands.achievement.usage";
     }
-    
-    @Override
-    public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
-        if (args.length < 2) {
+
+    /**
+     * Callback when the command is invoked
+     *  
+     * @param sender The {@link ICommandSender sender} who executed the command
+     * @param args The arguments that were passed with the command
+     */
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException
+    {
+        if (args.length < 2)
+        {
             throw new WrongUsageException("commands.achievement.usage", new Object[0]);
         }
-        final StatBase statbase = StatList.getOneShotStat(args[1]);
-        if (statbase == null && !args[1].equals("*")) {
-            throw new CommandException("commands.achievement.unknownAchievement", new Object[] { args[1] });
-        }
-        final EntityPlayerMP entityplayermp = (args.length >= 3) ? CommandBase.getPlayer(sender, args[2]) : CommandBase.getCommandSenderAsPlayer(sender);
-        final boolean flag = args[0].equalsIgnoreCase("give");
-        final boolean flag2 = args[0].equalsIgnoreCase("take");
-        if (flag || flag2) {
-            if (statbase == null) {
-                if (flag) {
-                    for (final Achievement achievement4 : AchievementList.achievementList) {
-                        entityplayermp.triggerAchievement(achievement4);
-                    }
-                    CommandBase.notifyOperators(sender, this, "commands.achievement.give.success.all", entityplayermp.getName());
-                }
-                else if (flag2) {
-                    for (final Achievement achievement5 : Lists.reverse((List)AchievementList.achievementList)) {
-                        entityplayermp.func_175145_a(achievement5);
-                    }
-                    CommandBase.notifyOperators(sender, this, "commands.achievement.take.success.all", entityplayermp.getName());
-                }
+        else
+        {
+            final StatBase statbase = StatList.getOneShotStat(args[1]);
+
+            if (statbase == null && !args[1].equals("*"))
+            {
+                throw new CommandException("commands.achievement.unknownAchievement", new Object[] {args[1]});
             }
-            else {
-                if (statbase instanceof Achievement) {
-                    Achievement achievement6 = (Achievement)statbase;
-                    if (flag) {
-                        if (entityplayermp.getStatFile().hasAchievementUnlocked(achievement6)) {
-                            throw new CommandException("commands.achievement.alreadyHave", new Object[] { entityplayermp.getName(), statbase.createChatComponent() });
+            else
+            {
+                final EntityPlayerMP entityplayermp = args.length >= 3 ? getPlayer(sender, args[2]) : getCommandSenderAsPlayer(sender);
+                boolean flag = args[0].equalsIgnoreCase("give");
+                boolean flag1 = args[0].equalsIgnoreCase("take");
+
+                if (flag || flag1)
+                {
+                    if (statbase == null)
+                    {
+                        if (flag)
+                        {
+                            for (Achievement achievement4 : AchievementList.achievementList)
+                            {
+                                entityplayermp.triggerAchievement(achievement4);
+                            }
+
+                            notifyOperators(sender, this, "commands.achievement.give.success.all", new Object[] {entityplayermp.getCommandSenderName()});
                         }
-                        final List<Achievement> list = (List<Achievement>)Lists.newArrayList();
-                        while (achievement6.parentAchievement != null && !entityplayermp.getStatFile().hasAchievementUnlocked(achievement6.parentAchievement)) {
-                            list.add(achievement6.parentAchievement);
-                            achievement6 = achievement6.parentAchievement;
-                        }
-                        for (final Achievement achievement7 : Lists.reverse((List)list)) {
-                            entityplayermp.triggerAchievement(achievement7);
+                        else if (flag1)
+                        {
+                            for (Achievement achievement5 : Lists.reverse(AchievementList.achievementList))
+                            {
+                                entityplayermp.func_175145_a(achievement5);
+                            }
+
+                            notifyOperators(sender, this, "commands.achievement.take.success.all", new Object[] {entityplayermp.getCommandSenderName()});
                         }
                     }
-                    else if (flag2) {
-                        if (!entityplayermp.getStatFile().hasAchievementUnlocked(achievement6)) {
-                            throw new CommandException("commands.achievement.dontHave", new Object[] { entityplayermp.getName(), statbase.createChatComponent() });
-                        }
-                        final List<Achievement> list2 = (List<Achievement>)Lists.newArrayList((Iterator)Iterators.filter((Iterator)AchievementList.achievementList.iterator(), (Predicate)new Predicate<Achievement>() {
-                            public boolean apply(final Achievement p_apply_1_) {
-                                return entityplayermp.getStatFile().hasAchievementUnlocked(p_apply_1_) && p_apply_1_ != statbase;
-                            }
-                        }));
-                        final List<Achievement> list3 = (List<Achievement>)Lists.newArrayList((Iterable)list2);
-                        for (Achievement achievement9 : list2) {
-                            final Achievement achievement8 = achievement9;
-                            boolean flag3 = false;
-                            while (achievement9 != null) {
-                                if (achievement9 == statbase) {
-                                    flag3 = true;
+                    else
+                    {
+                        if (statbase instanceof Achievement)
+                        {
+                            Achievement achievement = (Achievement)statbase;
+
+                            if (flag)
+                            {
+                                if (entityplayermp.getStatFile().hasAchievementUnlocked(achievement))
+                                {
+                                    throw new CommandException("commands.achievement.alreadyHave", new Object[] {entityplayermp.getCommandSenderName(), statbase.func_150955_j()});
                                 }
-                                achievement9 = achievement9.parentAchievement;
+
+                                List<Achievement> list;
+
+                                for (list = Lists.<Achievement>newArrayList(); achievement.parentAchievement != null && !entityplayermp.getStatFile().hasAchievementUnlocked(achievement.parentAchievement); achievement = achievement.parentAchievement)
+                                {
+                                    list.add(achievement.parentAchievement);
+                                }
+
+                                for (Achievement achievement1 : Lists.reverse(list))
+                                {
+                                    entityplayermp.triggerAchievement(achievement1);
+                                }
                             }
-                            if (!flag3) {
-                                for (achievement9 = achievement8; achievement9 != null; achievement9 = achievement9.parentAchievement) {
-                                    list3.remove(achievement8);
+                            else if (flag1)
+                            {
+                                if (!entityplayermp.getStatFile().hasAchievementUnlocked(achievement))
+                                {
+                                    throw new CommandException("commands.achievement.dontHave", new Object[] {entityplayermp.getCommandSenderName(), statbase.func_150955_j()});
+                                }
+
+                                List<Achievement> list1 = Lists.newArrayList(Iterators.filter(AchievementList.achievementList.iterator(), new Predicate<Achievement>()
+                                {
+                                    public boolean apply(Achievement p_apply_1_)
+                                    {
+                                        return entityplayermp.getStatFile().hasAchievementUnlocked(p_apply_1_) && p_apply_1_ != statbase;
+                                    }
+                                }));
+                                List<Achievement> list2 = Lists.newArrayList(list1);
+
+                                for (Achievement achievement2 : list1)
+                                {
+                                    Achievement achievement3 = achievement2;
+                                    boolean flag2;
+
+                                    for (flag2 = false; achievement3 != null; achievement3 = achievement3.parentAchievement)
+                                    {
+                                        if (achievement3 == statbase)
+                                        {
+                                            flag2 = true;
+                                        }
+                                    }
+
+                                    if (!flag2)
+                                    {
+                                        for (achievement3 = achievement2; achievement3 != null; achievement3 = achievement3.parentAchievement)
+                                        {
+                                            list2.remove(achievement2);
+                                        }
+                                    }
+                                }
+
+                                for (Achievement achievement6 : list2)
+                                {
+                                    entityplayermp.func_175145_a(achievement6);
                                 }
                             }
                         }
-                        for (final Achievement achievement10 : list3) {
-                            entityplayermp.func_175145_a(achievement10);
+
+                        if (flag)
+                        {
+                            entityplayermp.triggerAchievement(statbase);
+                            notifyOperators(sender, this, "commands.achievement.give.success.one", new Object[] {entityplayermp.getCommandSenderName(), statbase.func_150955_j()});
+                        }
+                        else if (flag1)
+                        {
+                            entityplayermp.func_175145_a(statbase);
+                            notifyOperators(sender, this, "commands.achievement.take.success.one", new Object[] {statbase.func_150955_j(), entityplayermp.getCommandSenderName()});
                         }
                     }
-                }
-                if (flag) {
-                    entityplayermp.triggerAchievement(statbase);
-                    CommandBase.notifyOperators(sender, this, "commands.achievement.give.success.one", entityplayermp.getName(), statbase.createChatComponent());
-                }
-                else if (flag2) {
-                    entityplayermp.func_175145_a(statbase);
-                    CommandBase.notifyOperators(sender, this, "commands.achievement.take.success.one", statbase.createChatComponent(), entityplayermp.getName());
                 }
             }
         }
     }
-    
-    @Override
-    public List<String> addTabCompletionOptions(final ICommandSender sender, final String[] args, final BlockPos pos) {
-        if (args.length == 1) {
-            return CommandBase.getListOfStringsMatchingLastWord(args, "give", "take");
+
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
+    {
+        if (args.length == 1)
+        {
+            return getListOfStringsMatchingLastWord(args, new String[] {"give", "take"});
         }
-        if (args.length != 2) {
-            return (args.length == 3) ? CommandBase.getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : null;
+        else if (args.length != 2)
+        {
+            return args.length == 3 ? getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : null;
         }
-        final List<String> list = (List<String>)Lists.newArrayList();
-        for (final StatBase statbase : StatList.allStats) {
-            list.add(statbase.statId);
+        else
+        {
+            List<String> list = Lists.<String>newArrayList();
+
+            for (StatBase statbase : StatList.allStats)
+            {
+                list.add(statbase.statId);
+            }
+
+            return getListOfStringsMatchingLastWord(args, list);
         }
-        return CommandBase.getListOfStringsMatchingLastWord(args, list);
     }
-    
-    @Override
-    public boolean isUsernameIndex(final String[] args, final int index) {
+
+    /**
+     * Return whether the specified command parameter index is a username parameter.
+     *  
+     * @param args The arguments that were given
+     * @param index The argument index that we are checking
+     */
+    public boolean isUsernameIndex(String[] args, int index)
+    {
         return index == 2;
     }
 }

@@ -1,18 +1,17 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.tileentity;
 
 public class TileEntityDropper extends TileEntityDispenser
 {
-    @Override
-    public String getName() {
+    /**
+     * Gets the name of this command sender (usually username, but possibly "Rcon")
+     */
+    public String getCommandSenderName()
+    {
         return this.hasCustomName() ? this.customName : "container.dropper";
     }
-    
-    @Override
-    public String getGuiID() {
+
+    public String getGuiID()
+    {
         return "minecraft:dropper";
     }
 }

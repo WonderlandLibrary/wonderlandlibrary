@@ -1,93 +1,110 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Map;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import java.util.Arrays;
-import net.minecraft.src.Config;
-import net.optifine.util.StrUtils;
-import java.util.HashMap;
-import net.optifine.util.ResUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import net.minecraft.network.PacketThreadUtil;
+import net.minecraft.src.Config;
+import net.optifine.util.ResUtils;
+import net.optifine.util.StrUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class CustomLoadingScreens
 {
-    private static CustomLoadingScreen[] screens;
-    private static int screensMinDimensionId;
-    
-    public static CustomLoadingScreen getCustomLoadingScreen() {
-        if (CustomLoadingScreens.screens == null) {
+    private static CustomLoadingScreen[] screens = null;
+    private static int screensMinDimensionId = 0;
+
+    public static CustomLoadingScreen getCustomLoadingScreen()
+    {
+        if (screens == null)
+        {
             return null;
         }
-        final int i = PacketThreadUtil.lastDimensionId;
-        final int j = i - CustomLoadingScreens.screensMinDimensionId;
-        CustomLoadingScreen customloadingscreen = null;
-        if (j >= 0 && j < CustomLoadingScreens.screens.length) {
-            customloadingscreen = CustomLoadingScreens.screens[j];
-        }
-        return customloadingscreen;
-    }
-    
-    public static void update() {
-        CustomLoadingScreens.screens = null;
-        CustomLoadingScreens.screensMinDimensionId = 0;
-        final Pair<CustomLoadingScreen[], Integer> pair = parseScreens();
-        CustomLoadingScreens.screens = (CustomLoadingScreen[])pair.getLeft();
-        CustomLoadingScreens.screensMinDimensionId = (int)pair.getRight();
-    }
-    
-    private static Pair<CustomLoadingScreen[], Integer> parseScreens() {
-        final String s = "optifine/gui/loading/background";
-        final String s2 = ".png";
-        final String[] astring = ResUtils.collectFiles(s, s2);
-        final Map<Integer, String> map = new HashMap<Integer, String>();
-        for (int i = 0; i < astring.length; ++i) {
-            final String s3 = astring[i];
-            final String s4 = StrUtils.removePrefixSuffix(s3, s, s2);
-            final int j = Config.parseInt(s4, Integer.MIN_VALUE);
-            if (j == Integer.MIN_VALUE) {
-                warn("Invalid dimension ID: " + s4 + ", path: " + s3);
+        else
+        {
+            int i = PacketThreadUtil.lastDimensionId;
+            int j = i - screensMinDimensionId;
+            CustomLoadingScreen customloadingscreen = null;
+
+            if (j >= 0 && j < screens.length)
+            {
+                customloadingscreen = screens[j];
             }
-            else {
-                map.put(j, s3);
+
+            return customloadingscreen;
+        }
+    }
+
+    public static void update()
+    {
+        screens = null;
+        screensMinDimensionId = 0;
+        Pair<CustomLoadingScreen[], Integer> pair = parseScreens();
+        screens = (CustomLoadingScreen[])pair.getLeft();
+        screensMinDimensionId = ((Integer)pair.getRight()).intValue();
+    }
+
+    private static Pair<CustomLoadingScreen[], Integer> parseScreens()
+    {
+        String s = "optifine/gui/loading/background";
+        String s1 = ".png";
+        String[] astring = ResUtils.collectFiles(s, s1);
+        Map<Integer, String> map = new HashMap();
+
+        for (int i = 0; i < astring.length; ++i)
+        {
+            String s2 = astring[i];
+            String s3 = StrUtils.removePrefixSuffix(s2, s, s1);
+            int j = Config.parseInt(s3, Integer.MIN_VALUE);
+
+            if (j == Integer.MIN_VALUE)
+            {
+                warn("Invalid dimension ID: " + s3 + ", path: " + s2);
+            }
+            else
+            {
+                map.put(Integer.valueOf(j), s2);
             }
         }
-        final Set<Integer> set = map.keySet();
-        final Integer[] ainteger = set.toArray(new Integer[set.size()]);
-        Arrays.sort(ainteger);
-        if (ainteger.length <= 0) {
-            return (Pair<CustomLoadingScreen[], Integer>)new ImmutablePair((Object)null, (Object)0);
+
+        Set<Integer> set = map.keySet();
+        Integer[] ainteger = (Integer[])set.toArray(new Integer[set.size()]);
+        Arrays.sort((Object[])ainteger);
+
+        if (ainteger.length <= 0)
+        {
+            return new ImmutablePair((Object)null, Integer.valueOf(0));
         }
-        final String s5 = "optifine/gui/loading/loading.properties";
-        final Properties properties = ResUtils.readProperties(s5, "CustomLoadingScreens");
-        final int k = ainteger[0];
-        final int l = ainteger[ainteger.length - 1];
-        final int i2 = l - k + 1;
-        final CustomLoadingScreen[] acustomloadingscreen = new CustomLoadingScreen[i2];
-        for (int j2 = 0; j2 < ainteger.length; ++j2) {
-            final Integer integer = ainteger[j2];
-            final String s6 = map.get(integer);
-            acustomloadingscreen[integer - k] = CustomLoadingScreen.parseScreen(s6, integer, properties);
+        else
+        {
+            String s5 = "optifine/gui/loading/loading.properties";
+            Properties properties = ResUtils.readProperties(s5, "CustomLoadingScreens");
+            int k = ainteger[0].intValue();
+            int l = ainteger[ainteger.length - 1].intValue();
+            int i1 = l - k + 1;
+            CustomLoadingScreen[] acustomloadingscreen = new CustomLoadingScreen[i1];
+
+            for (int j1 = 0; j1 < ainteger.length; ++j1)
+            {
+                Integer integer = ainteger[j1];
+                String s4 = (String)map.get(integer);
+                acustomloadingscreen[integer.intValue() - k] = CustomLoadingScreen.parseScreen(s4, integer.intValue(), properties);
+            }
+
+            return new ImmutablePair(acustomloadingscreen, Integer.valueOf(k));
         }
-        return (Pair<CustomLoadingScreen[], Integer>)new ImmutablePair((Object)acustomloadingscreen, (Object)k);
     }
-    
-    public static void warn(final String str) {
+
+    public static void warn(String str)
+    {
         Config.warn("CustomLoadingScreen: " + str);
     }
-    
-    public static void dbg(final String str) {
+
+    public static void dbg(String str)
+    {
         Config.dbg("CustomLoadingScreen: " + str);
-    }
-    
-    static {
-        CustomLoadingScreens.screens = null;
-        CustomLoadingScreens.screensMinDimensionId = 0;
     }
 }

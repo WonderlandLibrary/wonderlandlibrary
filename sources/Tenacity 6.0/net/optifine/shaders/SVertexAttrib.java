@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.shaders;
 
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
@@ -12,8 +8,9 @@ public class SVertexAttrib
     public int count;
     public VertexFormatElement.EnumType type;
     public int offset;
-    
-    public SVertexAttrib(final int index, final int count, final VertexFormatElement.EnumType type) {
+
+    public SVertexAttrib(int index, int count, VertexFormatElement.EnumType type)
+    {
         this.index = index;
         this.count = count;
         this.type = type;

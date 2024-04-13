@@ -1,36 +1,33 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.entity;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.entity.monster.EntityCaveSpider;
+import net.minecraft.util.ResourceLocation;
 
 public class RenderCaveSpider extends RenderSpider<EntityCaveSpider>
 {
-    private static final ResourceLocation caveSpiderTextures;
-    
-    public RenderCaveSpider(final RenderManager renderManagerIn) {
+    private static final ResourceLocation caveSpiderTextures = new ResourceLocation("textures/entity/spider/cave_spider.png");
+
+    public RenderCaveSpider(RenderManager renderManagerIn)
+    {
         super(renderManagerIn);
-        this.shadowSize *= 0.7f;
+        this.shadowSize *= 0.7F;
     }
-    
-    @Override
-    protected void preRenderCallback(final EntityCaveSpider entitylivingbaseIn, final float partialTickTime) {
-        GlStateManager.scale(0.7f, 0.7f, 0.7f);
+
+    /**
+     * Allows the render to do any OpenGL state modifications necessary before the model is rendered. Args:
+     * entityLiving, partialTickTime
+     */
+    protected void preRenderCallback(EntityCaveSpider entitylivingbaseIn, float partialTickTime)
+    {
+        GlStateManager.scale(0.7F, 0.7F, 0.7F);
     }
-    
-    @Override
-    protected ResourceLocation getEntityTexture(final EntityCaveSpider entity) {
-        return RenderCaveSpider.caveSpiderTextures;
-    }
-    
-    static {
-        caveSpiderTextures = new ResourceLocation("textures/entity/spider/cave_spider.png");
+
+    /**
+     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
+     */
+    protected ResourceLocation getEntityTexture(EntityCaveSpider entity)
+    {
+        return caveSpiderTextures;
     }
 }

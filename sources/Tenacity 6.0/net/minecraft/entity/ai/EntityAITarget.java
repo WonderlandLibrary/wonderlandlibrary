@@ -1,154 +1,262 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.entity.ai;
 
-import net.minecraft.pathfinding.PathPoint;
-import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.BlockPos;
-import org.apache.commons.lang3.StringUtils;
-import net.minecraft.entity.IEntityOwnable;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.scoreboard.Team;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityOwnable;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathPoint;
+import net.minecraft.scoreboard.Team;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.MathHelper;
+import org.apache.commons.lang3.StringUtils;
 
 public abstract class EntityAITarget extends EntityAIBase
 {
+    /** The entity that this task belongs to */
     protected final EntityCreature taskOwner;
+
+    /**
+     * If true, EntityAI targets must be able to be seen (cannot be blocked by walls) to be suitable targets.
+     */
     protected boolean shouldCheckSight;
+
+    /**
+     * When true, only entities that can be reached with minimal effort will be targetted.
+     */
     private boolean nearbyOnly;
+
+    /**
+     * When nearbyOnly is true: 0 -> No target, but OK to search; 1 -> Nearby target found; 2 -> Target too far.
+     */
     private int targetSearchStatus;
+
+    /**
+     * When nearbyOnly is true, this throttles target searching to avoid excessive pathfinding.
+     */
     private int targetSearchDelay;
+
+    /**
+     * If  @shouldCheckSight is true, the number of ticks before the interuption of this AITastk when the entity does't
+     * see the target
+     */
     private int targetUnseenTicks;
-    
-    public EntityAITarget(final EntityCreature creature, final boolean checkSight) {
+
+    public EntityAITarget(EntityCreature creature, boolean checkSight)
+    {
         this(creature, checkSight, false);
     }
-    
-    public EntityAITarget(final EntityCreature creature, final boolean checkSight, final boolean onlyNearby) {
+
+    public EntityAITarget(EntityCreature creature, boolean checkSight, boolean onlyNearby)
+    {
         this.taskOwner = creature;
         this.shouldCheckSight = checkSight;
         this.nearbyOnly = onlyNearby;
     }
-    
-    @Override
-    public boolean continueExecuting() {
-        final EntityLivingBase entitylivingbase = this.taskOwner.getAttackTarget();
-        if (entitylivingbase == null) {
+
+    /**
+     * Returns whether an in-progress EntityAIBase should continue executing
+     */
+    public boolean continueExecuting()
+    {
+        EntityLivingBase entitylivingbase = this.taskOwner.getAttackTarget();
+
+        if (entitylivingbase == null)
+        {
             return false;
         }
-        if (!entitylivingbase.isEntityAlive()) {
+        else if (!entitylivingbase.isEntityAlive())
+        {
             return false;
         }
-        final Team team = this.taskOwner.getTeam();
-        final Team team2 = entitylivingbase.getTeam();
-        if (team != null && team2 == team) {
-            return false;
-        }
-        final double d0 = this.getTargetDistance();
-        if (this.taskOwner.getDistanceSqToEntity(entitylivingbase) > d0 * d0) {
-            return false;
-        }
-        if (this.shouldCheckSight) {
-            if (this.taskOwner.getEntitySenses().canSee(entitylivingbase)) {
-                this.targetUnseenTicks = 0;
-            }
-            else if (++this.targetUnseenTicks > 60) {
+        else
+        {
+            Team team = this.taskOwner.getTeam();
+            Team team1 = entitylivingbase.getTeam();
+
+            if (team != null && team1 == team)
+            {
                 return false;
             }
+            else
+            {
+                double d0 = this.getTargetDistance();
+
+                if (this.taskOwner.getDistanceSqToEntity(entitylivingbase) > d0 * d0)
+                {
+                    return false;
+                }
+                else
+                {
+                    if (this.shouldCheckSight)
+                    {
+                        if (this.taskOwner.getEntitySenses().canSee(entitylivingbase))
+                        {
+                            this.targetUnseenTicks = 0;
+                        }
+                        else if (++this.targetUnseenTicks > 60)
+                        {
+                            return false;
+                        }
+                    }
+
+                    return !(entitylivingbase instanceof EntityPlayer) || !((EntityPlayer)entitylivingbase).capabilities.disableDamage;
+                }
+            }
         }
-        return !(entitylivingbase instanceof EntityPlayer) || !((EntityPlayer)entitylivingbase).capabilities.disableDamage;
     }
-    
-    protected double getTargetDistance() {
-        final IAttributeInstance iattributeinstance = this.taskOwner.getEntityAttribute(SharedMonsterAttributes.followRange);
-        return (iattributeinstance == null) ? 16.0 : iattributeinstance.getAttributeValue();
+
+    protected double getTargetDistance()
+    {
+        IAttributeInstance iattributeinstance = this.taskOwner.getEntityAttribute(SharedMonsterAttributes.followRange);
+        return iattributeinstance == null ? 16.0D : iattributeinstance.getAttributeValue();
     }
-    
-    @Override
-    public void startExecuting() {
+
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
+    {
         this.targetSearchStatus = 0;
         this.targetSearchDelay = 0;
         this.targetUnseenTicks = 0;
     }
-    
-    @Override
-    public void resetTask() {
-        this.taskOwner.setAttackTarget(null);
+
+    /**
+     * Resets the task
+     */
+    public void resetTask()
+    {
+        this.taskOwner.setAttackTarget((EntityLivingBase)null);
     }
-    
-    public static boolean isSuitableTarget(final EntityLiving attacker, final EntityLivingBase target, final boolean includeInvincibles, final boolean checkSight) {
-        if (target == null) {
+
+    /**
+     * A static method used to see if an entity is a suitable target through a number of checks.
+     *  
+     * @param attacker entity which is attacking
+     * @param target attack target
+     * @param includeInvincibles should ignore {@link net.minecraft.entity.player.EntityPlayer#capabilities
+     * EntityPlayer.capabilities}.{@link net.minecraft.entity.player.PlayerCapabilities#disableDamage disableDamage}
+     * @param checkSight should check if attacker can see target
+     */
+    public static boolean isSuitableTarget(EntityLiving attacker, EntityLivingBase target, boolean includeInvincibles, boolean checkSight)
+    {
+        if (target == null)
+        {
             return false;
         }
-        if (target == attacker) {
+        else if (target == attacker)
+        {
             return false;
         }
-        if (!target.isEntityAlive()) {
+        else if (!target.isEntityAlive())
+        {
             return false;
         }
-        if (!attacker.canAttackClass(target.getClass())) {
+        else if (!attacker.canAttackClass(target.getClass()))
+        {
             return false;
         }
-        final Team team = attacker.getTeam();
-        final Team team2 = target.getTeam();
-        if (team != null && team2 == team) {
-            return false;
-        }
-        if (attacker instanceof IEntityOwnable && StringUtils.isNotEmpty((CharSequence)((IEntityOwnable)attacker).getOwnerId())) {
-            if (target instanceof IEntityOwnable && ((IEntityOwnable)attacker).getOwnerId().equals(((IEntityOwnable)target).getOwnerId())) {
+        else
+        {
+            Team team = attacker.getTeam();
+            Team team1 = target.getTeam();
+
+            if (team != null && team1 == team)
+            {
                 return false;
             }
-            if (target == ((IEntityOwnable)attacker).getOwner()) {
-                return false;
+            else
+            {
+                if (attacker instanceof IEntityOwnable && StringUtils.isNotEmpty(((IEntityOwnable)attacker).getOwnerId()))
+                {
+                    if (target instanceof IEntityOwnable && ((IEntityOwnable)attacker).getOwnerId().equals(((IEntityOwnable)target).getOwnerId()))
+                    {
+                        return false;
+                    }
+
+                    if (target == ((IEntityOwnable)attacker).getOwner())
+                    {
+                        return false;
+                    }
+                }
+                else if (target instanceof EntityPlayer && !includeInvincibles && ((EntityPlayer)target).capabilities.disableDamage)
+                {
+                    return false;
+                }
+
+                return !checkSight || attacker.getEntitySenses().canSee(target);
             }
         }
-        else if (target instanceof EntityPlayer && !includeInvincibles && ((EntityPlayer)target).capabilities.disableDamage) {
-            return false;
-        }
-        return !checkSight || attacker.getEntitySenses().canSee(target);
     }
-    
-    protected boolean isSuitableTarget(final EntityLivingBase target, final boolean includeInvincibles) {
-        if (!isSuitableTarget(this.taskOwner, target, includeInvincibles, this.shouldCheckSight)) {
+
+    /**
+     * A method used to see if an entity is a suitable target through a number of checks. Args : entity,
+     * canTargetInvinciblePlayer
+     */
+    protected boolean isSuitableTarget(EntityLivingBase target, boolean includeInvincibles)
+    {
+        if (!isSuitableTarget(this.taskOwner, target, includeInvincibles, this.shouldCheckSight))
+        {
             return false;
         }
-        if (!this.taskOwner.isWithinHomeDistanceFromPosition(new BlockPos(target))) {
+        else if (!this.taskOwner.isWithinHomeDistanceFromPosition(new BlockPos(target)))
+        {
             return false;
         }
-        if (this.nearbyOnly) {
-            if (--this.targetSearchDelay <= 0) {
-                this.targetSearchStatus = 0;
+        else
+        {
+            if (this.nearbyOnly)
+            {
+                if (--this.targetSearchDelay <= 0)
+                {
+                    this.targetSearchStatus = 0;
+                }
+
+                if (this.targetSearchStatus == 0)
+                {
+                    this.targetSearchStatus = this.canEasilyReach(target) ? 1 : 2;
+                }
+
+                if (this.targetSearchStatus == 2)
+                {
+                    return false;
+                }
             }
-            if (this.targetSearchStatus == 0) {
-                this.targetSearchStatus = (this.canEasilyReach(target) ? 1 : 2);
-            }
-            if (this.targetSearchStatus == 2) {
-                return false;
-            }
+
+            return true;
         }
-        return true;
     }
-    
-    private boolean canEasilyReach(final EntityLivingBase target) {
+
+    /**
+     * Checks to see if this entity can find a short path to the given target.
+     */
+    private boolean canEasilyReach(EntityLivingBase p_75295_1_)
+    {
         this.targetSearchDelay = 10 + this.taskOwner.getRNG().nextInt(5);
-        final PathEntity pathentity = this.taskOwner.getNavigator().getPathToEntityLiving(target);
-        if (pathentity == null) {
+        PathEntity pathentity = this.taskOwner.getNavigator().getPathToEntityLiving(p_75295_1_);
+
+        if (pathentity == null)
+        {
             return false;
         }
-        final PathPoint pathpoint = pathentity.getFinalPathPoint();
-        if (pathpoint == null) {
-            return false;
+        else
+        {
+            PathPoint pathpoint = pathentity.getFinalPathPoint();
+
+            if (pathpoint == null)
+            {
+                return false;
+            }
+            else
+            {
+                int i = pathpoint.xCoord - MathHelper.floor_double(p_75295_1_.posX);
+                int j = pathpoint.zCoord - MathHelper.floor_double(p_75295_1_.posZ);
+                return (double)(i * i + j * j) <= 2.25D;
+            }
         }
-        final int i = pathpoint.xCoord - MathHelper.floor_double(target.posX);
-        final int j = pathpoint.zCoord - MathHelper.floor_double(target.posZ);
-        return i * i + j * j <= 2.25;
     }
 }

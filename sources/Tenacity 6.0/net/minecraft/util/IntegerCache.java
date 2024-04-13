@@ -1,21 +1,21 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.util;
 
 public class IntegerCache
 {
-    private static final Integer[] CACHE;
-    
-    public static Integer getInteger(final int value) {
-        return (value >= 0 && value < IntegerCache.CACHE.length) ? IntegerCache.CACHE[value] : new Integer(value);
+    private static final Integer[] field_181757_a = new Integer[65535];
+
+    public static Integer func_181756_a(int p_181756_0_)
+    {
+        return p_181756_0_ >= 0 && p_181756_0_ < field_181757_a.length ? field_181757_a[p_181756_0_] : new Integer(p_181756_0_);
     }
-    
-    static {
-        CACHE = new Integer[65535];
-        for (int i = 0, j = IntegerCache.CACHE.length; i < j; ++i) {
-            IntegerCache.CACHE[i] = i;
+
+    static
+    {
+        int i = 0;
+
+        for (int j = field_181757_a.length; i < j; ++i)
+        {
+            field_181757_a[i] = Integer.valueOf(i);
         }
     }
 }

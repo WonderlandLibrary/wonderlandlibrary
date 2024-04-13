@@ -1,30 +1,36 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.enchantment;
 
 import net.minecraft.util.ResourceLocation;
 
 public class EnchantmentWaterWorker extends Enchantment
 {
-    public EnchantmentWaterWorker(final int p_i45761_1_, final ResourceLocation p_i45761_2_, final int p_i45761_3_) {
+    public EnchantmentWaterWorker(int p_i45761_1_, ResourceLocation p_i45761_2_, int p_i45761_3_)
+    {
         super(p_i45761_1_, p_i45761_2_, p_i45761_3_, EnumEnchantmentType.ARMOR_HEAD);
         this.setName("waterWorker");
     }
-    
-    @Override
-    public int getMinEnchantability(final int enchantmentLevel) {
+
+    /**
+     * Returns the minimal value of enchantability needed on the enchantment level passed.
+     */
+    public int getMinEnchantability(int enchantmentLevel)
+    {
         return 1;
     }
-    
-    @Override
-    public int getMaxEnchantability(final int enchantmentLevel) {
+
+    /**
+     * Returns the maximum value of enchantability nedded on the enchantment level passed.
+     */
+    public int getMaxEnchantability(int enchantmentLevel)
+    {
         return this.getMinEnchantability(enchantmentLevel) + 40;
     }
-    
-    @Override
-    public int getMaxLevel() {
+
+    /**
+     * Returns the maximum level that the enchantment can have.
+     */
+    public int getMaxLevel()
+    {
         return 1;
     }
 }

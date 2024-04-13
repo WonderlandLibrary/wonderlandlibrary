@@ -1,95 +1,99 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.particle;
 
-import net.minecraft.init.Items;
-import net.minecraft.entity.Entity;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.init.Blocks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
 public class EntityBreakingFX extends EntityFX
 {
-    protected EntityBreakingFX(final World worldIn, final double posXIn, final double posYIn, final double posZIn, final Item p_i1195_8_) {
+    protected EntityBreakingFX(World worldIn, double posXIn, double posYIn, double posZIn, Item p_i1195_8_)
+    {
         this(worldIn, posXIn, posYIn, posZIn, p_i1195_8_, 0);
     }
-    
-    protected EntityBreakingFX(final World worldIn, final double posXIn, final double posYIn, final double posZIn, final double xSpeedIn, final double ySpeedIn, final double zSpeedIn, final Item p_i1197_14_, final int p_i1197_15_) {
+
+    protected EntityBreakingFX(World worldIn, double posXIn, double posYIn, double posZIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, Item p_i1197_14_, int p_i1197_15_)
+    {
         this(worldIn, posXIn, posYIn, posZIn, p_i1197_14_, p_i1197_15_);
-        this.motionX *= 0.10000000149011612;
-        this.motionY *= 0.10000000149011612;
-        this.motionZ *= 0.10000000149011612;
+        this.motionX *= 0.10000000149011612D;
+        this.motionY *= 0.10000000149011612D;
+        this.motionZ *= 0.10000000149011612D;
         this.motionX += xSpeedIn;
         this.motionY += ySpeedIn;
         this.motionZ += zSpeedIn;
     }
-    
-    protected EntityBreakingFX(final World worldIn, final double posXIn, final double posYIn, final double posZIn, final Item p_i1196_8_, final int p_i1196_9_) {
-        super(worldIn, posXIn, posYIn, posZIn, 0.0, 0.0, 0.0);
+
+    protected EntityBreakingFX(World worldIn, double posXIn, double posYIn, double posZIn, Item p_i1196_8_, int p_i1196_9_)
+    {
+        super(worldIn, posXIn, posYIn, posZIn, 0.0D, 0.0D, 0.0D);
         this.setParticleIcon(Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getParticleIcon(p_i1196_8_, p_i1196_9_));
-        final float particleRed = 1.0f;
-        this.particleBlue = particleRed;
-        this.particleGreen = particleRed;
-        this.particleRed = particleRed;
+        this.particleRed = this.particleGreen = this.particleBlue = 1.0F;
         this.particleGravity = Blocks.snow.blockParticleGravity;
-        this.particleScale /= 2.0f;
+        this.particleScale /= 2.0F;
     }
-    
-    @Override
-    public int getFXLayer() {
+
+    public int getFXLayer()
+    {
         return 1;
     }
-    
-    @Override
-    public void renderParticle(final WorldRenderer worldRendererIn, final Entity entityIn, final float partialTicks, final float rotationX, final float rotationZ, final float rotationYZ, final float rotationXY, final float rotationXZ) {
-        float f = (this.particleTextureIndexX + this.particleTextureJitterX / 4.0f) / 16.0f;
-        float f2 = f + 0.015609375f;
-        float f3 = (this.particleTextureIndexY + this.particleTextureJitterY / 4.0f) / 16.0f;
-        float f4 = f3 + 0.015609375f;
-        final float f5 = 0.1f * this.particleScale;
-        if (this.particleIcon != null) {
-            f = this.particleIcon.getInterpolatedU(this.particleTextureJitterX / 4.0f * 16.0f);
-            f2 = this.particleIcon.getInterpolatedU((this.particleTextureJitterX + 1.0f) / 4.0f * 16.0f);
-            f3 = this.particleIcon.getInterpolatedV(this.particleTextureJitterY / 4.0f * 16.0f);
-            f4 = this.particleIcon.getInterpolatedV((this.particleTextureJitterY + 1.0f) / 4.0f * 16.0f);
+
+    /**
+     * Renders the particle
+     *  
+     * @param worldRendererIn The WorldRenderer instance
+     */
+    public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float p_180434_4_, float p_180434_5_, float p_180434_6_, float p_180434_7_, float p_180434_8_)
+    {
+        float f = ((float)this.particleTextureIndexX + this.particleTextureJitterX / 4.0F) / 16.0F;
+        float f1 = f + 0.015609375F;
+        float f2 = ((float)this.particleTextureIndexY + this.particleTextureJitterY / 4.0F) / 16.0F;
+        float f3 = f2 + 0.015609375F;
+        float f4 = 0.1F * this.particleScale;
+
+        if (this.particleIcon != null)
+        {
+            f = this.particleIcon.getInterpolatedU((double)(this.particleTextureJitterX / 4.0F * 16.0F));
+            f1 = this.particleIcon.getInterpolatedU((double)((this.particleTextureJitterX + 1.0F) / 4.0F * 16.0F));
+            f2 = this.particleIcon.getInterpolatedV((double)(this.particleTextureJitterY / 4.0F * 16.0F));
+            f3 = this.particleIcon.getInterpolatedV((double)((this.particleTextureJitterY + 1.0F) / 4.0F * 16.0F));
         }
-        final float f6 = (float)(this.prevPosX + (this.posX - this.prevPosX) * partialTicks - EntityBreakingFX.interpPosX);
-        final float f7 = (float)(this.prevPosY + (this.posY - this.prevPosY) * partialTicks - EntityBreakingFX.interpPosY);
-        final float f8 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * partialTicks - EntityBreakingFX.interpPosZ);
-        final int i = this.getBrightnessForRender(partialTicks);
-        final int j = i >> 16 & 0xFFFF;
-        final int k = i & 0xFFFF;
-        worldRendererIn.pos(f6 - rotationX * f5 - rotationXY * f5, f7 - rotationZ * f5, f8 - rotationYZ * f5 - rotationXZ * f5).tex(f, f4).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0f).lightmap(j, k).endVertex();
-        worldRendererIn.pos(f6 - rotationX * f5 + rotationXY * f5, f7 + rotationZ * f5, f8 - rotationYZ * f5 + rotationXZ * f5).tex(f, f3).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0f).lightmap(j, k).endVertex();
-        worldRendererIn.pos(f6 + rotationX * f5 + rotationXY * f5, f7 + rotationZ * f5, f8 + rotationYZ * f5 + rotationXZ * f5).tex(f2, f3).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0f).lightmap(j, k).endVertex();
-        worldRendererIn.pos(f6 + rotationX * f5 - rotationXY * f5, f7 - rotationZ * f5, f8 + rotationYZ * f5 - rotationXZ * f5).tex(f2, f4).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0f).lightmap(j, k).endVertex();
+
+        float f5 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks - interpPosX);
+        float f6 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks - interpPosY);
+        float f7 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks - interpPosZ);
+        int i = this.getBrightnessForRender(partialTicks);
+        int j = i >> 16 & 65535;
+        int k = i & 65535;
+        worldRendererIn.pos((double)(f5 - p_180434_4_ * f4 - p_180434_7_ * f4), (double)(f6 - p_180434_5_ * f4), (double)(f7 - p_180434_6_ * f4 - p_180434_8_ * f4)).tex((double)f, (double)f3).func_181666_a(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).func_181671_a(j, k).endVertex();
+        worldRendererIn.pos((double)(f5 - p_180434_4_ * f4 + p_180434_7_ * f4), (double)(f6 + p_180434_5_ * f4), (double)(f7 - p_180434_6_ * f4 + p_180434_8_ * f4)).tex((double)f, (double)f2).func_181666_a(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).func_181671_a(j, k).endVertex();
+        worldRendererIn.pos((double)(f5 + p_180434_4_ * f4 + p_180434_7_ * f4), (double)(f6 + p_180434_5_ * f4), (double)(f7 + p_180434_6_ * f4 + p_180434_8_ * f4)).tex((double)f1, (double)f2).func_181666_a(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).func_181671_a(j, k).endVertex();
+        worldRendererIn.pos((double)(f5 + p_180434_4_ * f4 - p_180434_7_ * f4), (double)(f6 - p_180434_5_ * f4), (double)(f7 + p_180434_6_ * f4 - p_180434_8_ * f4)).tex((double)f1, (double)f3).func_181666_a(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).func_181671_a(j, k).endVertex();
     }
-    
+
     public static class Factory implements IParticleFactory
     {
-        @Override
-        public EntityFX getEntityFX(final int particleID, final World worldIn, final double xCoordIn, final double yCoordIn, final double zCoordIn, final double xSpeedIn, final double ySpeedIn, final double zSpeedIn, final int... p_178902_15_) {
-            final int i = (p_178902_15_.length > 1) ? p_178902_15_[1] : 0;
+        public EntityFX getEntityFX(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_)
+        {
+            int i = p_178902_15_.length > 1 ? p_178902_15_[1] : 0;
             return new EntityBreakingFX(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, Item.getItemById(p_178902_15_[0]), i);
         }
     }
-    
+
     public static class SlimeFactory implements IParticleFactory
     {
-        @Override
-        public EntityFX getEntityFX(final int particleID, final World worldIn, final double xCoordIn, final double yCoordIn, final double zCoordIn, final double xSpeedIn, final double ySpeedIn, final double zSpeedIn, final int... p_178902_15_) {
+        public EntityFX getEntityFX(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_)
+        {
             return new EntityBreakingFX(worldIn, xCoordIn, yCoordIn, zCoordIn, Items.slime_ball);
         }
     }
-    
+
     public static class SnowballFactory implements IParticleFactory
     {
-        @Override
-        public EntityFX getEntityFX(final int particleID, final World worldIn, final double xCoordIn, final double yCoordIn, final double zCoordIn, final double xSpeedIn, final double ySpeedIn, final double zSpeedIn, final int... p_178902_15_) {
+        public EntityFX getEntityFX(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_)
+        {
             return new EntityBreakingFX(worldIn, xCoordIn, yCoordIn, zCoordIn, Items.snowball);
         }
     }

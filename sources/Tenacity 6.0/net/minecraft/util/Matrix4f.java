@@ -1,12 +1,9 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.util;
 
 public class Matrix4f extends org.lwjgl.util.vector.Matrix4f
 {
-    public Matrix4f(final float[] p_i46413_1_) {
+    public Matrix4f(float[] p_i46413_1_)
+    {
         this.m00 = p_i46413_1_[0];
         this.m01 = p_i46413_1_[1];
         this.m02 = p_i46413_1_[2];
@@ -24,24 +21,9 @@ public class Matrix4f extends org.lwjgl.util.vector.Matrix4f
         this.m32 = p_i46413_1_[14];
         this.m33 = p_i46413_1_[15];
     }
-    
-    public Matrix4f() {
-        final float n = 0.0f;
-        this.m33 = n;
-        this.m32 = n;
-        this.m31 = n;
-        this.m30 = n;
-        this.m23 = n;
-        this.m22 = n;
-        this.m21 = n;
-        this.m20 = n;
-        this.m13 = n;
-        this.m12 = n;
-        this.m11 = n;
-        this.m10 = n;
-        this.m03 = n;
-        this.m02 = n;
-        this.m01 = n;
-        this.m00 = n;
+
+    public Matrix4f()
+    {
+        this.m00 = this.m01 = this.m02 = this.m03 = this.m10 = this.m11 = this.m12 = this.m13 = this.m20 = this.m21 = this.m22 = this.m23 = this.m30 = this.m31 = this.m32 = this.m33 = 0.0F;
     }
 }

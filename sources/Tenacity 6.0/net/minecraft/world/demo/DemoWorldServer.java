@@ -1,29 +1,21 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.world.demo;
 
-import net.minecraft.world.WorldType;
 import net.minecraft.profiler.Profiler;
-import net.minecraft.world.storage.WorldInfo;
-import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.WorldSettings;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.WorldSettings;
+import net.minecraft.world.WorldType;
+import net.minecraft.world.storage.ISaveHandler;
+import net.minecraft.world.storage.WorldInfo;
 
 public class DemoWorldServer extends WorldServer
 {
-    private static final long demoWorldSeed;
-    public static final WorldSettings demoWorldSettings;
-    
-    public DemoWorldServer(final MinecraftServer server, final ISaveHandler saveHandlerIn, final WorldInfo worldInfoIn, final int dimensionId, final Profiler profilerIn) {
+    private static final long demoWorldSeed = (long)"North Carolina".hashCode();
+    public static final WorldSettings demoWorldSettings = (new WorldSettings(demoWorldSeed, WorldSettings.GameType.SURVIVAL, true, false, WorldType.DEFAULT)).enableBonusChest();
+
+    public DemoWorldServer(MinecraftServer server, ISaveHandler saveHandlerIn, WorldInfo worldInfoIn, int dimensionId, Profiler profilerIn)
+    {
         super(server, saveHandlerIn, worldInfoIn, dimensionId, profilerIn);
-        this.worldInfo.populateFromWorldSettings(DemoWorldServer.demoWorldSettings);
-    }
-    
-    static {
-        demoWorldSeed = "North Carolina".hashCode();
-        demoWorldSettings = new WorldSettings(DemoWorldServer.demoWorldSeed, WorldSettings.GameType.SURVIVAL, true, false, WorldType.DEFAULT).enableBonusChest();
+        this.worldInfo.populateFromWorldSettings(demoWorldSettings);
     }
 }

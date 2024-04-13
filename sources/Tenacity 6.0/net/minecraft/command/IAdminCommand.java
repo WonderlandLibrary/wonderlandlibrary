@@ -1,10 +1,14 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.command;
 
 public interface IAdminCommand
 {
-    void notifyOperators(final ICommandSender p0, final ICommand p1, final int p2, final String p3, final Object... p4);
+    /**
+     * Send an informative message to the server operators
+     *  
+     * @param sender The command sender
+     * @param command The command that was executed
+     * @param msgFormat The message, optionally with formatting wildcards
+     * @param msgParams The formatting arguments for the {@code msgFormat}
+     */
+    void notifyOperators(ICommandSender sender, ICommand command, int flags, String msgFormat, Object... msgParams);
 }

@@ -1,24 +1,33 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.reflect;
 
-public class ReflectorClass implements IResolvable
+import net.minecraft.src.Config;
+
+public class ReflectorClass
 {
     private String targetClassName;
     private boolean checked;
     private Class targetClass;
-    
-    public ReflectorClass(final String targetClassName) {
+
+    public ReflectorClass(String targetClassName)
+    {
+        this(targetClassName, false);
+    }
+
+    public ReflectorClass(String targetClassName, boolean lazyResolve)
+    {
         this.targetClassName = null;
         this.checked = false;
         this.targetClass = null;
         this.targetClassName = targetClassName;
-        ReflectorResolver.register(this);
+
+        if (!lazyResolve)
+        {
+            Class oclass = this.getTargetClass();
+        }
     }
-    
-    public ReflectorClass(final Class targetClass) {
+
+    public ReflectorClass(Class targetClass)
+    {
         this.targetClassName = null;
         this.checked = false;
         this.targetClass = null;
@@ -26,48 +35,66 @@ public class ReflectorClass implements IResolvable
         this.targetClassName = targetClass.getName();
         this.checked = true;
     }
-    
-    public Class getTargetClass() {
-        if (this.checked) {
+
+    public Class getTargetClass()
+    {
+        if (this.checked)
+        {
             return this.targetClass;
         }
-        this.checked = true;
-        try {
-            this.targetClass = Class.forName(this.targetClassName);
+        else
+        {
+            this.checked = true;
+
+            try
+            {
+                this.targetClass = Class.forName(this.targetClassName);
+            }
+            catch (ClassNotFoundException var2)
+            {
+                Config.log("(Reflector) Class not present: " + this.targetClassName);
+            }
+            catch (Throwable throwable)
+            {
+                throwable.printStackTrace();
+            }
+
+            return this.targetClass;
         }
-        catch (ClassNotFoundException ex) {}
-        catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
-        return this.targetClass;
     }
-    
-    public boolean exists() {
+
+    public boolean exists()
+    {
         return this.getTargetClass() != null;
     }
-    
-    public String getTargetClassName() {
+
+    public String getTargetClassName()
+    {
         return this.targetClassName;
     }
-    
-    public boolean isInstance(final Object obj) {
-        return this.getTargetClass() != null && this.getTargetClass().isInstance(obj);
+
+    public boolean isInstance(Object obj)
+    {
+        return this.getTargetClass() == null ? false : this.getTargetClass().isInstance(obj);
     }
-    
-    public ReflectorField makeField(final String name) {
+
+    public ReflectorField makeField(String name)
+    {
         return new ReflectorField(this, name);
     }
-    
-    public ReflectorMethod makeMethod(final String name) {
+
+    public ReflectorMethod makeMethod(String name)
+    {
         return new ReflectorMethod(this, name);
     }
-    
-    public ReflectorMethod makeMethod(final String name, final Class[] paramTypes) {
+
+    public ReflectorMethod makeMethod(String name, Class[] paramTypes)
+    {
         return new ReflectorMethod(this, name, paramTypes);
     }
-    
-    @Override
-    public void resolve() {
-        final Class oclass = this.getTargetClass();
+
+    public ReflectorMethod makeMethod(String name, Class[] paramTypes, boolean lazyResolve)
+    {
+        return new ReflectorMethod(this, name, paramTypes, lazyResolve);
     }
 }

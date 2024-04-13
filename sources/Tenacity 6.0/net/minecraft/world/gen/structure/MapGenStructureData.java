@@ -1,41 +1,49 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.world.gen.structure;
 
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldSavedData;
 
 public class MapGenStructureData extends WorldSavedData
 {
-    private NBTTagCompound tagCompound;
-    
-    public MapGenStructureData(final String name) {
+    private NBTTagCompound tagCompound = new NBTTagCompound();
+
+    public MapGenStructureData(String name)
+    {
         super(name);
-        this.tagCompound = new NBTTagCompound();
     }
-    
-    @Override
-    public void readFromNBT(final NBTTagCompound nbt) {
+
+    /**
+     * reads in data from the NBTTagCompound into this MapDataBase
+     */
+    public void readFromNBT(NBTTagCompound nbt)
+    {
         this.tagCompound = nbt.getCompoundTag("Features");
     }
-    
-    @Override
-    public void writeToNBT(final NBTTagCompound nbt) {
+
+    /**
+     * write data to NBTTagCompound from this MapDataBase, similar to Entities and TileEntities
+     */
+    public void writeToNBT(NBTTagCompound nbt)
+    {
         nbt.setTag("Features", this.tagCompound);
     }
-    
-    public void writeInstance(final NBTTagCompound tagCompoundIn, final int chunkX, final int chunkZ) {
+
+    /**
+     * Writes the NBT tag of an instance of this structure type to the internal NBT tag, using the chunkcoordinates as
+     * the key
+     */
+    public void writeInstance(NBTTagCompound tagCompoundIn, int chunkX, int chunkZ)
+    {
         this.tagCompound.setTag(formatChunkCoords(chunkX, chunkZ), tagCompoundIn);
     }
-    
-    public static String formatChunkCoords(final int chunkX, final int chunkZ) {
+
+    public static String formatChunkCoords(int chunkX, int chunkZ)
+    {
         return "[" + chunkX + "," + chunkZ + "]";
     }
-    
-    public NBTTagCompound getTagCompound() {
+
+    public NBTTagCompound getTagCompound()
+    {
         return this.tagCompound;
     }
 }

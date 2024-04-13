@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.entity.model;
 
 import net.minecraft.util.ResourceLocation;
@@ -9,10 +5,10 @@ import net.minecraft.util.ResourceLocation;
 public interface IEntityRenderer
 {
     Class getEntityClass();
-    
-    void setEntityClass(final Class p0);
-    
+
+    void setEntityClass(Class var1);
+
     ResourceLocation getLocationTextureCustom();
-    
-    void setLocationTextureCustom(final ResourceLocation p0);
+
+    void setLocationTextureCustom(ResourceLocation var1);
 }

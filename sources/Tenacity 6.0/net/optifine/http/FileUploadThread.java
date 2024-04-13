@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.http;
 
 import java.util.Map;
@@ -12,34 +8,40 @@ public class FileUploadThread extends Thread
     private Map headers;
     private byte[] content;
     private IFileUploadListener listener;
-    
-    public FileUploadThread(final String urlString, final Map headers, final byte[] content, final IFileUploadListener listener) {
+
+    public FileUploadThread(String urlString, Map headers, byte[] content, IFileUploadListener listener)
+    {
         this.urlString = urlString;
         this.headers = headers;
         this.content = content;
         this.listener = listener;
     }
-    
-    @Override
-    public void run() {
-        try {
+
+    public void run()
+    {
+        try
+        {
             HttpUtils.post(this.urlString, this.headers, this.content);
-            this.listener.fileUploadFinished(this.urlString, this.content, null);
+            this.listener.fileUploadFinished(this.urlString, this.content, (Throwable)null);
         }
-        catch (Exception exception) {
+        catch (Exception exception)
+        {
             this.listener.fileUploadFinished(this.urlString, this.content, exception);
         }
     }
-    
-    public String getUrlString() {
+
+    public String getUrlString()
+    {
         return this.urlString;
     }
-    
-    public byte[] getContent() {
+
+    public byte[] getContent()
+    {
         return this.content;
     }
-    
-    public IFileUploadListener getListener() {
+
+    public IFileUploadListener getListener()
+    {
         return this.listener;
     }
 }

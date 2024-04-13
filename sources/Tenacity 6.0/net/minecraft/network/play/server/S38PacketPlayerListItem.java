@@ -1,224 +1,272 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.network.play.server;
 
-import net.minecraft.network.INetHandler;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import java.io.IOException;
+import java.util.List;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.Packet;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.WorldSettings;
-import com.mojang.authlib.properties.Property;
-import com.mojang.authlib.GameProfile;
-import net.minecraft.network.PacketBuffer;
-import java.util.Iterator;
-import net.minecraft.entity.player.EntityPlayerMP;
-import com.google.common.collect.Lists;
-import java.util.List;
-import net.minecraft.network.play.INetHandlerPlayClient;
-import net.minecraft.network.Packet;
 
 public class S38PacketPlayerListItem implements Packet<INetHandlerPlayClient>
 {
-    private Action action;
-    private final List<AddPlayerData> players;
-    
-    public S38PacketPlayerListItem() {
-        this.players = (List<AddPlayerData>)Lists.newArrayList();
+    private S38PacketPlayerListItem.Action action;
+    private final List<S38PacketPlayerListItem.AddPlayerData> players = Lists.<S38PacketPlayerListItem.AddPlayerData>newArrayList();
+
+    public S38PacketPlayerListItem()
+    {
     }
-    
-    public S38PacketPlayerListItem(final Action actionIn, final EntityPlayerMP... players) {
-        this.players = (List<AddPlayerData>)Lists.newArrayList();
+
+    public S38PacketPlayerListItem(S38PacketPlayerListItem.Action actionIn, EntityPlayerMP... players)
+    {
         this.action = actionIn;
-        for (final EntityPlayerMP entityplayermp : players) {
-            this.players.add(new AddPlayerData(entityplayermp.getGameProfile(), entityplayermp.ping, entityplayermp.theItemInWorldManager.getGameType(), entityplayermp.getTabListDisplayName()));
+
+        for (EntityPlayerMP entityplayermp : players)
+        {
+            this.players.add(new S38PacketPlayerListItem.AddPlayerData(entityplayermp.getGameProfile(), entityplayermp.ping, entityplayermp.theItemInWorldManager.getGameType(), entityplayermp.getTabListDisplayName()));
         }
     }
-    
-    public S38PacketPlayerListItem(final Action actionIn, final Iterable<EntityPlayerMP> players) {
-        this.players = (List<AddPlayerData>)Lists.newArrayList();
+
+    public S38PacketPlayerListItem(S38PacketPlayerListItem.Action actionIn, Iterable<EntityPlayerMP> players)
+    {
         this.action = actionIn;
-        for (final EntityPlayerMP entityplayermp : players) {
-            this.players.add(new AddPlayerData(entityplayermp.getGameProfile(), entityplayermp.ping, entityplayermp.theItemInWorldManager.getGameType(), entityplayermp.getTabListDisplayName()));
+
+        for (EntityPlayerMP entityplayermp : players)
+        {
+            this.players.add(new S38PacketPlayerListItem.AddPlayerData(entityplayermp.getGameProfile(), entityplayermp.ping, entityplayermp.theItemInWorldManager.getGameType(), entityplayermp.getTabListDisplayName()));
         }
     }
-    
-    @Override
-    public void readPacketData(final PacketBuffer buf) throws IOException {
-        this.action = buf.readEnumValue(Action.class);
-        for (int i = buf.readVarIntFromBuffer(), j = 0; j < i; ++j) {
+
+    /**
+     * Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(PacketBuffer buf) throws IOException
+    {
+        this.action = (S38PacketPlayerListItem.Action)buf.readEnumValue(S38PacketPlayerListItem.Action.class);
+        int i = buf.readVarIntFromBuffer();
+
+        for (int j = 0; j < i; ++j)
+        {
             GameProfile gameprofile = null;
             int k = 0;
             WorldSettings.GameType worldsettings$gametype = null;
             IChatComponent ichatcomponent = null;
-            switch (this.action) {
-                case ADD_PLAYER: {
+
+            switch (this.action)
+            {
+                case ADD_PLAYER:
                     gameprofile = new GameProfile(buf.readUuid(), buf.readStringFromBuffer(16));
-                    for (int l = buf.readVarIntFromBuffer(), i2 = 0; i2 < l; ++i2) {
-                        final String s = buf.readStringFromBuffer(32767);
-                        final String s2 = buf.readStringFromBuffer(32767);
-                        if (buf.readBoolean()) {
-                            gameprofile.getProperties().put((Object)s, (Object)new Property(s, s2, buf.readStringFromBuffer(32767)));
+                    int l = buf.readVarIntFromBuffer();
+                    int i1 = 0;
+
+                    for (; i1 < l; ++i1)
+                    {
+                        String s = buf.readStringFromBuffer(32767);
+                        String s1 = buf.readStringFromBuffer(32767);
+
+                        if (buf.readBoolean())
+                        {
+                            gameprofile.getProperties().put(s, new Property(s, s1, buf.readStringFromBuffer(32767)));
                         }
-                        else {
-                            gameprofile.getProperties().put((Object)s, (Object)new Property(s, s2));
+                        else
+                        {
+                            gameprofile.getProperties().put(s, new Property(s, s1));
                         }
                     }
+
                     worldsettings$gametype = WorldSettings.GameType.getByID(buf.readVarIntFromBuffer());
                     k = buf.readVarIntFromBuffer();
-                    if (buf.readBoolean()) {
+
+                    if (buf.readBoolean())
+                    {
                         ichatcomponent = buf.readChatComponent();
-                        break;
                     }
+
                     break;
-                }
-                case UPDATE_GAME_MODE: {
+
+                case UPDATE_GAME_MODE:
                     gameprofile = new GameProfile(buf.readUuid(), (String)null);
                     worldsettings$gametype = WorldSettings.GameType.getByID(buf.readVarIntFromBuffer());
                     break;
-                }
-                case UPDATE_LATENCY: {
+
+                case UPDATE_LATENCY:
                     gameprofile = new GameProfile(buf.readUuid(), (String)null);
                     k = buf.readVarIntFromBuffer();
                     break;
-                }
-                case UPDATE_DISPLAY_NAME: {
+
+                case UPDATE_DISPLAY_NAME:
                     gameprofile = new GameProfile(buf.readUuid(), (String)null);
-                    if (buf.readBoolean()) {
+
+                    if (buf.readBoolean())
+                    {
                         ichatcomponent = buf.readChatComponent();
-                        break;
                     }
+
                     break;
-                }
-                case REMOVE_PLAYER: {
+
+                case REMOVE_PLAYER:
                     gameprofile = new GameProfile(buf.readUuid(), (String)null);
-                    break;
-                }
             }
-            this.players.add(new AddPlayerData(gameprofile, k, worldsettings$gametype, ichatcomponent));
+
+            this.players.add(new S38PacketPlayerListItem.AddPlayerData(gameprofile, k, worldsettings$gametype, ichatcomponent));
         }
     }
-    
-    @Override
-    public void writePacketData(final PacketBuffer buf) throws IOException {
+
+    /**
+     * Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(PacketBuffer buf) throws IOException
+    {
         buf.writeEnumValue(this.action);
         buf.writeVarIntToBuffer(this.players.size());
-        for (final AddPlayerData s38packetplayerlistitem$addplayerdata : this.players) {
-            switch (this.action) {
-                case ADD_PLAYER: {
+
+        for (S38PacketPlayerListItem.AddPlayerData s38packetplayerlistitem$addplayerdata : this.players)
+        {
+            switch (this.action)
+            {
+                case ADD_PLAYER:
                     buf.writeUuid(s38packetplayerlistitem$addplayerdata.getProfile().getId());
                     buf.writeString(s38packetplayerlistitem$addplayerdata.getProfile().getName());
                     buf.writeVarIntToBuffer(s38packetplayerlistitem$addplayerdata.getProfile().getProperties().size());
-                    for (final Property property : s38packetplayerlistitem$addplayerdata.getProfile().getProperties().values()) {
+
+                    for (Property property : s38packetplayerlistitem$addplayerdata.getProfile().getProperties().values())
+                    {
                         buf.writeString(property.getName());
                         buf.writeString(property.getValue());
-                        if (property.hasSignature()) {
+
+                        if (property.hasSignature())
+                        {
                             buf.writeBoolean(true);
                             buf.writeString(property.getSignature());
                         }
-                        else {
+                        else
+                        {
                             buf.writeBoolean(false);
                         }
                     }
+
                     buf.writeVarIntToBuffer(s38packetplayerlistitem$addplayerdata.getGameMode().getID());
                     buf.writeVarIntToBuffer(s38packetplayerlistitem$addplayerdata.getPing());
-                    if (s38packetplayerlistitem$addplayerdata.getDisplayName() == null) {
+
+                    if (s38packetplayerlistitem$addplayerdata.getDisplayName() == null)
+                    {
                         buf.writeBoolean(false);
-                        continue;
                     }
-                    buf.writeBoolean(true);
-                    buf.writeChatComponent(s38packetplayerlistitem$addplayerdata.getDisplayName());
-                    continue;
-                }
-                case UPDATE_GAME_MODE: {
+                    else
+                    {
+                        buf.writeBoolean(true);
+                        buf.writeChatComponent(s38packetplayerlistitem$addplayerdata.getDisplayName());
+                    }
+
+                    break;
+
+                case UPDATE_GAME_MODE:
                     buf.writeUuid(s38packetplayerlistitem$addplayerdata.getProfile().getId());
                     buf.writeVarIntToBuffer(s38packetplayerlistitem$addplayerdata.getGameMode().getID());
-                    continue;
-                }
-                case UPDATE_LATENCY: {
+                    break;
+
+                case UPDATE_LATENCY:
                     buf.writeUuid(s38packetplayerlistitem$addplayerdata.getProfile().getId());
                     buf.writeVarIntToBuffer(s38packetplayerlistitem$addplayerdata.getPing());
-                    continue;
-                }
-                case UPDATE_DISPLAY_NAME: {
+                    break;
+
+                case UPDATE_DISPLAY_NAME:
                     buf.writeUuid(s38packetplayerlistitem$addplayerdata.getProfile().getId());
-                    if (s38packetplayerlistitem$addplayerdata.getDisplayName() == null) {
+
+                    if (s38packetplayerlistitem$addplayerdata.getDisplayName() == null)
+                    {
                         buf.writeBoolean(false);
-                        continue;
                     }
-                    buf.writeBoolean(true);
-                    buf.writeChatComponent(s38packetplayerlistitem$addplayerdata.getDisplayName());
-                    continue;
-                }
-                case REMOVE_PLAYER: {
+                    else
+                    {
+                        buf.writeBoolean(true);
+                        buf.writeChatComponent(s38packetplayerlistitem$addplayerdata.getDisplayName());
+                    }
+
+                    break;
+
+                case REMOVE_PLAYER:
                     buf.writeUuid(s38packetplayerlistitem$addplayerdata.getProfile().getId());
-                    continue;
-                }
             }
         }
     }
-    
-    @Override
-    public void processPacket(final INetHandlerPlayClient handler) {
+
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(INetHandlerPlayClient handler)
+    {
         handler.handlePlayerListItem(this);
     }
-    
-    public List<AddPlayerData> getEntries() {
+
+    public List<S38PacketPlayerListItem.AddPlayerData> func_179767_a()
+    {
         return this.players;
     }
-    
-    public Action getAction() {
+
+    public S38PacketPlayerListItem.Action func_179768_b()
+    {
         return this.action;
     }
-    
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper((Object)this).add("action", (Object)this.action).add("entries", (Object)this.players).toString();
-    }
-    
-    public enum Action
+
+    public String toString()
     {
-        ADD_PLAYER, 
-        UPDATE_GAME_MODE, 
-        UPDATE_LATENCY, 
-        UPDATE_DISPLAY_NAME, 
+        return MoreObjects.toStringHelper(this).add("action", this.action).add("entries", this.players).toString();
+    }
+
+    public static enum Action
+    {
+        ADD_PLAYER,
+        UPDATE_GAME_MODE,
+        UPDATE_LATENCY,
+        UPDATE_DISPLAY_NAME,
         REMOVE_PLAYER;
     }
-    
+
     public class AddPlayerData
     {
         private final int ping;
         private final WorldSettings.GameType gamemode;
         private final GameProfile profile;
         private final IChatComponent displayName;
-        
-        public AddPlayerData(final GameProfile profile, final int pingIn, final WorldSettings.GameType gamemodeIn, final IChatComponent displayNameIn) {
+
+        public AddPlayerData(GameProfile profile, int pingIn, WorldSettings.GameType gamemodeIn, IChatComponent displayNameIn)
+        {
             this.profile = profile;
             this.ping = pingIn;
             this.gamemode = gamemodeIn;
             this.displayName = displayNameIn;
         }
-        
-        public GameProfile getProfile() {
+
+        public GameProfile getProfile()
+        {
             return this.profile;
         }
-        
-        public int getPing() {
+
+        public int getPing()
+        {
             return this.ping;
         }
-        
-        public WorldSettings.GameType getGameMode() {
+
+        public WorldSettings.GameType getGameMode()
+        {
             return this.gamemode;
         }
-        
-        public IChatComponent getDisplayName() {
+
+        public IChatComponent getDisplayName()
+        {
             return this.displayName;
         }
-        
-        @Override
-        public String toString() {
-            return MoreObjects.toStringHelper((Object)this).add("latency", this.ping).add("gameMode", (Object)this.gamemode).add("profile", (Object)this.profile).add("displayName", (Object)((this.displayName == null) ? null : IChatComponent.Serializer.componentToJson(this.displayName))).toString();
+
+        public String toString()
+        {
+            return MoreObjects.toStringHelper(this).add("latency", this.ping).add("gameMode", this.gamemode).add("profile", this.profile).add("displayName", this.displayName == null ? null : IChatComponent.Serializer.componentToJson(this.displayName)).toString();
         }
     }
 }

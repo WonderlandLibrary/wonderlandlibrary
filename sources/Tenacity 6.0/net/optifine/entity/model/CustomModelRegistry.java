@@ -1,22 +1,19 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.entity.model;
 
-import java.util.Set;
-import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.src.Config;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.src.Config;
 
 public class CustomModelRegistry
 {
-    private static Map<String, ModelAdapter> mapModelAdapters;
-    
-    private static Map<String, ModelAdapter> makeMapModelAdapters() {
-        final Map<String, ModelAdapter> map = new LinkedHashMap<String, ModelAdapter>();
+    private static Map<String, ModelAdapter> mapModelAdapters = makeMapModelAdapters();
+
+    private static Map<String, ModelAdapter> makeMapModelAdapters()
+    {
+        Map<String, ModelAdapter> map = new LinkedHashMap();
         addModelAdapter(map, new ModelAdapterArmorStand());
         addModelAdapter(map, new ModelAdapterBat());
         addModelAdapter(map, new ModelAdapterBlaze());
@@ -67,45 +64,55 @@ public class CustomModelRegistry
         addModelAdapter(map, new ModelAdapterSign());
         return map;
     }
-    
-    private static void addModelAdapter(final Map<String, ModelAdapter> map, final ModelAdapter modelAdapter) {
+
+    private static void addModelAdapter(Map<String, ModelAdapter> map, ModelAdapter modelAdapter)
+    {
         addModelAdapter(map, modelAdapter, modelAdapter.getName());
-        final String[] astring = modelAdapter.getAliases();
-        if (astring != null) {
-            for (int i = 0; i < astring.length; ++i) {
-                final String s = astring[i];
+        String[] astring = modelAdapter.getAliases();
+
+        if (astring != null)
+        {
+            for (int i = 0; i < astring.length; ++i)
+            {
+                String s = astring[i];
                 addModelAdapter(map, modelAdapter, s);
             }
         }
-        final ModelBase modelbase = modelAdapter.makeModel();
-        final String[] astring2 = modelAdapter.getModelRendererNames();
-        for (int j = 0; j < astring2.length; ++j) {
-            final String s2 = astring2[j];
-            final ModelRenderer modelrenderer = modelAdapter.getModelRenderer(modelbase, s2);
-            if (modelrenderer == null) {
-                Config.warn("Model renderer not found, model: " + modelAdapter.getName() + ", name: " + s2);
+
+        ModelBase modelbase = modelAdapter.makeModel();
+        String[] astring1 = modelAdapter.getModelRendererNames();
+
+        for (int j = 0; j < astring1.length; ++j)
+        {
+            String s1 = astring1[j];
+            ModelRenderer modelrenderer = modelAdapter.getModelRenderer(modelbase, s1);
+
+            if (modelrenderer == null)
+            {
+                Config.warn("Model renderer not found, model: " + modelAdapter.getName() + ", name: " + s1);
             }
         }
     }
-    
-    private static void addModelAdapter(final Map<String, ModelAdapter> map, final ModelAdapter modelAdapter, final String name) {
-        if (map.containsKey(name)) {
+
+    private static void addModelAdapter(Map<String, ModelAdapter> map, ModelAdapter modelAdapter, String name)
+    {
+        if (map.containsKey(name))
+        {
             Config.warn("Model adapter already registered for id: " + name + ", class: " + modelAdapter.getEntityClass().getName());
         }
+
         map.put(name, modelAdapter);
     }
-    
-    public static ModelAdapter getModelAdapter(final String name) {
-        return CustomModelRegistry.mapModelAdapters.get(name);
+
+    public static ModelAdapter getModelAdapter(String name)
+    {
+        return (ModelAdapter)mapModelAdapters.get(name);
     }
-    
-    public static String[] getModelNames() {
-        final Set<String> set = CustomModelRegistry.mapModelAdapters.keySet();
-        final String[] astring = set.toArray(new String[set.size()]);
+
+    public static String[] getModelNames()
+    {
+        Set<String> set = mapModelAdapters.keySet();
+        String[] astring = (String[])((String[])set.toArray(new String[set.size()]));
         return astring;
-    }
-    
-    static {
-        CustomModelRegistry.mapModelAdapters = makeMapModelAdapters();
     }
 }

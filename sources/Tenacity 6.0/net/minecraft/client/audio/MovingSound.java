@@ -1,22 +1,18 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.audio;
 
 import net.minecraft.util.ResourceLocation;
 
 public abstract class MovingSound extends PositionedSound implements ITickableSound
 {
-    protected boolean donePlaying;
-    
-    protected MovingSound(final ResourceLocation location) {
+    protected boolean donePlaying = false;
+
+    protected MovingSound(ResourceLocation location)
+    {
         super(location);
-        this.donePlaying = false;
     }
-    
-    @Override
-    public boolean isDonePlaying() {
+
+    public boolean isDonePlaying()
+    {
         return this.donePlaying;
     }
 }

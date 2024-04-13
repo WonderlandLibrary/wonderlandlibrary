@@ -1,67 +1,89 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.command.server;
 
-import net.minecraft.command.CommandException;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.MinecraftException;
-import net.minecraft.command.ICommand;
-import net.minecraft.util.IProgressUpdate;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IProgressUpdate;
+import net.minecraft.world.MinecraftException;
+import net.minecraft.world.WorldServer;
 
 public class CommandSaveAll extends CommandBase
 {
-    @Override
-    public String getCommandName() {
+    /**
+     * Gets the name of the command
+     */
+    public String getCommandName()
+    {
         return "save-all";
     }
-    
-    @Override
-    public String getCommandUsage(final ICommandSender sender) {
+
+    /**
+     * Gets the usage string for the command.
+     *  
+     * @param sender The {@link ICommandSender} who is requesting usage details.
+     */
+    public String getCommandUsage(ICommandSender sender)
+    {
         return "commands.save.usage";
     }
-    
-    @Override
-    public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
-        final MinecraftServer minecraftserver = MinecraftServer.getServer();
+
+    /**
+     * Callback when the command is invoked
+     *  
+     * @param sender The {@link ICommandSender sender} who executed the command
+     * @param args The arguments that were passed with the command
+     */
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException
+    {
+        MinecraftServer minecraftserver = MinecraftServer.getServer();
         sender.addChatMessage(new ChatComponentTranslation("commands.save.start", new Object[0]));
-        if (minecraftserver.getConfigurationManager() != null) {
+
+        if (minecraftserver.getConfigurationManager() != null)
+        {
             minecraftserver.getConfigurationManager().saveAllPlayerData();
         }
-        try {
-            for (int i = 0; i < minecraftserver.worldServers.length; ++i) {
-                if (minecraftserver.worldServers[i] != null) {
-                    final WorldServer worldserver = minecraftserver.worldServers[i];
-                    final boolean flag = worldserver.disableLevelSaving;
+
+        try
+        {
+            for (int i = 0; i < minecraftserver.worldServers.length; ++i)
+            {
+                if (minecraftserver.worldServers[i] != null)
+                {
+                    WorldServer worldserver = minecraftserver.worldServers[i];
+                    boolean flag = worldserver.disableLevelSaving;
                     worldserver.disableLevelSaving = false;
-                    worldserver.saveAllChunks(true, null);
+                    worldserver.saveAllChunks(true, (IProgressUpdate)null);
                     worldserver.disableLevelSaving = flag;
                 }
             }
-            if (args.length > 0 && "flush".equals(args[0])) {
+
+            if (args.length > 0 && "flush".equals(args[0]))
+            {
                 sender.addChatMessage(new ChatComponentTranslation("commands.save.flushStart", new Object[0]));
-                for (int j = 0; j < minecraftserver.worldServers.length; ++j) {
-                    if (minecraftserver.worldServers[j] != null) {
-                        final WorldServer worldserver2 = minecraftserver.worldServers[j];
-                        final boolean flag2 = worldserver2.disableLevelSaving;
-                        worldserver2.disableLevelSaving = false;
-                        worldserver2.saveChunkData();
-                        worldserver2.disableLevelSaving = flag2;
+
+                for (int j = 0; j < minecraftserver.worldServers.length; ++j)
+                {
+                    if (minecraftserver.worldServers[j] != null)
+                    {
+                        WorldServer worldserver1 = minecraftserver.worldServers[j];
+                        boolean flag1 = worldserver1.disableLevelSaving;
+                        worldserver1.disableLevelSaving = false;
+                        worldserver1.saveChunkData();
+                        worldserver1.disableLevelSaving = flag1;
                     }
                 }
+
                 sender.addChatMessage(new ChatComponentTranslation("commands.save.flushEnd", new Object[0]));
             }
         }
-        catch (MinecraftException minecraftexception) {
-            CommandBase.notifyOperators(sender, this, "commands.save.failed", minecraftexception.getMessage());
+        catch (MinecraftException minecraftexception)
+        {
+            notifyOperators(sender, this, "commands.save.failed", new Object[] {minecraftexception.getMessage()});
             return;
         }
-        CommandBase.notifyOperators(sender, this, "commands.save.success", new Object[0]);
+
+        notifyOperators(sender, this, "commands.save.success", new Object[0]);
     }
 }

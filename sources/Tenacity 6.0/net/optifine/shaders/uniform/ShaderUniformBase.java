@@ -1,90 +1,104 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.shaders.uniform;
 
+import java.util.Arrays;
 import net.optifine.shaders.Shaders;
 import org.lwjgl.opengl.ARBShaderObjects;
-import java.util.Arrays;
 
 public abstract class ShaderUniformBase
 {
     private String name;
-    private int program;
-    private int[] locations;
+    private int program = 0;
+    private int[] locations = new int[] { -1};
     private static final int LOCATION_UNDEFINED = -1;
     private static final int LOCATION_UNKNOWN = Integer.MIN_VALUE;
-    
-    public ShaderUniformBase(final String name) {
-        this.program = 0;
-        this.locations = new int[] { -1 };
+
+    public ShaderUniformBase(String name)
+    {
         this.name = name;
     }
-    
-    public void setProgram(final int program) {
-        if (this.program != program) {
+
+    public void setProgram(int program)
+    {
+        if (this.program != program)
+        {
             this.program = program;
             this.expandLocations();
             this.onProgramSet(program);
         }
     }
-    
-    private void expandLocations() {
-        if (this.program >= this.locations.length) {
-            final int[] aint = new int[this.program * 2];
+
+    private void expandLocations()
+    {
+        if (this.program >= this.locations.length)
+        {
+            int[] aint = new int[this.program * 2];
             Arrays.fill(aint, Integer.MIN_VALUE);
             System.arraycopy(this.locations, 0, aint, 0, this.locations.length);
             this.locations = aint;
         }
     }
-    
-    protected abstract void onProgramSet(final int p0);
-    
-    public String getName() {
+
+    protected abstract void onProgramSet(int var1);
+
+    public String getName()
+    {
         return this.name;
     }
-    
-    public int getProgram() {
+
+    public int getProgram()
+    {
         return this.program;
     }
-    
-    public int getLocation() {
-        if (this.program <= 0) {
+
+    public int getLocation()
+    {
+        if (this.program <= 0)
+        {
             return -1;
         }
-        int i = this.locations[this.program];
-        if (i == Integer.MIN_VALUE) {
-            i = ARBShaderObjects.glGetUniformLocationARB(this.program, (CharSequence)this.name);
-            this.locations[this.program] = i;
+        else
+        {
+            int i = this.locations[this.program];
+
+            if (i == Integer.MIN_VALUE)
+            {
+                i = ARBShaderObjects.glGetUniformLocationARB(this.program, (CharSequence)this.name);
+                this.locations[this.program] = i;
+            }
+
+            return i;
         }
-        return i;
     }
-    
-    public boolean isDefined() {
+
+    public boolean isDefined()
+    {
         return this.getLocation() >= 0;
     }
-    
-    public void disable() {
+
+    public void disable()
+    {
         this.locations[this.program] = -1;
     }
-    
-    public void reset() {
+
+    public void reset()
+    {
         this.program = 0;
-        this.locations = new int[] { -1 };
+        this.locations = new int[] { -1};
         this.resetValue();
     }
-    
+
     protected abstract void resetValue();
-    
-    protected void checkGLError() {
-        if (Shaders.checkGLError(this.name) != 0) {
+
+    protected void checkGLError()
+    {
+        if (Shaders.checkGLError(this.name) != 0)
+        {
             this.disable();
         }
     }
-    
-    @Override
-    public String toString() {
+
+    public String toString()
+    {
         return this.name;
     }
 }

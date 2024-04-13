@@ -1,10 +1,5 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.util;
 
-import java.util.Iterator;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
@@ -14,68 +9,99 @@ public class ChatComponentScore extends ChatComponentStyle
 {
     private final String name;
     private final String objective;
-    private String value;
-    
-    public ChatComponentScore(final String nameIn, final String objectiveIn) {
-        this.value = "";
+
+    /** The value displayed instead of the real score (may be null) */
+    private String value = "";
+
+    public ChatComponentScore(String nameIn, String objectiveIn)
+    {
         this.name = nameIn;
         this.objective = objectiveIn;
     }
-    
-    public String getName() {
+
+    public String getName()
+    {
         return this.name;
     }
-    
-    public String getObjective() {
+
+    public String getObjective()
+    {
         return this.objective;
     }
-    
-    public void setValue(final String valueIn) {
+
+    /**
+     * Sets the value displayed instead of the real score.
+     *  
+     * @param valueIn The value to display instead
+     */
+    public void setValue(String valueIn)
+    {
         this.value = valueIn;
     }
-    
-    @Override
-    public String getUnformattedTextForChat() {
-        final MinecraftServer minecraftserver = MinecraftServer.getServer();
-        if (minecraftserver != null && minecraftserver.isAnvilFileSet() && StringUtils.isNullOrEmpty(this.value)) {
-            final Scoreboard scoreboard = minecraftserver.worldServerForDimension(0).getScoreboard();
-            final ScoreObjective scoreobjective = scoreboard.getObjective(this.objective);
-            if (scoreboard.entityHasObjective(this.name, scoreobjective)) {
-                final Score score = scoreboard.getValueFromObjective(this.name, scoreobjective);
-                this.setValue(String.format("%d", score.getScorePoints()));
+
+    /**
+     * Gets the text of this component, without any special formatting codes added, for chat.  TODO: why is this two
+     * different methods?
+     */
+    public String getUnformattedTextForChat()
+    {
+        MinecraftServer minecraftserver = MinecraftServer.getServer();
+
+        if (minecraftserver != null && minecraftserver.isAnvilFileSet() && StringUtils.isNullOrEmpty(this.value))
+        {
+            Scoreboard scoreboard = minecraftserver.worldServerForDimension(0).getScoreboard();
+            ScoreObjective scoreobjective = scoreboard.getObjective(this.objective);
+
+            if (scoreboard.entityHasObjective(this.name, scoreobjective))
+            {
+                Score score = scoreboard.getValueFromObjective(this.name, scoreobjective);
+                this.setValue(String.format("%d", new Object[] {Integer.valueOf(score.getScorePoints())}));
             }
-            else {
+            else
+            {
                 this.value = "";
             }
         }
+
         return this.value;
     }
-    
-    @Override
-    public ChatComponentScore createCopy() {
-        final ChatComponentScore chatcomponentscore = new ChatComponentScore(this.name, this.objective);
+
+    /**
+     * Creates a copy of this component.  Almost a deep copy, except the style is shallow-copied.
+     */
+    public ChatComponentScore createCopy()
+    {
+        ChatComponentScore chatcomponentscore = new ChatComponentScore(this.name, this.objective);
         chatcomponentscore.setValue(this.value);
         chatcomponentscore.setChatStyle(this.getChatStyle().createShallowCopy());
-        for (final IChatComponent ichatcomponent : this.getSiblings()) {
+
+        for (IChatComponent ichatcomponent : this.getSiblings())
+        {
             chatcomponentscore.appendSibling(ichatcomponent.createCopy());
         }
+
         return chatcomponentscore;
     }
-    
-    @Override
-    public boolean equals(final Object p_equals_1_) {
-        if (this == p_equals_1_) {
+
+    public boolean equals(Object p_equals_1_)
+    {
+        if (this == p_equals_1_)
+        {
             return true;
         }
-        if (!(p_equals_1_ instanceof ChatComponentScore)) {
+        else if (!(p_equals_1_ instanceof ChatComponentScore))
+        {
             return false;
         }
-        final ChatComponentScore chatcomponentscore = (ChatComponentScore)p_equals_1_;
-        return this.name.equals(chatcomponentscore.name) && this.objective.equals(chatcomponentscore.objective) && super.equals(p_equals_1_);
+        else
+        {
+            ChatComponentScore chatcomponentscore = (ChatComponentScore)p_equals_1_;
+            return this.name.equals(chatcomponentscore.name) && this.objective.equals(chatcomponentscore.objective) && super.equals(p_equals_1_);
+        }
     }
-    
-    @Override
-    public String toString() {
-        return "ScoreComponent{name='" + this.name + '\'' + "objective='" + this.objective + '\'' + ", siblings=" + this.siblings + ", style=" + this.getChatStyle() + '}';
+
+    public String toString()
+    {
+        return "ScoreComponent{name=\'" + this.name + '\'' + "objective=\'" + this.objective + '\'' + ", siblings=" + this.siblings + ", style=" + this.getChatStyle() + '}';
     }
 }

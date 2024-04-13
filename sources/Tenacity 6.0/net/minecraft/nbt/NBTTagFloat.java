@@ -1,92 +1,104 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.nbt;
 
-import net.minecraft.util.MathHelper;
 import java.io.DataInput;
-import java.io.IOException;
 import java.io.DataOutput;
+import java.io.IOException;
+import net.minecraft.util.MathHelper;
 
-public class NBTTagFloat extends NBTPrimitive
+public class NBTTagFloat extends NBTBase.NBTPrimitive
 {
+    /** The float value for the tag. */
     private float data;
-    
-    NBTTagFloat() {
+
+    NBTTagFloat()
+    {
     }
-    
-    public NBTTagFloat(final float data) {
+
+    public NBTTagFloat(float data)
+    {
         this.data = data;
     }
-    
-    @Override
-    void write(final DataOutput output) throws IOException {
+
+    /**
+     * Write the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void write(DataOutput output) throws IOException
+    {
         output.writeFloat(this.data);
     }
-    
-    @Override
-    void read(final DataInput input, final int depth, final NBTSizeTracker sizeTracker) throws IOException {
+
+    void read(DataInput input, int depth, NBTSizeTracker sizeTracker) throws IOException
+    {
         sizeTracker.read(96L);
         this.data = input.readFloat();
     }
-    
-    @Override
-    public byte getId() {
-        return 5;
+
+    /**
+     * Gets the type byte for the tag.
+     */
+    public byte getId()
+    {
+        return (byte)5;
     }
-    
-    @Override
-    public String toString() {
+
+    public String toString()
+    {
         return "" + this.data + "f";
     }
-    
-    @Override
-    public NBTBase copy() {
+
+    /**
+     * Creates a clone of the tag.
+     */
+    public NBTBase copy()
+    {
         return new NBTTagFloat(this.data);
     }
-    
-    @Override
-    public boolean equals(final Object p_equals_1_) {
-        if (super.equals(p_equals_1_)) {
-            final NBTTagFloat nbttagfloat = (NBTTagFloat)p_equals_1_;
+
+    public boolean equals(Object p_equals_1_)
+    {
+        if (super.equals(p_equals_1_))
+        {
+            NBTTagFloat nbttagfloat = (NBTTagFloat)p_equals_1_;
             return this.data == nbttagfloat.data;
         }
-        return false;
+        else
+        {
+            return false;
+        }
     }
-    
-    @Override
-    public int hashCode() {
+
+    public int hashCode()
+    {
         return super.hashCode() ^ Float.floatToIntBits(this.data);
     }
-    
-    @Override
-    public long getLong() {
+
+    public long getLong()
+    {
         return (long)this.data;
     }
-    
-    @Override
-    public int getInt() {
+
+    public int getInt()
+    {
         return MathHelper.floor_float(this.data);
     }
-    
-    @Override
-    public short getShort() {
-        return (short)(MathHelper.floor_float(this.data) & 0xFFFF);
+
+    public short getShort()
+    {
+        return (short)(MathHelper.floor_float(this.data) & 65535);
     }
-    
-    @Override
-    public byte getByte() {
-        return (byte)(MathHelper.floor_float(this.data) & 0xFF);
+
+    public byte getByte()
+    {
+        return (byte)(MathHelper.floor_float(this.data) & 255);
     }
-    
-    @Override
-    public double getDouble() {
-        return this.data;
+
+    public double getDouble()
+    {
+        return (double)this.data;
     }
-    
-    @Override
-    public float getFloat() {
+
+    public float getFloat()
+    {
         return this.data;
     }
 }

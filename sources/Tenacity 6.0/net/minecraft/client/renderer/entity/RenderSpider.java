@@ -1,37 +1,30 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.entity;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.client.renderer.entity.layers.LayerSpiderEyes;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelSpider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.layers.LayerSpiderEyes;
 import net.minecraft.entity.monster.EntitySpider;
+import net.minecraft.util.ResourceLocation;
 
 public class RenderSpider<T extends EntitySpider> extends RenderLiving<T>
 {
-    private static final ResourceLocation spiderTextures;
-    
-    public RenderSpider(final RenderManager renderManagerIn) {
-        super(renderManagerIn, new ModelSpider(), 1.0f);
+    private static final ResourceLocation spiderTextures = new ResourceLocation("textures/entity/spider/spider.png");
+
+    public RenderSpider(RenderManager renderManagerIn)
+    {
+        super(renderManagerIn, new ModelSpider(), 1.0F);
         this.addLayer(new LayerSpiderEyes(this));
     }
-    
-    @Override
-    protected float getDeathMaxRotation(final T entityLivingBaseIn) {
-        return 180.0f;
+
+    protected float getDeathMaxRotation(T entityLivingBaseIn)
+    {
+        return 180.0F;
     }
-    
-    @Override
-    protected ResourceLocation getEntityTexture(final T entity) {
-        return RenderSpider.spiderTextures;
-    }
-    
-    static {
-        spiderTextures = new ResourceLocation("textures/entity/spider/spider.png");
+
+    /**
+     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
+     */
+    protected ResourceLocation getEntityTexture(T entity)
+    {
+        return spiderTextures;
     }
 }

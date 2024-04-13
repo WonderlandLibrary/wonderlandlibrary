@@ -1,45 +1,63 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.command.server;
 
-import net.minecraft.world.WorldServer;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommand;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.WorldServer;
 
 public class CommandSaveOff extends CommandBase
 {
-    @Override
-    public String getCommandName() {
+    /**
+     * Gets the name of the command
+     */
+    public String getCommandName()
+    {
         return "save-off";
     }
-    
-    @Override
-    public String getCommandUsage(final ICommandSender sender) {
+
+    /**
+     * Gets the usage string for the command.
+     *  
+     * @param sender The {@link ICommandSender} who is requesting usage details.
+     */
+    public String getCommandUsage(ICommandSender sender)
+    {
         return "commands.save-off.usage";
     }
-    
-    @Override
-    public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
-        final MinecraftServer minecraftserver = MinecraftServer.getServer();
+
+    /**
+     * Callback when the command is invoked
+     *  
+     * @param sender The {@link ICommandSender sender} who executed the command
+     * @param args The arguments that were passed with the command
+     */
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException
+    {
+        MinecraftServer minecraftserver = MinecraftServer.getServer();
         boolean flag = false;
-        for (int i = 0; i < minecraftserver.worldServers.length; ++i) {
-            if (minecraftserver.worldServers[i] != null) {
-                final WorldServer worldserver = minecraftserver.worldServers[i];
-                if (!worldserver.disableLevelSaving) {
+
+        for (int i = 0; i < minecraftserver.worldServers.length; ++i)
+        {
+            if (minecraftserver.worldServers[i] != null)
+            {
+                WorldServer worldserver = minecraftserver.worldServers[i];
+
+                if (!worldserver.disableLevelSaving)
+                {
                     worldserver.disableLevelSaving = true;
                     flag = true;
                 }
             }
         }
-        if (flag) {
-            CommandBase.notifyOperators(sender, this, "commands.save.disabled", new Object[0]);
-            return;
+
+        if (flag)
+        {
+            notifyOperators(sender, this, "commands.save.disabled", new Object[0]);
         }
-        throw new CommandException("commands.save-off.alreadyOff", new Object[0]);
+        else
+        {
+            throw new CommandException("commands.save-off.alreadyOff", new Object[0]);
+        }
     }
 }

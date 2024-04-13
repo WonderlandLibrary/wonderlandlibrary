@@ -1,18 +1,20 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.item;
 
 public class ItemBook extends Item
 {
-    @Override
-    public boolean isItemTool(final ItemStack stack) {
+    /**
+     * Checks isDamagable and if it cannot be stacked
+     */
+    public boolean isItemTool(ItemStack stack)
+    {
         return stack.stackSize == 1;
     }
-    
-    @Override
-    public int getItemEnchantability() {
+
+    /**
+     * Return the enchantability factor of the item, most of the time is based on material.
+     */
+    public int getItemEnchantability()
+    {
         return 1;
     }
 }

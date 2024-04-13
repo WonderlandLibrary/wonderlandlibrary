@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block.state;
 
 import com.google.common.base.Predicate;
@@ -17,36 +13,47 @@ public class BlockWorldState
     private IBlockState state;
     private TileEntity tileEntity;
     private boolean tileEntityInitialized;
-    
-    public BlockWorldState(final World worldIn, final BlockPos posIn, final boolean p_i46451_3_) {
-        this.world = worldIn;
-        this.pos = posIn;
+
+    public BlockWorldState(World p_i46451_1_, BlockPos p_i46451_2_, boolean p_i46451_3_)
+    {
+        this.world = p_i46451_1_;
+        this.pos = p_i46451_2_;
         this.field_181628_c = p_i46451_3_;
     }
-    
-    public IBlockState getBlockState() {
-        if (this.state == null && (this.field_181628_c || this.world.isBlockLoaded(this.pos))) {
+
+    public IBlockState getBlockState()
+    {
+        if (this.state == null && (this.field_181628_c || this.world.isBlockLoaded(this.pos)))
+        {
             this.state = this.world.getBlockState(this.pos);
         }
+
         return this.state;
     }
-    
-    public TileEntity getTileEntity() {
-        if (this.tileEntity == null && !this.tileEntityInitialized) {
+
+    public TileEntity getTileEntity()
+    {
+        if (this.tileEntity == null && !this.tileEntityInitialized)
+        {
             this.tileEntity = this.world.getTileEntity(this.pos);
             this.tileEntityInitialized = true;
         }
+
         return this.tileEntity;
     }
-    
-    public BlockPos getPos() {
+
+    public BlockPos getPos()
+    {
         return this.pos;
     }
-    
-    public static Predicate<BlockWorldState> hasState(final Predicate<IBlockState> predicatesIn) {
-        return (Predicate<BlockWorldState>)new Predicate<BlockWorldState>() {
-            public boolean apply(final BlockWorldState p_apply_1_) {
-                return p_apply_1_ != null && predicatesIn.apply((Object)p_apply_1_.getBlockState());
+
+    public static Predicate<BlockWorldState> hasState(final Predicate<IBlockState> p_177510_0_)
+    {
+        return new Predicate<BlockWorldState>()
+        {
+            public boolean apply(BlockWorldState p_apply_1_)
+            {
+                return p_apply_1_ != null && p_177510_0_.apply(p_apply_1_.getBlockState());
             }
         };
     }

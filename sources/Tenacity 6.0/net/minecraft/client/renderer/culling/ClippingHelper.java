@@ -1,77 +1,91 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.culling;
 
 public class ClippingHelper
 {
-    public float[][] frustum;
-    public float[] projectionMatrix;
-    public float[] modelviewMatrix;
-    public float[] clippingMatrix;
-    public boolean disabled;
-    
-    public ClippingHelper() {
-        this.frustum = new float[6][4];
-        this.projectionMatrix = new float[16];
-        this.modelviewMatrix = new float[16];
-        this.clippingMatrix = new float[16];
-        this.disabled = false;
-    }
-    
-    private float dot(final float[] p_dot_1_, final float p_dot_2_, final float p_dot_3_, final float p_dot_4_) {
+    public float[][] frustum = new float[6][4];
+    public float[] projectionMatrix = new float[16];
+    public float[] modelviewMatrix = new float[16];
+    public float[] clippingMatrix = new float[16];
+    public boolean disabled = false;
+
+    private float dot(float[] p_dot_1_, float p_dot_2_, float p_dot_3_, float p_dot_4_)
+    {
         return p_dot_1_[0] * p_dot_2_ + p_dot_1_[1] * p_dot_3_ + p_dot_1_[2] * p_dot_4_ + p_dot_1_[3];
     }
-    
-    public boolean isBoxInFrustum(final double p_78553_1_, final double p_78553_3_, final double p_78553_5_, final double p_78553_7_, final double p_78553_9_, final double p_78553_11_) {
-        if (this.disabled) {
+
+    /**
+     * Returns true if the box is inside all 6 clipping planes, otherwise returns false.
+     */
+    public boolean isBoxInFrustum(double p_78553_1_, double p_78553_3_, double p_78553_5_, double p_78553_7_, double p_78553_9_, double p_78553_11_)
+    {
+        if (this.disabled)
+        {
             return true;
         }
-        final float f = (float)p_78553_1_;
-        final float f2 = (float)p_78553_3_;
-        final float f3 = (float)p_78553_5_;
-        final float f4 = (float)p_78553_7_;
-        final float f5 = (float)p_78553_9_;
-        final float f6 = (float)p_78553_11_;
-        for (int i = 0; i < 6; ++i) {
-            final float[] afloat = this.frustum[i];
-            final float f7 = afloat[0];
-            final float f8 = afloat[1];
-            final float f9 = afloat[2];
-            final float f10 = afloat[3];
-            if (f7 * f + f8 * f2 + f9 * f3 + f10 <= 0.0f && f7 * f4 + f8 * f2 + f9 * f3 + f10 <= 0.0f && f7 * f + f8 * f5 + f9 * f3 + f10 <= 0.0f && f7 * f4 + f8 * f5 + f9 * f3 + f10 <= 0.0f && f7 * f + f8 * f2 + f9 * f6 + f10 <= 0.0f && f7 * f4 + f8 * f2 + f9 * f6 + f10 <= 0.0f && f7 * f + f8 * f5 + f9 * f6 + f10 <= 0.0f && f7 * f4 + f8 * f5 + f9 * f6 + f10 <= 0.0f) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    public boolean isBoxInFrustumFully(final double p_isBoxInFrustumFully_1_, final double p_isBoxInFrustumFully_3_, final double p_isBoxInFrustumFully_5_, final double p_isBoxInFrustumFully_7_, final double p_isBoxInFrustumFully_9_, final double p_isBoxInFrustumFully_11_) {
-        if (this.disabled) {
-            return true;
-        }
-        final float f = (float)p_isBoxInFrustumFully_1_;
-        final float f2 = (float)p_isBoxInFrustumFully_3_;
-        final float f3 = (float)p_isBoxInFrustumFully_5_;
-        final float f4 = (float)p_isBoxInFrustumFully_7_;
-        final float f5 = (float)p_isBoxInFrustumFully_9_;
-        final float f6 = (float)p_isBoxInFrustumFully_11_;
-        for (int i = 0; i < 6; ++i) {
-            final float[] afloat = this.frustum[i];
-            final float f7 = afloat[0];
-            final float f8 = afloat[1];
-            final float f9 = afloat[2];
-            final float f10 = afloat[3];
-            if (i < 4) {
-                if (f7 * f + f8 * f2 + f9 * f3 + f10 <= 0.0f || f7 * f4 + f8 * f2 + f9 * f3 + f10 <= 0.0f || f7 * f + f8 * f5 + f9 * f3 + f10 <= 0.0f || f7 * f4 + f8 * f5 + f9 * f3 + f10 <= 0.0f || f7 * f + f8 * f2 + f9 * f6 + f10 <= 0.0f || f7 * f4 + f8 * f2 + f9 * f6 + f10 <= 0.0f || f7 * f + f8 * f5 + f9 * f6 + f10 <= 0.0f || f7 * f4 + f8 * f5 + f9 * f6 + f10 <= 0.0f) {
+        else
+        {
+            float f = (float)p_78553_1_;
+            float f1 = (float)p_78553_3_;
+            float f2 = (float)p_78553_5_;
+            float f3 = (float)p_78553_7_;
+            float f4 = (float)p_78553_9_;
+            float f5 = (float)p_78553_11_;
+
+            for (int i = 0; i < 6; ++i)
+            {
+                float[] afloat = this.frustum[i];
+                float f6 = afloat[0];
+                float f7 = afloat[1];
+                float f8 = afloat[2];
+                float f9 = afloat[3];
+
+                if (f6 * f + f7 * f1 + f8 * f2 + f9 <= 0.0F && f6 * f3 + f7 * f1 + f8 * f2 + f9 <= 0.0F && f6 * f + f7 * f4 + f8 * f2 + f9 <= 0.0F && f6 * f3 + f7 * f4 + f8 * f2 + f9 <= 0.0F && f6 * f + f7 * f1 + f8 * f5 + f9 <= 0.0F && f6 * f3 + f7 * f1 + f8 * f5 + f9 <= 0.0F && f6 * f + f7 * f4 + f8 * f5 + f9 <= 0.0F && f6 * f3 + f7 * f4 + f8 * f5 + f9 <= 0.0F)
+                {
                     return false;
                 }
             }
-            else if (f7 * f + f8 * f2 + f9 * f3 + f10 <= 0.0f && f7 * f4 + f8 * f2 + f9 * f3 + f10 <= 0.0f && f7 * f + f8 * f5 + f9 * f3 + f10 <= 0.0f && f7 * f4 + f8 * f5 + f9 * f3 + f10 <= 0.0f && f7 * f + f8 * f2 + f9 * f6 + f10 <= 0.0f && f7 * f4 + f8 * f2 + f9 * f6 + f10 <= 0.0f && f7 * f + f8 * f5 + f9 * f6 + f10 <= 0.0f && f7 * f4 + f8 * f5 + f9 * f6 + f10 <= 0.0f) {
-                return false;
-            }
+
+            return true;
         }
-        return true;
+    }
+
+    public boolean isBoxInFrustumFully(double p_isBoxInFrustumFully_1_, double p_isBoxInFrustumFully_3_, double p_isBoxInFrustumFully_5_, double p_isBoxInFrustumFully_7_, double p_isBoxInFrustumFully_9_, double p_isBoxInFrustumFully_11_)
+    {
+        if (this.disabled)
+        {
+            return true;
+        }
+        else
+        {
+            float f = (float)p_isBoxInFrustumFully_1_;
+            float f1 = (float)p_isBoxInFrustumFully_3_;
+            float f2 = (float)p_isBoxInFrustumFully_5_;
+            float f3 = (float)p_isBoxInFrustumFully_7_;
+            float f4 = (float)p_isBoxInFrustumFully_9_;
+            float f5 = (float)p_isBoxInFrustumFully_11_;
+
+            for (int i = 0; i < 6; ++i)
+            {
+                float[] afloat = this.frustum[i];
+                float f6 = afloat[0];
+                float f7 = afloat[1];
+                float f8 = afloat[2];
+                float f9 = afloat[3];
+
+                if (i < 4)
+                {
+                    if (f6 * f + f7 * f1 + f8 * f2 + f9 <= 0.0F || f6 * f3 + f7 * f1 + f8 * f2 + f9 <= 0.0F || f6 * f + f7 * f4 + f8 * f2 + f9 <= 0.0F || f6 * f3 + f7 * f4 + f8 * f2 + f9 <= 0.0F || f6 * f + f7 * f1 + f8 * f5 + f9 <= 0.0F || f6 * f3 + f7 * f1 + f8 * f5 + f9 <= 0.0F || f6 * f + f7 * f4 + f8 * f5 + f9 <= 0.0F || f6 * f3 + f7 * f4 + f8 * f5 + f9 <= 0.0F)
+                    {
+                        return false;
+                    }
+                }
+                else if (f6 * f + f7 * f1 + f8 * f2 + f9 <= 0.0F && f6 * f3 + f7 * f1 + f8 * f2 + f9 <= 0.0F && f6 * f + f7 * f4 + f8 * f2 + f9 <= 0.0F && f6 * f3 + f7 * f4 + f8 * f2 + f9 <= 0.0F && f6 * f + f7 * f1 + f8 * f5 + f9 <= 0.0F && f6 * f3 + f7 * f1 + f8 * f5 + f9 <= 0.0F && f6 * f + f7 * f4 + f8 * f5 + f9 <= 0.0F && f6 * f3 + f7 * f4 + f8 * f5 + f9 <= 0.0F)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }

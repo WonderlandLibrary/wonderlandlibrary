@@ -1,104 +1,122 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.resources;
 
-import java.util.List;
-import java.util.Enumeration;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipEntry;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.File;
 import java.util.zip.ZipFile;
-import com.google.common.base.Splitter;
-import java.io.Closeable;
 
 public class FileResourcePack extends AbstractResourcePack implements Closeable
 {
-    public static final Splitter entryNameSplitter;
+    public static final Splitter entryNameSplitter = Splitter.on('/').omitEmptyStrings().limit(3);
     private ZipFile resourcePackZipFile;
-    
-    public FileResourcePack(final File resourcePackFileIn) {
+
+    public FileResourcePack(File resourcePackFileIn)
+    {
         super(resourcePackFileIn);
     }
-    
-    private ZipFile getResourcePackZipFile() throws IOException {
-        if (this.resourcePackZipFile == null) {
+
+    private ZipFile getResourcePackZipFile() throws IOException
+    {
+        if (this.resourcePackZipFile == null)
+        {
             this.resourcePackZipFile = new ZipFile(this.resourcePackFile);
         }
+
         return this.resourcePackZipFile;
     }
-    
-    @Override
-    protected InputStream getInputStreamByName(final String name) throws IOException {
-        final ZipFile zipfile = this.getResourcePackZipFile();
-        final ZipEntry zipentry = zipfile.getEntry(name);
-        if (zipentry == null) {
+
+    protected InputStream getInputStreamByName(String name) throws IOException
+    {
+        ZipFile zipfile = this.getResourcePackZipFile();
+        ZipEntry zipentry = zipfile.getEntry(name);
+
+        if (zipentry == null)
+        {
             throw new ResourcePackFileNotFoundException(this.resourcePackFile, name);
         }
-        return zipfile.getInputStream(zipentry);
+        else
+        {
+            return zipfile.getInputStream(zipentry);
+        }
     }
-    
-    public boolean hasResourceName(final String name) {
-        try {
+
+    public boolean hasResourceName(String name)
+    {
+        try
+        {
             return this.getResourcePackZipFile().getEntry(name) != null;
         }
-        catch (IOException var3) {
+        catch (IOException var3)
+        {
             return false;
         }
     }
-    
-    @Override
-    public Set<String> getResourceDomains() {
+
+    public Set<String> getResourceDomains()
+    {
         ZipFile zipfile;
-        try {
+
+        try
+        {
             zipfile = this.getResourcePackZipFile();
         }
-        catch (IOException var8) {
-            return Collections.emptySet();
+        catch (IOException var8)
+        {
+            return Collections.<String>emptySet();
         }
-        final Enumeration<? extends ZipEntry> enumeration = zipfile.entries();
-        final Set<String> set = (Set<String>)Sets.newHashSet();
-        while (enumeration.hasMoreElements()) {
-            final ZipEntry zipentry = (ZipEntry)enumeration.nextElement();
-            final String s = zipentry.getName();
-            if (s.startsWith("assets/")) {
-                final List<String> list = (List<String>)Lists.newArrayList(FileResourcePack.entryNameSplitter.split((CharSequence)s));
-                if (list.size() <= 1) {
-                    continue;
-                }
-                final String s2 = list.get(1);
-                if (!s2.equals(s2.toLowerCase())) {
-                    this.logNameNotLowercase(s2);
-                }
-                else {
-                    set.add(s2);
+
+        Enumeration <? extends ZipEntry > enumeration = zipfile.entries();
+        Set<String> set = Sets.<String>newHashSet();
+
+        while (enumeration.hasMoreElements())
+        {
+            ZipEntry zipentry = (ZipEntry)enumeration.nextElement();
+            String s = zipentry.getName();
+
+            if (s.startsWith("assets/"))
+            {
+                List<String> list = Lists.newArrayList(entryNameSplitter.split(s));
+
+                if (list.size() > 1)
+                {
+                    String s1 = (String)list.get(1);
+
+                    if (!s1.equals(s1.toLowerCase()))
+                    {
+                        this.logNameNotLowercase(s1);
+                    }
+                    else
+                    {
+                        set.add(s1);
+                    }
                 }
             }
         }
+
         return set;
     }
-    
-    @Override
-    protected void finalize() throws Throwable {
+
+    protected void finalize() throws Throwable
+    {
         this.close();
         super.finalize();
     }
-    
-    @Override
-    public void close() throws IOException {
-        if (this.resourcePackZipFile != null) {
+
+    public void close() throws IOException
+    {
+        if (this.resourcePackZipFile != null)
+        {
             this.resourcePackZipFile.close();
             this.resourcePackZipFile = null;
         }
-    }
-    
-    static {
-        entryNameSplitter = Splitter.on('/').omitEmptyStrings().limit(3);
     }
 }

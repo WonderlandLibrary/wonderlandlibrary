@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.block.model;
 
 import java.util.Arrays;
@@ -10,61 +6,66 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 public class BreakingFour extends BakedQuad
 {
     private final TextureAtlasSprite texture;
-    
-    public BreakingFour(final BakedQuad quad, final TextureAtlasSprite textureIn) {
-        super(Arrays.copyOf(quad.getVertexData(), quad.getVertexData().length), quad.tintIndex, FaceBakery.getFacingFromVertexData(quad.getVertexData()));
+
+    public BreakingFour(BakedQuad p_i46217_1_, TextureAtlasSprite textureIn)
+    {
+        super(Arrays.copyOf(p_i46217_1_.getVertexData(), p_i46217_1_.getVertexData().length), p_i46217_1_.tintIndex, FaceBakery.getFacingFromVertexData(p_i46217_1_.getVertexData()));
         this.texture = textureIn;
-        this.remapQuad();
+        this.func_178217_e();
         this.fixVertexData();
     }
-    
-    private void remapQuad() {
-        for (int i = 0; i < 4; ++i) {
-            this.remapVert(i);
+
+    private void func_178217_e()
+    {
+        for (int i = 0; i < 4; ++i)
+        {
+            this.func_178216_a(i);
         }
     }
-    
-    private void remapVert(final int vertex) {
-        final int i = this.vertexData.length / 4;
-        final int j = i * vertex;
-        final float f = Float.intBitsToFloat(this.vertexData[j]);
-        final float f2 = Float.intBitsToFloat(this.vertexData[j + 1]);
-        final float f3 = Float.intBitsToFloat(this.vertexData[j + 2]);
-        float f4 = 0.0f;
-        float f5 = 0.0f;
-        switch (this.face) {
-            case DOWN: {
-                f4 = f * 16.0f;
-                f5 = (1.0f - f3) * 16.0f;
+
+    private void func_178216_a(int p_178216_1_)
+    {
+        int i = this.vertexData.length / 4;
+        int j = i * p_178216_1_;
+        float f = Float.intBitsToFloat(this.vertexData[j]);
+        float f1 = Float.intBitsToFloat(this.vertexData[j + 1]);
+        float f2 = Float.intBitsToFloat(this.vertexData[j + 2]);
+        float f3 = 0.0F;
+        float f4 = 0.0F;
+
+        switch (this.face)
+        {
+            case DOWN:
+                f3 = f * 16.0F;
+                f4 = (1.0F - f2) * 16.0F;
                 break;
-            }
-            case UP: {
-                f4 = f * 16.0f;
-                f5 = f3 * 16.0f;
+
+            case UP:
+                f3 = f * 16.0F;
+                f4 = f2 * 16.0F;
                 break;
-            }
-            case NORTH: {
-                f4 = (1.0f - f) * 16.0f;
-                f5 = (1.0f - f2) * 16.0f;
+
+            case NORTH:
+                f3 = (1.0F - f) * 16.0F;
+                f4 = (1.0F - f1) * 16.0F;
                 break;
-            }
-            case SOUTH: {
-                f4 = f * 16.0f;
-                f5 = (1.0f - f2) * 16.0f;
+
+            case SOUTH:
+                f3 = f * 16.0F;
+                f4 = (1.0F - f1) * 16.0F;
                 break;
-            }
-            case WEST: {
-                f4 = f3 * 16.0f;
-                f5 = (1.0f - f2) * 16.0f;
+
+            case WEST:
+                f3 = f2 * 16.0F;
+                f4 = (1.0F - f1) * 16.0F;
                 break;
-            }
-            case EAST: {
-                f4 = (1.0f - f3) * 16.0f;
-                f5 = (1.0f - f2) * 16.0f;
-                break;
-            }
+
+            case EAST:
+                f3 = (1.0F - f2) * 16.0F;
+                f4 = (1.0F - f1) * 16.0F;
         }
-        this.vertexData[j + 4] = Float.floatToRawIntBits(this.texture.getInterpolatedU(f4));
-        this.vertexData[j + 4 + 1] = Float.floatToRawIntBits(this.texture.getInterpolatedV(f5));
+
+        this.vertexData[j + 4] = Float.floatToRawIntBits(this.texture.getInterpolatedU((double)f3));
+        this.vertexData[j + 4 + 1] = Float.floatToRawIntBits(this.texture.getInterpolatedV((double)f4));
     }
 }

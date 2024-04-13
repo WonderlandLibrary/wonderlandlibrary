@@ -1,50 +1,67 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.entity.ai;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityTameable;
 
 public class EntityAISit extends EntityAIBase
 {
     private EntityTameable theEntity;
+
+    /** If the EntityTameable is sitting. */
     private boolean isSitting;
-    
-    public EntityAISit(final EntityTameable entityIn) {
+
+    public EntityAISit(EntityTameable entityIn)
+    {
         this.theEntity = entityIn;
         this.setMutexBits(5);
     }
-    
-    @Override
-    public boolean shouldExecute() {
-        if (!this.theEntity.isTamed()) {
+
+    /**
+     * Returns whether the EntityAIBase should begin execution.
+     */
+    public boolean shouldExecute()
+    {
+        if (!this.theEntity.isTamed())
+        {
             return false;
         }
-        if (this.theEntity.isInWater()) {
+        else if (this.theEntity.isInWater())
+        {
             return false;
         }
-        if (!this.theEntity.onGround) {
+        else if (!this.theEntity.onGround)
+        {
             return false;
         }
-        final EntityLivingBase entitylivingbase = this.theEntity.getOwner();
-        return entitylivingbase == null || ((this.theEntity.getDistanceSqToEntity(entitylivingbase) >= 144.0 || entitylivingbase.getAITarget() == null) && this.isSitting);
+        else
+        {
+            EntityLivingBase entitylivingbase = this.theEntity.getOwner();
+            return entitylivingbase == null ? true : (this.theEntity.getDistanceSqToEntity(entitylivingbase) < 144.0D && entitylivingbase.getAITarget() != null ? false : this.isSitting);
+        }
     }
-    
-    @Override
-    public void startExecuting() {
+
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
+    {
         this.theEntity.getNavigator().clearPathEntity();
         this.theEntity.setSitting(true);
     }
-    
-    @Override
-    public void resetTask() {
+
+    /**
+     * Resets the task
+     */
+    public void resetTask()
+    {
         this.theEntity.setSitting(false);
     }
-    
-    public void setSitting(final boolean sitting) {
+
+    /**
+     * Sets the sitting flag.
+     */
+    public void setSitting(boolean sitting)
+    {
         this.isSitting = sitting;
     }
 }

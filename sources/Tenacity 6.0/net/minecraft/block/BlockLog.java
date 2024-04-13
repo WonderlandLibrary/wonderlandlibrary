@@ -1,92 +1,94 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.EnumFacing;
-import java.util.Iterator;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.world.World;
 
 public abstract class BlockLog extends BlockRotatedPillar
 {
-    public static final PropertyEnum<EnumAxis> LOG_AXIS;
-    
-    public BlockLog() {
+    public static final PropertyEnum<BlockLog.EnumAxis> LOG_AXIS = PropertyEnum.<BlockLog.EnumAxis>create("axis", BlockLog.EnumAxis.class);
+
+    public BlockLog()
+    {
         super(Material.wood);
         this.setCreativeTab(CreativeTabs.tabBlock);
-        this.setHardness(2.0f);
-        this.setStepSound(BlockLog.soundTypeWood);
+        this.setHardness(2.0F);
+        this.setStepSound(soundTypeWood);
     }
-    
-    @Override
-    public void breakBlock(final World worldIn, final BlockPos pos, final IBlockState state) {
-        final int i = 4;
-        final int j = i + 1;
-        if (worldIn.isAreaLoaded(pos.add(-j, -j, -j), pos.add(j, j, j))) {
-            for (final BlockPos blockpos : BlockPos.getAllInBox(pos.add(-i, -i, -i), pos.add(i, i, i))) {
-                final IBlockState iblockstate = worldIn.getBlockState(blockpos);
-                if (iblockstate.getBlock().getMaterial() == Material.leaves && !iblockstate.getValue((IProperty<Boolean>)BlockLeaves.CHECK_DECAY)) {
-                    worldIn.setBlockState(blockpos, iblockstate.withProperty((IProperty<Comparable>)BlockLeaves.CHECK_DECAY, true), 4);
+
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+        int i = 4;
+        int j = i + 1;
+
+        if (worldIn.isAreaLoaded(pos.add(-j, -j, -j), pos.add(j, j, j)))
+        {
+            for (BlockPos blockpos : BlockPos.getAllInBox(pos.add(-i, -i, -i), pos.add(i, i, i)))
+            {
+                IBlockState iblockstate = worldIn.getBlockState(blockpos);
+
+                if (iblockstate.getBlock().getMaterial() == Material.leaves && !((Boolean)iblockstate.getValue(BlockLeaves.CHECK_DECAY)).booleanValue())
+                {
+                    worldIn.setBlockState(blockpos, iblockstate.withProperty(BlockLeaves.CHECK_DECAY, Boolean.valueOf(true)), 4);
                 }
             }
         }
     }
-    
-    @Override
-    public IBlockState onBlockPlaced(final World worldIn, final BlockPos pos, final EnumFacing facing, final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer) {
-        return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(BlockLog.LOG_AXIS, EnumAxis.fromFacingAxis(facing.getAxis()));
-    }
-    
-    static {
-        LOG_AXIS = PropertyEnum.create("axis", EnumAxis.class);
-    }
-    
-    public enum EnumAxis implements IStringSerializable
+
+    /**
+     * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
+     * IBlockstate
+     */
+    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
-        X("x"), 
-        Y("y"), 
-        Z("z"), 
+        return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(LOG_AXIS, BlockLog.EnumAxis.fromFacingAxis(facing.getAxis()));
+    }
+
+    public static enum EnumAxis implements IStringSerializable
+    {
+        X("x"),
+        Y("y"),
+        Z("z"),
         NONE("none");
-        
+
         private final String name;
-        
-        private EnumAxis(final String name) {
+
+        private EnumAxis(String name)
+        {
             this.name = name;
         }
-        
-        @Override
-        public String toString() {
+
+        public String toString()
+        {
             return this.name;
         }
-        
-        public static EnumAxis fromFacingAxis(final EnumFacing.Axis axis) {
-            switch (axis) {
-                case X: {
-                    return EnumAxis.X;
-                }
-                case Y: {
-                    return EnumAxis.Y;
-                }
-                case Z: {
-                    return EnumAxis.Z;
-                }
-                default: {
-                    return EnumAxis.NONE;
-                }
+
+        public static BlockLog.EnumAxis fromFacingAxis(EnumFacing.Axis axis)
+        {
+            switch (axis)
+            {
+                case X:
+                    return X;
+
+                case Y:
+                    return Y;
+
+                case Z:
+                    return Z;
+
+                default:
+                    return NONE;
             }
         }
-        
-        @Override
-        public String getName() {
+
+        public String getName()
+        {
             return this.name;
         }
     }

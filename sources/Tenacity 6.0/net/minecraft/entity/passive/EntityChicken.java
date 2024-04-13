@@ -1,32 +1,24 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.entity.passive;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.item.ItemStack;
-import net.minecraft.entity.EntityAgeable;
-import net.minecraft.item.Item;
 import net.minecraft.block.Block;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
+import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIFollowParent;
 import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.ai.EntityAIMate;
+import net.minecraft.entity.ai.EntityAIPanic;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAITempt;
+import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIFollowParent;
-import net.minecraft.entity.ai.EntityAITempt;
 import net.minecraft.init.Items;
-import net.minecraft.entity.ai.EntityAIMate;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.ai.EntityAIPanic;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class EntityChicken extends EntityAnimal
@@ -35,155 +27,217 @@ public class EntityChicken extends EntityAnimal
     public float destPos;
     public float field_70884_g;
     public float field_70888_h;
-    public float wingRotDelta;
+    public float wingRotDelta = 1.0F;
+
+    /** The time until the next egg is spawned. */
     public int timeUntilNextEgg;
     public boolean chickenJockey;
-    
-    public EntityChicken(final World worldIn) {
+
+    public EntityChicken(World worldIn)
+    {
         super(worldIn);
-        this.wingRotDelta = 1.0f;
-        this.setSize(0.4f, 0.7f);
+        this.setSize(0.4F, 0.7F);
         this.timeUntilNextEgg = this.rand.nextInt(6000) + 6000;
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(1, new EntityAIPanic(this, 1.4));
-        this.tasks.addTask(2, new EntityAIMate(this, 1.0));
-        this.tasks.addTask(3, new EntityAITempt(this, 1.0, Items.wheat_seeds, false));
-        this.tasks.addTask(4, new EntityAIFollowParent(this, 1.1));
-        this.tasks.addTask(5, new EntityAIWander(this, 1.0));
-        this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0f));
+        this.tasks.addTask(1, new EntityAIPanic(this, 1.4D));
+        this.tasks.addTask(2, new EntityAIMate(this, 1.0D));
+        this.tasks.addTask(3, new EntityAITempt(this, 1.0D, Items.wheat_seeds, false));
+        this.tasks.addTask(4, new EntityAIFollowParent(this, 1.1D));
+        this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
         this.tasks.addTask(7, new EntityAILookIdle(this));
     }
-    
-    @Override
-    public float getEyeHeight() {
+
+    public float getEyeHeight()
+    {
         return this.height;
     }
-    
-    @Override
-    protected void applyEntityAttributes() {
+
+    protected void applyEntityAttributes()
+    {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(4.0);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(4.0D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
     }
-    
-    @Override
-    public void onLivingUpdate() {
+
+    /**
+     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+     * use this to react to sunlight and start to burn.
+     */
+    public void onLivingUpdate()
+    {
         super.onLivingUpdate();
         this.field_70888_h = this.wingRotation;
         this.field_70884_g = this.destPos;
-        this.destPos += (float)((this.onGround ? -1 : 4) * 0.3);
-        this.destPos = MathHelper.clamp_float(this.destPos, 0.0f, 1.0f);
-        if (!this.onGround && this.wingRotDelta < 1.0f) {
-            this.wingRotDelta = 1.0f;
+        this.destPos = (float)((double)this.destPos + (double)(this.onGround ? -1 : 4) * 0.3D);
+        this.destPos = MathHelper.clamp_float(this.destPos, 0.0F, 1.0F);
+
+        if (!this.onGround && this.wingRotDelta < 1.0F)
+        {
+            this.wingRotDelta = 1.0F;
         }
-        this.wingRotDelta *= (float)0.9;
-        if (!this.onGround && this.motionY < 0.0) {
-            this.motionY *= 0.6;
+
+        this.wingRotDelta = (float)((double)this.wingRotDelta * 0.9D);
+
+        if (!this.onGround && this.motionY < 0.0D)
+        {
+            this.motionY *= 0.6D;
         }
-        this.wingRotation += this.wingRotDelta * 2.0f;
-        if (!this.worldObj.isRemote && !this.isChild() && !this.isChickenJockey() && --this.timeUntilNextEgg <= 0) {
-            this.playSound("mob.chicken.plop", 1.0f, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 1.0f);
+
+        this.wingRotation += this.wingRotDelta * 2.0F;
+
+        if (!this.worldObj.isRemote && !this.isChild() && !this.isChickenJockey() && --this.timeUntilNextEgg <= 0)
+        {
+            this.playSound("mob.chicken.plop", 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
             this.dropItem(Items.egg, 1);
             this.timeUntilNextEgg = this.rand.nextInt(6000) + 6000;
         }
     }
-    
-    @Override
-    public void fall(final float distance, final float damageMultiplier) {
+
+    public void fall(float distance, float damageMultiplier)
+    {
     }
-    
-    @Override
-    protected String getLivingSound() {
+
+    /**
+     * Returns the sound this mob makes while it's alive.
+     */
+    protected String getLivingSound()
+    {
         return "mob.chicken.say";
     }
-    
-    @Override
-    protected String getHurtSound() {
+
+    /**
+     * Returns the sound this mob makes when it is hurt.
+     */
+    protected String getHurtSound()
+    {
         return "mob.chicken.hurt";
     }
-    
-    @Override
-    protected String getDeathSound() {
+
+    /**
+     * Returns the sound this mob makes on death.
+     */
+    protected String getDeathSound()
+    {
         return "mob.chicken.hurt";
     }
-    
-    @Override
-    protected void playStepSound(final BlockPos pos, final Block blockIn) {
-        this.playSound("mob.chicken.step", 0.15f, 1.0f);
+
+    protected void playStepSound(BlockPos pos, Block blockIn)
+    {
+        this.playSound("mob.chicken.step", 0.15F, 1.0F);
     }
-    
-    @Override
-    protected Item getDropItem() {
+
+    protected Item getDropItem()
+    {
         return Items.feather;
     }
-    
-    @Override
-    protected void dropFewItems(final boolean wasRecentlyHit, final int lootingModifier) {
-        for (int i = this.rand.nextInt(3) + this.rand.nextInt(1 + lootingModifier), j = 0; j < i; ++j) {
+
+    /**
+     * Drop 0-2 items of this living's type
+     */
+    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
+    {
+        int i = this.rand.nextInt(3) + this.rand.nextInt(1 + p_70628_2_);
+
+        for (int j = 0; j < i; ++j)
+        {
             this.dropItem(Items.feather, 1);
         }
-        if (this.isBurning()) {
+
+        if (this.isBurning())
+        {
             this.dropItem(Items.cooked_chicken, 1);
         }
-        else {
+        else
+        {
             this.dropItem(Items.chicken, 1);
         }
     }
-    
-    @Override
-    public EntityChicken createChild(final EntityAgeable ageable) {
+
+    public EntityChicken createChild(EntityAgeable ageable)
+    {
         return new EntityChicken(this.worldObj);
     }
-    
-    @Override
-    public boolean isBreedingItem(final ItemStack stack) {
+
+    /**
+     * Checks if the parameter is an item which this animal can be fed to breed it (wheat, carrots or seeds depending on
+     * the animal type)
+     */
+    public boolean isBreedingItem(ItemStack stack)
+    {
         return stack != null && stack.getItem() == Items.wheat_seeds;
     }
-    
-    @Override
-    public void readEntityFromNBT(final NBTTagCompound tagCompund) {
+
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    public void readEntityFromNBT(NBTTagCompound tagCompund)
+    {
         super.readEntityFromNBT(tagCompund);
         this.chickenJockey = tagCompund.getBoolean("IsChickenJockey");
-        if (tagCompund.hasKey("EggLayTime")) {
+
+        if (tagCompund.hasKey("EggLayTime"))
+        {
             this.timeUntilNextEgg = tagCompund.getInteger("EggLayTime");
         }
     }
-    
-    @Override
-    protected int getExperiencePoints(final EntityPlayer player) {
+
+    /**
+     * Get the experience points the entity currently has.
+     */
+    protected int getExperiencePoints(EntityPlayer player)
+    {
         return this.isChickenJockey() ? 10 : super.getExperiencePoints(player);
     }
-    
-    @Override
-    public void writeEntityToNBT(final NBTTagCompound tagCompound) {
+
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    public void writeEntityToNBT(NBTTagCompound tagCompound)
+    {
         super.writeEntityToNBT(tagCompound);
         tagCompound.setBoolean("IsChickenJockey", this.chickenJockey);
         tagCompound.setInteger("EggLayTime", this.timeUntilNextEgg);
     }
-    
-    @Override
-    protected boolean canDespawn() {
+
+    /**
+     * Determines if an entity can be despawned, used on idle far away entities
+     */
+    protected boolean canDespawn()
+    {
         return this.isChickenJockey() && this.riddenByEntity == null;
     }
-    
-    @Override
-    public void updateRiderPosition() {
+
+    public void updateRiderPosition()
+    {
         super.updateRiderPosition();
-        final float f = MathHelper.sin(this.renderYawOffset * 3.1415927f / 180.0f);
-        final float f2 = MathHelper.cos(this.renderYawOffset * 3.1415927f / 180.0f);
-        final float f3 = 0.1f;
-        final float f4 = 0.0f;
-        this.riddenByEntity.setPosition(this.posX + f3 * f, this.posY + this.height * 0.5f + this.riddenByEntity.getYOffset() + f4, this.posZ - f3 * f2);
-        if (this.riddenByEntity instanceof EntityLivingBase) {
+        float f = MathHelper.sin(this.renderYawOffset * (float)Math.PI / 180.0F);
+        float f1 = MathHelper.cos(this.renderYawOffset * (float)Math.PI / 180.0F);
+        float f2 = 0.1F;
+        float f3 = 0.0F;
+        this.riddenByEntity.setPosition(this.posX + (double)(f2 * f), this.posY + (double)(this.height * 0.5F) + this.riddenByEntity.getYOffset() + (double)f3, this.posZ - (double)(f2 * f1));
+
+        if (this.riddenByEntity instanceof EntityLivingBase)
+        {
             ((EntityLivingBase)this.riddenByEntity).renderYawOffset = this.renderYawOffset;
         }
     }
-    
-    public boolean isChickenJockey() {
+
+    /**
+     * Determines if this chicken is a jokey with a zombie riding it.
+     */
+    public boolean isChickenJockey()
+    {
         return this.chickenJockey;
     }
-    
-    public void setChickenJockey(final boolean jockey) {
+
+    /**
+     * Sets whether this chicken is a jockey or not.
+     *  
+     * @param jockey Whether this chicken is a jockey or not
+     */
+    public void setChickenJockey(boolean jockey)
+    {
         this.chickenJockey = jockey;
     }
 }

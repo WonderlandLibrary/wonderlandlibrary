@@ -1,133 +1,160 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
 import com.google.common.base.Predicate;
-import net.minecraft.stats.StatList;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.block.state.BlockState;
 import java.util.List;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.init.Items;
-import net.minecraft.world.World;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.ColorizerFoliage;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.ColorizerFoliage;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public class BlockOldLeaf extends BlockLeaves
 {
-    public static final PropertyEnum<BlockPlanks.EnumType> VARIANT;
-    
-    public BlockOldLeaf() {
-        this.setDefaultState(this.blockState.getBaseState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.OAK).withProperty((IProperty<Comparable>)BlockOldLeaf.CHECK_DECAY, true).withProperty((IProperty<Comparable>)BlockOldLeaf.DECAYABLE, true));
+    public static final PropertyEnum<BlockPlanks.EnumType> VARIANT = PropertyEnum.<BlockPlanks.EnumType>create("variant", BlockPlanks.EnumType.class, new Predicate<BlockPlanks.EnumType>()
+    {
+        public boolean apply(BlockPlanks.EnumType p_apply_1_)
+        {
+            return p_apply_1_.getMetadata() < 4;
+        }
+    });
+
+    public BlockOldLeaf()
+    {
+        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockPlanks.EnumType.OAK).withProperty(CHECK_DECAY, Boolean.valueOf(true)).withProperty(DECAYABLE, Boolean.valueOf(true)));
     }
-    
-    @Override
-    public int getRenderColor(final IBlockState state) {
-        if (state.getBlock() != this) {
+
+    public int getRenderColor(IBlockState state)
+    {
+        if (state.getBlock() != this)
+        {
             return super.getRenderColor(state);
         }
-        final BlockPlanks.EnumType blockplanks$enumtype = state.getValue(BlockOldLeaf.VARIANT);
-        return (blockplanks$enumtype == BlockPlanks.EnumType.SPRUCE) ? ColorizerFoliage.getFoliageColorPine() : ((blockplanks$enumtype == BlockPlanks.EnumType.BIRCH) ? ColorizerFoliage.getFoliageColorBirch() : super.getRenderColor(state));
+        else
+        {
+            BlockPlanks.EnumType blockplanks$enumtype = (BlockPlanks.EnumType)state.getValue(VARIANT);
+            return blockplanks$enumtype == BlockPlanks.EnumType.SPRUCE ? ColorizerFoliage.getFoliageColorPine() : (blockplanks$enumtype == BlockPlanks.EnumType.BIRCH ? ColorizerFoliage.getFoliageColorBirch() : super.getRenderColor(state));
+        }
     }
-    
-    @Override
-    public int colorMultiplier(final IBlockAccess worldIn, final BlockPos pos, final int renderPass) {
-        final IBlockState iblockstate = worldIn.getBlockState(pos);
-        if (iblockstate.getBlock() == this) {
-            final BlockPlanks.EnumType blockplanks$enumtype = iblockstate.getValue(BlockOldLeaf.VARIANT);
-            if (blockplanks$enumtype == BlockPlanks.EnumType.SPRUCE) {
+
+    public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)
+    {
+        IBlockState iblockstate = worldIn.getBlockState(pos);
+
+        if (iblockstate.getBlock() == this)
+        {
+            BlockPlanks.EnumType blockplanks$enumtype = (BlockPlanks.EnumType)iblockstate.getValue(VARIANT);
+
+            if (blockplanks$enumtype == BlockPlanks.EnumType.SPRUCE)
+            {
                 return ColorizerFoliage.getFoliageColorPine();
             }
-            if (blockplanks$enumtype == BlockPlanks.EnumType.BIRCH) {
+
+            if (blockplanks$enumtype == BlockPlanks.EnumType.BIRCH)
+            {
                 return ColorizerFoliage.getFoliageColorBirch();
             }
         }
+
         return super.colorMultiplier(worldIn, pos, renderPass);
     }
-    
-    @Override
-    protected void dropApple(final World worldIn, final BlockPos pos, final IBlockState state, final int chance) {
-        if (state.getValue(BlockOldLeaf.VARIANT) == BlockPlanks.EnumType.OAK && worldIn.rand.nextInt(chance) == 0) {
-            Block.spawnAsEntity(worldIn, pos, new ItemStack(Items.apple, 1, 0));
+
+    protected void dropApple(World worldIn, BlockPos pos, IBlockState state, int chance)
+    {
+        if (state.getValue(VARIANT) == BlockPlanks.EnumType.OAK && worldIn.rand.nextInt(chance) == 0)
+        {
+            spawnAsEntity(worldIn, pos, new ItemStack(Items.apple, 1, 0));
         }
     }
-    
-    @Override
-    protected int getSaplingDropChance(final IBlockState state) {
-        return (state.getValue(BlockOldLeaf.VARIANT) == BlockPlanks.EnumType.JUNGLE) ? 40 : super.getSaplingDropChance(state);
+
+    protected int getSaplingDropChance(IBlockState state)
+    {
+        return state.getValue(VARIANT) == BlockPlanks.EnumType.JUNGLE ? 40 : super.getSaplingDropChance(state);
     }
-    
-    @Override
-    public void getSubBlocks(final Item itemIn, final CreativeTabs tab, final List<ItemStack> list) {
+
+    /**
+     * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
+     */
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+    {
         list.add(new ItemStack(itemIn, 1, BlockPlanks.EnumType.OAK.getMetadata()));
         list.add(new ItemStack(itemIn, 1, BlockPlanks.EnumType.SPRUCE.getMetadata()));
         list.add(new ItemStack(itemIn, 1, BlockPlanks.EnumType.BIRCH.getMetadata()));
         list.add(new ItemStack(itemIn, 1, BlockPlanks.EnumType.JUNGLE.getMetadata()));
     }
-    
-    @Override
-    protected ItemStack createStackedBlock(final IBlockState state) {
-        return new ItemStack(Item.getItemFromBlock(this), 1, state.getValue(BlockOldLeaf.VARIANT).getMetadata());
+
+    protected ItemStack createStackedBlock(IBlockState state)
+    {
+        return new ItemStack(Item.getItemFromBlock(this), 1, ((BlockPlanks.EnumType)state.getValue(VARIANT)).getMetadata());
     }
-    
-    @Override
-    public IBlockState getStateFromMeta(final int meta) {
-        return this.getDefaultState().withProperty(BlockOldLeaf.VARIANT, this.getWoodType(meta)).withProperty((IProperty<Comparable>)BlockOldLeaf.DECAYABLE, (meta & 0x4) == 0x0).withProperty((IProperty<Comparable>)BlockOldLeaf.CHECK_DECAY, (meta & 0x8) > 0);
+
+    /**
+     * Convert the given metadata into a BlockState for this Block
+     */
+    public IBlockState getStateFromMeta(int meta)
+    {
+        return this.getDefaultState().withProperty(VARIANT, this.getWoodType(meta)).withProperty(DECAYABLE, Boolean.valueOf((meta & 4) == 0)).withProperty(CHECK_DECAY, Boolean.valueOf((meta & 8) > 0));
     }
-    
-    @Override
-    public int getMetaFromState(final IBlockState state) {
+
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
         int i = 0;
-        i |= state.getValue(BlockOldLeaf.VARIANT).getMetadata();
-        if (!state.getValue((IProperty<Boolean>)BlockOldLeaf.DECAYABLE)) {
-            i |= 0x4;
+        i = i | ((BlockPlanks.EnumType)state.getValue(VARIANT)).getMetadata();
+
+        if (!((Boolean)state.getValue(DECAYABLE)).booleanValue())
+        {
+            i |= 4;
         }
-        if (state.getValue((IProperty<Boolean>)BlockOldLeaf.CHECK_DECAY)) {
-            i |= 0x8;
+
+        if (((Boolean)state.getValue(CHECK_DECAY)).booleanValue())
+        {
+            i |= 8;
         }
+
         return i;
     }
-    
-    @Override
-    public BlockPlanks.EnumType getWoodType(final int meta) {
-        return BlockPlanks.EnumType.byMetadata((meta & 0x3) % 4);
+
+    public BlockPlanks.EnumType getWoodType(int meta)
+    {
+        return BlockPlanks.EnumType.byMetadata((meta & 3) % 4);
     }
-    
-    @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, new IProperty[] { BlockOldLeaf.VARIANT, BlockOldLeaf.CHECK_DECAY, BlockOldLeaf.DECAYABLE });
+
+    protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {VARIANT, CHECK_DECAY, DECAYABLE});
     }
-    
-    @Override
-    public int damageDropped(final IBlockState state) {
-        return state.getValue(BlockOldLeaf.VARIANT).getMetadata();
+
+    /**
+     * Gets the metadata of the item this Block can drop. This method is called when the block gets destroyed. It
+     * returns the metadata of the dropped item based on the old metadata of the block.
+     */
+    public int damageDropped(IBlockState state)
+    {
+        return ((BlockPlanks.EnumType)state.getValue(VARIANT)).getMetadata();
     }
-    
-    @Override
-    public void harvestBlock(final World worldIn, final EntityPlayer player, final BlockPos pos, final IBlockState state, final TileEntity te) {
-        if (!worldIn.isRemote && player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == Items.shears) {
+
+    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te)
+    {
+        if (!worldIn.isRemote && player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == Items.shears)
+        {
             player.triggerAchievement(StatList.mineBlockStatArray[Block.getIdFromBlock(this)]);
-            Block.spawnAsEntity(worldIn, pos, new ItemStack(Item.getItemFromBlock(this), 1, state.getValue(BlockOldLeaf.VARIANT).getMetadata()));
+            spawnAsEntity(worldIn, pos, new ItemStack(Item.getItemFromBlock(this), 1, ((BlockPlanks.EnumType)state.getValue(VARIANT)).getMetadata()));
         }
-        else {
+        else
+        {
             super.harvestBlock(worldIn, player, pos, state, te);
         }
-    }
-    
-    static {
-        VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class, (com.google.common.base.Predicate<BlockPlanks.EnumType>)new Predicate<BlockPlanks.EnumType>() {
-            public boolean apply(final BlockPlanks.EnumType p_apply_1_) {
-                return p_apply_1_.getMetadata() < 4;
-            }
-        });
     }
 }

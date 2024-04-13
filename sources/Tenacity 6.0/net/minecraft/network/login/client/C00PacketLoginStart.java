@@ -1,49 +1,51 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.network.login.client;
 
-import net.minecraft.network.INetHandler;
+import com.mojang.authlib.GameProfile;
 import java.io.IOException;
 import java.util.UUID;
-import net.minecraft.network.PacketBuffer;
-import com.mojang.authlib.GameProfile;
-import net.minecraft.network.login.INetHandlerLoginServer;
 import net.minecraft.network.Packet;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.login.INetHandlerLoginServer;
 
 public class C00PacketLoginStart implements Packet<INetHandlerLoginServer>
 {
     private GameProfile profile;
-    
-    public C00PacketLoginStart() {
+
+    public C00PacketLoginStart()
+    {
     }
-    
-    public C00PacketLoginStart(final GameProfile profileIn) {
+
+    public C00PacketLoginStart(GameProfile profileIn)
+    {
         this.profile = profileIn;
     }
-    
-    @Override
-    public void readPacketData(final PacketBuffer buf) throws IOException {
+
+    /**
+     * Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(PacketBuffer buf) throws IOException
+    {
         this.profile = new GameProfile((UUID)null, buf.readStringFromBuffer(16));
     }
-    
-    @Override
-    public void writePacketData(final PacketBuffer buf) throws IOException {
+
+    /**
+     * Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(PacketBuffer buf) throws IOException
+    {
         buf.writeString(this.profile.getName());
     }
-    
-    @Override
-    public void processPacket(final INetHandlerLoginServer handler) {
+
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(INetHandlerLoginServer handler)
+    {
         handler.processLoginStart(this);
     }
-    
-    public GameProfile getProfile() {
+
+    public GameProfile getProfile()
+    {
         return this.profile;
-    }
-    
-    @Override
-    public int getID() {
-        return 1;
     }
 }

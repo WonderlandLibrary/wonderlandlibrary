@@ -1,55 +1,56 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.network.status.server;
 
-import com.google.gson.TypeAdapterFactory;
-import net.minecraft.util.EnumTypeAdapterFactory;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.IChatComponent;
-import java.lang.reflect.Type;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.minecraft.network.INetHandler;
 import java.io.IOException;
+import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.ServerStatusResponse;
-import com.google.gson.Gson;
 import net.minecraft.network.status.INetHandlerStatusClient;
-import net.minecraft.network.Packet;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumTypeAdapterFactory;
+import net.minecraft.util.IChatComponent;
 
 public class S00PacketServerInfo implements Packet<INetHandlerStatusClient>
 {
-    private static final Gson GSON;
+    private static final Gson GSON = (new GsonBuilder()).registerTypeAdapter(ServerStatusResponse.MinecraftProtocolVersionIdentifier.class, new ServerStatusResponse.MinecraftProtocolVersionIdentifier.Serializer()).registerTypeAdapter(ServerStatusResponse.PlayerCountData.class, new ServerStatusResponse.PlayerCountData.Serializer()).registerTypeAdapter(ServerStatusResponse.class, new ServerStatusResponse.Serializer()).registerTypeHierarchyAdapter(IChatComponent.class, new IChatComponent.Serializer()).registerTypeHierarchyAdapter(ChatStyle.class, new ChatStyle.Serializer()).registerTypeAdapterFactory(new EnumTypeAdapterFactory()).create();
     private ServerStatusResponse response;
-    
-    public S00PacketServerInfo() {
+
+    public S00PacketServerInfo()
+    {
     }
-    
-    public S00PacketServerInfo(final ServerStatusResponse responseIn) {
+
+    public S00PacketServerInfo(ServerStatusResponse responseIn)
+    {
         this.response = responseIn;
     }
-    
-    @Override
-    public void readPacketData(final PacketBuffer buf) throws IOException {
-        this.response = (ServerStatusResponse)S00PacketServerInfo.GSON.fromJson(buf.readStringFromBuffer(32767), (Class)ServerStatusResponse.class);
+
+    /**
+     * Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(PacketBuffer buf) throws IOException
+    {
+        this.response = (ServerStatusResponse)GSON.fromJson(buf.readStringFromBuffer(32767), ServerStatusResponse.class);
     }
-    
-    @Override
-    public void writePacketData(final PacketBuffer buf) throws IOException {
-        buf.writeString(S00PacketServerInfo.GSON.toJson((Object)this.response));
+
+    /**
+     * Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(PacketBuffer buf) throws IOException
+    {
+        buf.writeString(GSON.toJson((Object)this.response));
     }
-    
-    @Override
-    public void processPacket(final INetHandlerStatusClient handler) {
+
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(INetHandlerStatusClient handler)
+    {
         handler.handleServerInfo(this);
     }
-    
-    public ServerStatusResponse getResponse() {
+
+    public ServerStatusResponse getResponse()
+    {
         return this.response;
-    }
-    
-    static {
-        GSON = new GsonBuilder().registerTypeAdapter((Type)ServerStatusResponse.MinecraftProtocolVersionIdentifier.class, (Object)new ServerStatusResponse.MinecraftProtocolVersionIdentifier.Serializer()).registerTypeAdapter((Type)ServerStatusResponse.PlayerCountData.class, (Object)new ServerStatusResponse.PlayerCountData.Serializer()).registerTypeAdapter((Type)ServerStatusResponse.class, (Object)new ServerStatusResponse.Serializer()).registerTypeHierarchyAdapter((Class)IChatComponent.class, (Object)new IChatComponent.Serializer()).registerTypeHierarchyAdapter((Class)ChatStyle.class, (Object)new ChatStyle.Serializer()).registerTypeAdapterFactory((TypeAdapterFactory)new EnumTypeAdapterFactory()).create();
     }
 }

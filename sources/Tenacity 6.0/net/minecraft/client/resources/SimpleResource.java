@@ -1,25 +1,21 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.resources;
 
-import org.apache.commons.io.IOUtils;
-import com.google.gson.JsonParser;
-import java.io.Reader;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonObject;
-import net.minecraft.client.resources.data.IMetadataSerializer;
+import com.google.gson.JsonParser;
+import java.io.BufferedReader;
 import java.io.InputStream;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.client.resources.data.IMetadataSection;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Map;
+import net.minecraft.client.resources.data.IMetadataSection;
+import net.minecraft.client.resources.data.IMetadataSerializer;
+import net.minecraft.util.ResourceLocation;
+import org.apache.commons.io.IOUtils;
 
 public class SimpleResource implements IResource
 {
-    private final Map<String, IMetadataSection> mapMetadataSections;
+    private final Map<String, IMetadataSection> mapMetadataSections = Maps.<String, IMetadataSection>newHashMap();
     private final String resourcePackName;
     private final ResourceLocation srResourceLocation;
     private final InputStream resourceInputStream;
@@ -27,91 +23,117 @@ public class SimpleResource implements IResource
     private final IMetadataSerializer srMetadataSerializer;
     private boolean mcmetaJsonChecked;
     private JsonObject mcmetaJson;
-    
-    public SimpleResource(final String resourcePackNameIn, final ResourceLocation srResourceLocationIn, final InputStream resourceInputStreamIn, final InputStream mcmetaInputStreamIn, final IMetadataSerializer srMetadataSerializerIn) {
-        this.mapMetadataSections = (Map<String, IMetadataSection>)Maps.newHashMap();
+
+    public SimpleResource(String resourcePackNameIn, ResourceLocation srResourceLocationIn, InputStream resourceInputStreamIn, InputStream mcmetaInputStreamIn, IMetadataSerializer srMetadataSerializerIn)
+    {
         this.resourcePackName = resourcePackNameIn;
         this.srResourceLocation = srResourceLocationIn;
         this.resourceInputStream = resourceInputStreamIn;
         this.mcmetaInputStream = mcmetaInputStreamIn;
         this.srMetadataSerializer = srMetadataSerializerIn;
     }
-    
-    @Override
-    public ResourceLocation getResourceLocation() {
+
+    public ResourceLocation getResourceLocation()
+    {
         return this.srResourceLocation;
     }
-    
-    @Override
-    public InputStream getInputStream() {
+
+    public InputStream getInputStream()
+    {
         return this.resourceInputStream;
     }
-    
-    @Override
-    public boolean hasMetadata() {
+
+    public boolean hasMetadata()
+    {
         return this.mcmetaInputStream != null;
     }
-    
-    @Override
-    public <T extends IMetadataSection> T getMetadata(final String p_110526_1_) {
-        if (!this.hasMetadata()) {
-            return null;
+
+    public <T extends IMetadataSection> T getMetadata(String p_110526_1_)
+    {
+        if (!this.hasMetadata())
+        {
+            return (T)null;
         }
-        if (this.mcmetaJson == null && !this.mcmetaJsonChecked) {
-            this.mcmetaJsonChecked = true;
-            BufferedReader bufferedreader = null;
-            try {
-                bufferedreader = new BufferedReader(new InputStreamReader(this.mcmetaInputStream));
-                this.mcmetaJson = new JsonParser().parse((Reader)bufferedreader).getAsJsonObject();
+        else
+        {
+            if (this.mcmetaJson == null && !this.mcmetaJsonChecked)
+            {
+                this.mcmetaJsonChecked = true;
+                BufferedReader bufferedreader = null;
+
+                try
+                {
+                    bufferedreader = new BufferedReader(new InputStreamReader(this.mcmetaInputStream));
+                    this.mcmetaJson = (new JsonParser()).parse((Reader)bufferedreader).getAsJsonObject();
+                }
+                finally
+                {
+                    IOUtils.closeQuietly((Reader)bufferedreader);
+                }
             }
-            finally {
-                IOUtils.closeQuietly((Reader)bufferedreader);
+
+            T t = (T)this.mapMetadataSections.get(p_110526_1_);
+
+            if (t == null)
+            {
+                t = this.srMetadataSerializer.parseMetadataSection(p_110526_1_, this.mcmetaJson);
             }
+
+            return t;
         }
-        T t = (T)this.mapMetadataSections.get(p_110526_1_);
-        if (t == null) {
-            t = this.srMetadataSerializer.parseMetadataSection(p_110526_1_, this.mcmetaJson);
-        }
-        return t;
     }
-    
-    @Override
-    public String getResourcePackName() {
+
+    public String getResourcePackName()
+    {
         return this.resourcePackName;
     }
-    
-    @Override
-    public boolean equals(final Object p_equals_1_) {
-        if (this == p_equals_1_) {
+
+    public boolean equals(Object p_equals_1_)
+    {
+        if (this == p_equals_1_)
+        {
             return true;
         }
-        if (!(p_equals_1_ instanceof SimpleResource)) {
+        else if (!(p_equals_1_ instanceof SimpleResource))
+        {
             return false;
         }
-        final SimpleResource simpleresource = (SimpleResource)p_equals_1_;
-        if (this.srResourceLocation != null) {
-            if (!this.srResourceLocation.equals(simpleresource.srResourceLocation)) {
+        else
+        {
+            SimpleResource simpleresource = (SimpleResource)p_equals_1_;
+
+            if (this.srResourceLocation != null)
+            {
+                if (!this.srResourceLocation.equals(simpleresource.srResourceLocation))
+                {
+                    return false;
+                }
+            }
+            else if (simpleresource.srResourceLocation != null)
+            {
                 return false;
             }
-        }
-        else if (simpleresource.srResourceLocation != null) {
-            return false;
-        }
-        if (this.resourcePackName != null) {
-            if (!this.resourcePackName.equals(simpleresource.resourcePackName)) {
+
+            if (this.resourcePackName != null)
+            {
+                if (!this.resourcePackName.equals(simpleresource.resourcePackName))
+                {
+                    return false;
+                }
+            }
+            else if (simpleresource.resourcePackName != null)
+            {
                 return false;
             }
+
+            return true;
         }
-        else if (simpleresource.resourcePackName != null) {
-            return false;
-        }
-        return true;
     }
-    
-    @Override
-    public int hashCode() {
-        int i = (this.resourcePackName != null) ? this.resourcePackName.hashCode() : 0;
-        i = 31 * i + ((this.srResourceLocation != null) ? this.srResourceLocation.hashCode() : 0);
+
+    public int hashCode()
+    {
+        int i = this.resourcePackName != null ? this.resourcePackName.hashCode() : 0;
+        i = 31 * i + (this.srResourceLocation != null ? this.srResourceLocation.hashCode() : 0);
         return i;
     }
 }

@@ -1,45 +1,30 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package dev.tenacity.event;
 
-import store.intent.intentguard.annotation.Strategy;
-import store.intent.intentguard.annotation.Exclude;
+import dev.tenacity.Tenacity;
+import net.minecraft.entity.player.EntityPlayer;
 
-public class Event
-{
-    private boolean cancelled;
-    
-    public void cancel() {
-        this.cancelled = true;
+public class Event {
+
+    private boolean canceled;
+    private boolean pre = true;
+
+    public boolean isCanceled() {
+        return canceled;
     }
-    
-    public boolean isCancelled() {
-        return this.cancelled;
+
+    public final boolean isPre() {
+        return pre;
     }
-    
-    public static class StateEvent extends Event
-    {
-        private boolean pre;
-        
-        public StateEvent() {
-            this.pre = true;
-        }
-        
-        @Exclude({ Strategy.NAME_REMAPPING })
-        public boolean isPre() {
-            return this.pre;
-        }
-        
-        @Exclude({ Strategy.NAME_REMAPPING })
-        public boolean isPost() {
-            return !this.pre;
-        }
-        
-        @Exclude({ Strategy.NAME_REMAPPING })
-        public void setPost() {
-            this.pre = false;
-        }
+
+    public final boolean isPost() {
+        return !pre;
+    }
+
+    public final void setPost() {
+        pre = false;
+    }
+
+    public final void cancel() {
+        canceled = true;
     }
 }

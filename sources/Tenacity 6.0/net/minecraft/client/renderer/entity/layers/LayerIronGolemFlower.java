@@ -1,53 +1,50 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.entity.layers;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.init.Blocks;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.model.ModelIronGolem;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelIronGolem;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderIronGolem;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.monster.EntityIronGolem;
+import net.minecraft.init.Blocks;
 
 public class LayerIronGolemFlower implements LayerRenderer<EntityIronGolem>
 {
     private final RenderIronGolem ironGolemRenderer;
-    
-    public LayerIronGolemFlower(final RenderIronGolem ironGolemRendererIn) {
+
+    public LayerIronGolemFlower(RenderIronGolem ironGolemRendererIn)
+    {
         this.ironGolemRenderer = ironGolemRendererIn;
     }
-    
-    @Override
-    public void doRenderLayer(final EntityIronGolem entitylivingbaseIn, final float p_177141_2_, final float p_177141_3_, final float partialTicks, final float p_177141_5_, final float p_177141_6_, final float p_177141_7_, final float scale) {
-        if (entitylivingbaseIn.getHoldRoseTick() != 0) {
-            final BlockRendererDispatcher blockrendererdispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
+
+    public void doRenderLayer(EntityIronGolem entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale)
+    {
+        if (entitylivingbaseIn.getHoldRoseTick() != 0)
+        {
+            BlockRendererDispatcher blockrendererdispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
             GlStateManager.enableRescaleNormal();
             GlStateManager.pushMatrix();
-            GlStateManager.rotate(5.0f + 180.0f * ((ModelIronGolem)this.ironGolemRenderer.getMainModel()).ironGolemRightArm.rotateAngleX / 3.1415927f, 1.0f, 0.0f, 0.0f);
-            GlStateManager.rotate(90.0f, 1.0f, 0.0f, 0.0f);
-            GlStateManager.translate(-0.9375f, -0.625f, -0.9375f);
-            final float f = 0.5f;
+            GlStateManager.rotate(5.0F + 180.0F * ((ModelIronGolem)this.ironGolemRenderer.getMainModel()).ironGolemRightArm.rotateAngleX / (float)Math.PI, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.translate(-0.9375F, -0.625F, -0.9375F);
+            float f = 0.5F;
             GlStateManager.scale(f, -f, f);
-            final int i = entitylivingbaseIn.getBrightnessForRender(partialTicks);
-            final int j = i % 65536;
-            final int k = i / 65536;
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j / 1.0f, k / 1.0f);
-            GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+            int i = entitylivingbaseIn.getBrightnessForRender(partialTicks);
+            int j = i % 65536;
+            int k = i / 65536;
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.ironGolemRenderer.bindTexture(TextureMap.locationBlocksTexture);
-            blockrendererdispatcher.renderBlockBrightness(Blocks.red_flower.getDefaultState(), 1.0f);
+            blockrendererdispatcher.renderBlockBrightness(Blocks.red_flower.getDefaultState(), 1.0F);
             GlStateManager.popMatrix();
             GlStateManager.disableRescaleNormal();
         }
     }
-    
-    @Override
-    public boolean shouldCombineTextures() {
+
+    public boolean shouldCombineTextures()
+    {
         return false;
     }
 }

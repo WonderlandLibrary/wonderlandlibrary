@@ -1,41 +1,34 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.entity;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.client.model.ModelZombie;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelZombie;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.entity.monster.EntityPigZombie;
+import net.minecraft.util.ResourceLocation;
 
 public class RenderPigZombie extends RenderBiped<EntityPigZombie>
 {
-    private static final ResourceLocation ZOMBIE_PIGMAN_TEXTURE;
-    
-    public RenderPigZombie(final RenderManager renderManagerIn) {
-        super(renderManagerIn, new ModelZombie(), 0.5f, 1.0f);
-        ((RendererLivingEntity<EntityLivingBase>)this).addLayer(new LayerHeldItem(this));
-        ((RendererLivingEntity<EntityLivingBase>)this).addLayer(new LayerBipedArmor(this) {
-            @Override
-            protected void initArmor() {
-                this.modelLeggings = (T)new ModelZombie(0.5f, true);
-                this.modelArmor = (T)new ModelZombie(1.0f, true);
+    private static final ResourceLocation ZOMBIE_PIGMAN_TEXTURE = new ResourceLocation("textures/entity/zombie_pigman.png");
+
+    public RenderPigZombie(RenderManager renderManagerIn)
+    {
+        super(renderManagerIn, new ModelZombie(), 0.5F, 1.0F);
+        this.addLayer(new LayerHeldItem(this));
+        this.addLayer(new LayerBipedArmor(this)
+        {
+            protected void initArmor()
+            {
+                this.field_177189_c = new ModelZombie(0.5F, true);
+                this.field_177186_d = new ModelZombie(1.0F, true);
             }
         });
     }
-    
-    @Override
-    protected ResourceLocation getEntityTexture(final EntityPigZombie entity) {
-        return RenderPigZombie.ZOMBIE_PIGMAN_TEXTURE;
-    }
-    
-    static {
-        ZOMBIE_PIGMAN_TEXTURE = new ResourceLocation("textures/entity/zombie_pigman.png");
+
+    /**
+     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
+     */
+    protected ResourceLocation getEntityTexture(EntityPigZombie entity)
+    {
+        return ZOMBIE_PIGMAN_TEXTURE;
     }
 }

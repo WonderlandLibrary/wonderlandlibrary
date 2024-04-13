@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.shaders;
 
 import org.lwjgl.opengl.ARBShaderObjects;
@@ -83,8 +79,9 @@ public class ShaderProgramData
     public int uniform_hideGUI;
     public int uniform_centerDepthSmooth;
     public int uniform_atlasSize;
-    
-    public ShaderProgramData(final int programID) {
+
+    public ShaderProgramData(int programID)
+    {
         this.programIDGL = programID;
         this.uniform_texture = ARBShaderObjects.glGetUniformLocationARB(programID, (CharSequence)"texture");
         this.uniform_lightmap = ARBShaderObjects.glGetUniformLocationARB(programID, (CharSequence)"lightmap");

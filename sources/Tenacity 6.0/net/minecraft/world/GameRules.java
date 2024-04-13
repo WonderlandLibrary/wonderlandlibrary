@@ -1,157 +1,206 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.world;
 
-import java.util.Objects;
 import java.util.Set;
-import java.util.Iterator;
-import net.minecraft.nbt.NBTTagCompound;
 import java.util.TreeMap;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class GameRules
 {
-    private final TreeMap<String, Value> theGameRules;
-    
-    public GameRules() {
-        this.theGameRules = new TreeMap<String, Value>();
-        this.addGameRule("doFireTick", "true", ValueType.BOOLEAN_VALUE);
-        this.addGameRule("mobGriefing", "true", ValueType.BOOLEAN_VALUE);
-        this.addGameRule("keepInventory", "false", ValueType.BOOLEAN_VALUE);
-        this.addGameRule("doMobSpawning", "true", ValueType.BOOLEAN_VALUE);
-        this.addGameRule("doMobLoot", "true", ValueType.BOOLEAN_VALUE);
-        this.addGameRule("doTileDrops", "true", ValueType.BOOLEAN_VALUE);
-        this.addGameRule("doEntityDrops", "true", ValueType.BOOLEAN_VALUE);
-        this.addGameRule("commandBlockOutput", "true", ValueType.BOOLEAN_VALUE);
-        this.addGameRule("naturalRegeneration", "true", ValueType.BOOLEAN_VALUE);
-        this.addGameRule("doDaylightCycle", "true", ValueType.BOOLEAN_VALUE);
-        this.addGameRule("logAdminCommands", "true", ValueType.BOOLEAN_VALUE);
-        this.addGameRule("showDeathMessages", "true", ValueType.BOOLEAN_VALUE);
-        this.addGameRule("randomTickSpeed", "3", ValueType.NUMERICAL_VALUE);
-        this.addGameRule("sendCommandFeedback", "true", ValueType.BOOLEAN_VALUE);
-        this.addGameRule("reducedDebugInfo", "false", ValueType.BOOLEAN_VALUE);
+    private TreeMap<String, GameRules.Value> theGameRules = new TreeMap();
+
+    public GameRules()
+    {
+        this.addGameRule("doFireTick", "true", GameRules.ValueType.BOOLEAN_VALUE);
+        this.addGameRule("mobGriefing", "true", GameRules.ValueType.BOOLEAN_VALUE);
+        this.addGameRule("keepInventory", "false", GameRules.ValueType.BOOLEAN_VALUE);
+        this.addGameRule("doMobSpawning", "true", GameRules.ValueType.BOOLEAN_VALUE);
+        this.addGameRule("doMobLoot", "true", GameRules.ValueType.BOOLEAN_VALUE);
+        this.addGameRule("doTileDrops", "true", GameRules.ValueType.BOOLEAN_VALUE);
+        this.addGameRule("doEntityDrops", "true", GameRules.ValueType.BOOLEAN_VALUE);
+        this.addGameRule("commandBlockOutput", "true", GameRules.ValueType.BOOLEAN_VALUE);
+        this.addGameRule("naturalRegeneration", "true", GameRules.ValueType.BOOLEAN_VALUE);
+        this.addGameRule("doDaylightCycle", "true", GameRules.ValueType.BOOLEAN_VALUE);
+        this.addGameRule("logAdminCommands", "true", GameRules.ValueType.BOOLEAN_VALUE);
+        this.addGameRule("showDeathMessages", "true", GameRules.ValueType.BOOLEAN_VALUE);
+        this.addGameRule("randomTickSpeed", "3", GameRules.ValueType.NUMERICAL_VALUE);
+        this.addGameRule("sendCommandFeedback", "true", GameRules.ValueType.BOOLEAN_VALUE);
+        this.addGameRule("reducedDebugInfo", "false", GameRules.ValueType.BOOLEAN_VALUE);
     }
-    
-    public void addGameRule(final String key, final String value, final ValueType type) {
-        this.theGameRules.put(key, new Value(value, type));
+
+    public void addGameRule(String key, String value, GameRules.ValueType type)
+    {
+        this.theGameRules.put(key, new GameRules.Value(value, type));
     }
-    
-    public void setOrCreateGameRule(final String key, final String ruleValue) {
-        final Value gamerules$value = this.theGameRules.get(key);
-        if (gamerules$value != null) {
+
+    public void setOrCreateGameRule(String key, String ruleValue)
+    {
+        GameRules.Value gamerules$value = (GameRules.Value)this.theGameRules.get(key);
+
+        if (gamerules$value != null)
+        {
             gamerules$value.setValue(ruleValue);
         }
-        else {
-            this.addGameRule(key, ruleValue, ValueType.ANY_VALUE);
+        else
+        {
+            this.addGameRule(key, ruleValue, GameRules.ValueType.ANY_VALUE);
         }
     }
-    
-    public String getString(final String name) {
-        final Value gamerules$value = this.theGameRules.get(name);
-        return (gamerules$value != null) ? gamerules$value.getString() : "";
+
+    /**
+     * Gets the string Game Rule value.
+     */
+    public String getGameRuleStringValue(String name)
+    {
+        GameRules.Value gamerules$value = (GameRules.Value)this.theGameRules.get(name);
+        return gamerules$value != null ? gamerules$value.getGameRuleStringValue() : "";
     }
-    
-    public boolean getBoolean(final String name) {
-        final Value gamerules$value = this.theGameRules.get(name);
-        return gamerules$value != null && gamerules$value.getBoolean();
+
+    /**
+     * Gets the boolean Game Rule value.
+     */
+    public boolean getGameRuleBooleanValue(String name)
+    {
+        GameRules.Value gamerules$value = (GameRules.Value)this.theGameRules.get(name);
+        return gamerules$value != null ? gamerules$value.getGameRuleBooleanValue() : false;
     }
-    
-    public int getInt(final String name) {
-        final Value gamerules$value = this.theGameRules.get(name);
-        return (gamerules$value != null) ? gamerules$value.getInt() : 0;
+
+    public int getInt(String name)
+    {
+        GameRules.Value gamerules$value = (GameRules.Value)this.theGameRules.get(name);
+        return gamerules$value != null ? gamerules$value.getInt() : 0;
     }
-    
-    public NBTTagCompound writeToNBT() {
-        final NBTTagCompound nbttagcompound = new NBTTagCompound();
-        for (final String s : this.theGameRules.keySet()) {
-            final Value gamerules$value = this.theGameRules.get(s);
-            nbttagcompound.setString(s, gamerules$value.getString());
+
+    /**
+     * Return the defined game rules as NBT.
+     */
+    public NBTTagCompound writeToNBT()
+    {
+        NBTTagCompound nbttagcompound = new NBTTagCompound();
+
+        for (String s : this.theGameRules.keySet())
+        {
+            GameRules.Value gamerules$value = (GameRules.Value)this.theGameRules.get(s);
+            nbttagcompound.setString(s, gamerules$value.getGameRuleStringValue());
         }
+
         return nbttagcompound;
     }
-    
-    public void readFromNBT(final NBTTagCompound nbt) {
-        for (final String s : nbt.getKeySet()) {
-            final String s2 = nbt.getString(s);
-            this.setOrCreateGameRule(s, s2);
+
+    /**
+     * Set defined game rules from NBT.
+     */
+    public void readFromNBT(NBTTagCompound nbt)
+    {
+        for (String s : nbt.getKeySet())
+        {
+            String s1 = nbt.getString(s);
+            this.setOrCreateGameRule(s, s1);
         }
     }
-    
-    public String[] getRules() {
-        final Set<String> set = this.theGameRules.keySet();
-        return set.toArray(new String[set.size()]);
+
+    /**
+     * Return the defined game rules.
+     */
+    public String[] getRules()
+    {
+        Set<String> set = this.theGameRules.keySet();
+        return (String[])((String[])set.toArray(new String[set.size()]));
     }
-    
-    public boolean hasRule(final String name) {
+
+    /**
+     * Return whether the specified game rule is defined.
+     */
+    public boolean hasRule(String name)
+    {
         return this.theGameRules.containsKey(name);
     }
-    
-    public boolean areSameType(final String key, final ValueType otherValue) {
-        final Value gamerules$value = this.theGameRules.get(key);
-        return gamerules$value != null && (gamerules$value.getType() == otherValue || otherValue == ValueType.ANY_VALUE);
+
+    public boolean areSameType(String key, GameRules.ValueType otherValue)
+    {
+        GameRules.Value gamerules$value = (GameRules.Value)this.theGameRules.get(key);
+        return gamerules$value != null && (gamerules$value.getType() == otherValue || otherValue == GameRules.ValueType.ANY_VALUE);
     }
-    
+
     static class Value
     {
         private String valueString;
         private boolean valueBoolean;
         private int valueInteger;
         private double valueDouble;
-        private final ValueType type;
-        
-        public Value(final String value, final ValueType type) {
+        private final GameRules.ValueType type;
+
+        public Value(String value, GameRules.ValueType type)
+        {
             this.type = type;
             this.setValue(value);
         }
-        
-        public void setValue(final String value) {
-            if (Objects.equals(this.valueString, value)) {
-                return;
-            }
-            if ((this.valueString = value) != null) {
-                if (value.equals("false")) {
+
+        public void setValue(String value)
+        {
+            this.valueString = value;
+
+            if (value != null)
+            {
+                if (value.equals("false"))
+                {
                     this.valueBoolean = false;
                     return;
                 }
-                if (value.equals("true")) {
+
+                if (value.equals("true"))
+                {
                     this.valueBoolean = true;
                     return;
                 }
             }
+
             this.valueBoolean = Boolean.parseBoolean(value);
-            this.valueInteger = (this.valueBoolean ? 1 : 0);
-            try {
+            this.valueInteger = this.valueBoolean ? 1 : 0;
+
+            try
+            {
                 this.valueInteger = Integer.parseInt(value);
             }
-            catch (NumberFormatException ex) {}
-            try {
+            catch (NumberFormatException var4)
+            {
+                ;
+            }
+
+            try
+            {
                 this.valueDouble = Double.parseDouble(value);
             }
-            catch (NumberFormatException ex2) {}
+            catch (NumberFormatException var3)
+            {
+                ;
+            }
         }
-        
-        public String getString() {
+
+        public String getGameRuleStringValue()
+        {
             return this.valueString;
         }
-        
-        public boolean getBoolean() {
+
+        public boolean getGameRuleBooleanValue()
+        {
             return this.valueBoolean;
         }
-        
-        public int getInt() {
+
+        public int getInt()
+        {
             return this.valueInteger;
         }
-        
-        public ValueType getType() {
+
+        public GameRules.ValueType getType()
+        {
             return this.type;
         }
     }
-    
-    public enum ValueType
+
+    public static enum ValueType
     {
-        ANY_VALUE, 
-        BOOLEAN_VALUE, 
+        ANY_VALUE,
+        BOOLEAN_VALUE,
         NUMERICAL_VALUE;
     }
 }

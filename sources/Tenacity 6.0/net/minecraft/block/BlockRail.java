@@ -1,53 +1,53 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyEnum;
 
 public class BlockRail extends BlockRailBase
 {
-    public static final PropertyEnum<EnumRailDirection> SHAPE;
-    
-    protected BlockRail() {
+    public static final PropertyEnum<BlockRailBase.EnumRailDirection> SHAPE = PropertyEnum.<BlockRailBase.EnumRailDirection>create("shape", BlockRailBase.EnumRailDirection.class);
+
+    protected BlockRail()
+    {
         super(false);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(BlockRail.SHAPE, EnumRailDirection.NORTH_SOUTH));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(SHAPE, BlockRailBase.EnumRailDirection.NORTH_SOUTH));
     }
-    
-    @Override
-    protected void onNeighborChangedInternal(final World worldIn, final BlockPos pos, final IBlockState state, final Block neighborBlock) {
-        if (neighborBlock.canProvidePower() && new Rail(worldIn, pos, state).countAdjacentRails() == 3) {
+
+    protected void onNeighborChangedInternal(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+    {
+        if (neighborBlock.canProvidePower() && (new BlockRailBase.Rail(worldIn, pos, state)).countAdjacentRails() == 3)
+        {
             this.func_176564_a(worldIn, pos, state, false);
         }
     }
-    
-    @Override
-    public IProperty<EnumRailDirection> getShapeProperty() {
-        return BlockRail.SHAPE;
+
+    public IProperty<BlockRailBase.EnumRailDirection> getShapeProperty()
+    {
+        return SHAPE;
     }
-    
-    @Override
-    public IBlockState getStateFromMeta(final int meta) {
-        return this.getDefaultState().withProperty(BlockRail.SHAPE, EnumRailDirection.byMetadata(meta));
+
+    /**
+     * Convert the given metadata into a BlockState for this Block
+     */
+    public IBlockState getStateFromMeta(int meta)
+    {
+        return this.getDefaultState().withProperty(SHAPE, BlockRailBase.EnumRailDirection.byMetadata(meta));
     }
-    
-    @Override
-    public int getMetaFromState(final IBlockState state) {
-        return state.getValue(BlockRail.SHAPE).getMetadata();
+
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
+        return ((BlockRailBase.EnumRailDirection)state.getValue(SHAPE)).getMetadata();
     }
-    
-    @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, new IProperty[] { BlockRail.SHAPE });
-    }
-    
-    static {
-        SHAPE = PropertyEnum.create("shape", EnumRailDirection.class);
+
+    protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {SHAPE});
     }
 }

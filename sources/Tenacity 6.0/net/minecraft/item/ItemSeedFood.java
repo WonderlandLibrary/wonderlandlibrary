@@ -1,39 +1,50 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.item;
 
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 
 public class ItemSeedFood extends ItemFood
 {
     private Block crops;
+
+    /** Block ID of the soil this seed food should be planted on. */
     private Block soilId;
-    
-    public ItemSeedFood(final int healAmount, final float saturation, final Block crops, final Block soil) {
+
+    public ItemSeedFood(int healAmount, float saturation, Block crops, Block soil)
+    {
         super(healAmount, saturation, false);
         this.crops = crops;
         this.soilId = soil;
     }
-    
-    @Override
-    public boolean onItemUse(final ItemStack stack, final EntityPlayer playerIn, final World worldIn, final BlockPos pos, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
-        if (side != EnumFacing.UP) {
+
+    /**
+     * Called when a Block is right-clicked with this Item
+     *  
+     * @param pos The block being right-clicked
+     * @param side The side being right-clicked
+     */
+    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+    {
+        if (side != EnumFacing.UP)
+        {
             return false;
         }
-        if (!playerIn.canPlayerEdit(pos.offset(side), side, stack)) {
+        else if (!playerIn.canPlayerEdit(pos.offset(side), side, stack))
+        {
             return false;
         }
-        if (worldIn.getBlockState(pos).getBlock() == this.soilId && worldIn.isAirBlock(pos.up())) {
+        else if (worldIn.getBlockState(pos).getBlock() == this.soilId && worldIn.isAirBlock(pos.up()))
+        {
             worldIn.setBlockState(pos.up(), this.crops.getDefaultState());
             --stack.stackSize;
             return true;
         }
-        return false;
+        else
+        {
+            return false;
+        }
     }
 }

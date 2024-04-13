@@ -1,26 +1,26 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.entity.passive;
 
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraft.entity.EntityLiving;
 
 public abstract class EntityAmbientCreature extends EntityLiving implements IAnimals
 {
-    public EntityAmbientCreature(final World worldIn) {
+    public EntityAmbientCreature(World worldIn)
+    {
         super(worldIn);
     }
-    
-    @Override
-    public boolean allowLeashing() {
+
+    public boolean allowLeashing()
+    {
         return false;
     }
-    
-    @Override
-    protected boolean interact(final EntityPlayer player) {
+
+    /**
+     * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+     */
+    protected boolean interact(EntityPlayer player)
+    {
         return false;
     }
 }

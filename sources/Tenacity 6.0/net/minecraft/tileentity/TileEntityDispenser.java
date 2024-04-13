@@ -1,203 +1,272 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.tileentity;
 
-import net.minecraft.inventory.ContainerDispenser;
-import net.minecraft.inventory.Container;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.item.ItemStack;
 import java.util.Random;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerDispenser;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 
 public class TileEntityDispenser extends TileEntityLockable implements IInventory
 {
-    private static final Random RNG;
-    private ItemStack[] stacks;
+    private static final Random RNG = new Random();
+    private ItemStack[] stacks = new ItemStack[9];
     protected String customName;
-    
-    public TileEntityDispenser() {
-        this.stacks = new ItemStack[9];
-    }
-    
-    @Override
-    public int getSizeInventory() {
+
+    /**
+     * Returns the number of slots in the inventory.
+     */
+    public int getSizeInventory()
+    {
         return 9;
     }
-    
-    @Override
-    public ItemStack getStackInSlot(final int index) {
+
+    /**
+     * Returns the stack in the given slot.
+     *  
+     * @param index The slot to retrieve from.
+     */
+    public ItemStack getStackInSlot(int index)
+    {
         return this.stacks[index];
     }
-    
-    @Override
-    public ItemStack decrStackSize(final int index, final int count) {
-        if (this.stacks[index] == null) {
+
+    /**
+     * Removes up to a specified number of items from an inventory slot and returns them in a new stack.
+     *  
+     * @param index The slot to remove from.
+     * @param count The maximum amount of items to remove.
+     */
+    public ItemStack decrStackSize(int index, int count)
+    {
+        if (this.stacks[index] != null)
+        {
+            if (this.stacks[index].stackSize <= count)
+            {
+                ItemStack itemstack1 = this.stacks[index];
+                this.stacks[index] = null;
+                this.markDirty();
+                return itemstack1;
+            }
+            else
+            {
+                ItemStack itemstack = this.stacks[index].splitStack(count);
+
+                if (this.stacks[index].stackSize == 0)
+                {
+                    this.stacks[index] = null;
+                }
+
+                this.markDirty();
+                return itemstack;
+            }
+        }
+        else
+        {
             return null;
         }
-        if (this.stacks[index].stackSize <= count) {
-            final ItemStack itemstack1 = this.stacks[index];
-            this.stacks[index] = null;
-            this.markDirty();
-            return itemstack1;
-        }
-        final ItemStack itemstack2 = this.stacks[index].splitStack(count);
-        if (this.stacks[index].stackSize == 0) {
-            this.stacks[index] = null;
-        }
-        this.markDirty();
-        return itemstack2;
     }
-    
-    @Override
-    public ItemStack removeStackFromSlot(final int index) {
-        if (this.stacks[index] != null) {
-            final ItemStack itemstack = this.stacks[index];
+
+    /**
+     * Removes a stack from the given slot and returns it.
+     *  
+     * @param index The slot to remove a stack from.
+     */
+    public ItemStack getStackInSlotOnClosing(int index)
+    {
+        if (this.stacks[index] != null)
+        {
+            ItemStack itemstack = this.stacks[index];
             this.stacks[index] = null;
             return itemstack;
         }
-        return null;
+        else
+        {
+            return null;
+        }
     }
-    
-    public int getDispenseSlot() {
+
+    public int getDispenseSlot()
+    {
         int i = -1;
         int j = 1;
-        for (int k = 0; k < this.stacks.length; ++k) {
-            if (this.stacks[k] != null && TileEntityDispenser.RNG.nextInt(j++) == 0) {
+
+        for (int k = 0; k < this.stacks.length; ++k)
+        {
+            if (this.stacks[k] != null && RNG.nextInt(j++) == 0)
+            {
                 i = k;
             }
         }
+
         return i;
     }
-    
-    @Override
-    public void setInventorySlotContents(final int index, final ItemStack stack) {
+
+    /**
+     * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
+     */
+    public void setInventorySlotContents(int index, ItemStack stack)
+    {
         this.stacks[index] = stack;
-        if (stack != null && stack.stackSize > this.getInventoryStackLimit()) {
+
+        if (stack != null && stack.stackSize > this.getInventoryStackLimit())
+        {
             stack.stackSize = this.getInventoryStackLimit();
         }
+
         this.markDirty();
     }
-    
-    public int addItemStack(final ItemStack stack) {
-        for (int i = 0; i < this.stacks.length; ++i) {
-            if (this.stacks[i] == null || this.stacks[i].getItem() == null) {
+
+    /**
+     * Add the given ItemStack to this Dispenser. Return the Slot the Item was placed in or -1 if no free slot is
+     * available.
+     */
+    public int addItemStack(ItemStack stack)
+    {
+        for (int i = 0; i < this.stacks.length; ++i)
+        {
+            if (this.stacks[i] == null || this.stacks[i].getItem() == null)
+            {
                 this.setInventorySlotContents(i, stack);
                 return i;
             }
         }
+
         return -1;
     }
-    
-    @Override
-    public String getName() {
+
+    /**
+     * Gets the name of this command sender (usually username, but possibly "Rcon")
+     */
+    public String getCommandSenderName()
+    {
         return this.hasCustomName() ? this.customName : "container.dispenser";
     }
-    
-    public void setCustomName(final String customName) {
+
+    public void setCustomName(String customName)
+    {
         this.customName = customName;
     }
-    
-    @Override
-    public boolean hasCustomName() {
+
+    /**
+     * Returns true if this thing is named
+     */
+    public boolean hasCustomName()
+    {
         return this.customName != null;
     }
-    
-    @Override
-    public void readFromNBT(final NBTTagCompound compound) {
+
+    public void readFromNBT(NBTTagCompound compound)
+    {
         super.readFromNBT(compound);
-        final NBTTagList nbttaglist = compound.getTagList("Items", 10);
+        NBTTagList nbttaglist = compound.getTagList("Items", 10);
         this.stacks = new ItemStack[this.getSizeInventory()];
-        for (int i = 0; i < nbttaglist.tagCount(); ++i) {
-            final NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
-            final int j = nbttagcompound.getByte("Slot") & 0xFF;
-            if (j >= 0 && j < this.stacks.length) {
+
+        for (int i = 0; i < nbttaglist.tagCount(); ++i)
+        {
+            NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
+            int j = nbttagcompound.getByte("Slot") & 255;
+
+            if (j >= 0 && j < this.stacks.length)
+            {
                 this.stacks[j] = ItemStack.loadItemStackFromNBT(nbttagcompound);
             }
         }
-        if (compound.hasKey("CustomName", 8)) {
+
+        if (compound.hasKey("CustomName", 8))
+        {
             this.customName = compound.getString("CustomName");
         }
     }
-    
-    @Override
-    public void writeToNBT(final NBTTagCompound compound) {
+
+    public void writeToNBT(NBTTagCompound compound)
+    {
         super.writeToNBT(compound);
-        final NBTTagList nbttaglist = new NBTTagList();
-        for (int i = 0; i < this.stacks.length; ++i) {
-            if (this.stacks[i] != null) {
-                final NBTTagCompound nbttagcompound = new NBTTagCompound();
+        NBTTagList nbttaglist = new NBTTagList();
+
+        for (int i = 0; i < this.stacks.length; ++i)
+        {
+            if (this.stacks[i] != null)
+            {
+                NBTTagCompound nbttagcompound = new NBTTagCompound();
                 nbttagcompound.setByte("Slot", (byte)i);
                 this.stacks[i].writeToNBT(nbttagcompound);
                 nbttaglist.appendTag(nbttagcompound);
             }
         }
+
         compound.setTag("Items", nbttaglist);
-        if (this.hasCustomName()) {
+
+        if (this.hasCustomName())
+        {
             compound.setString("CustomName", this.customName);
         }
     }
-    
-    @Override
-    public int getInventoryStackLimit() {
+
+    /**
+     * Returns the maximum stack size for a inventory slot. Seems to always be 64, possibly will be extended.
+     */
+    public int getInventoryStackLimit()
+    {
         return 64;
     }
-    
-    @Override
-    public boolean isUseableByPlayer(final EntityPlayer player) {
-        return this.worldObj.getTileEntity(this.pos) == this && player.getDistanceSq(this.pos.getX() + 0.5, this.pos.getY() + 0.5, this.pos.getZ() + 0.5) <= 64.0;
+
+    /**
+     * Do not make give this method the name canInteractWith because it clashes with Container
+     */
+    public boolean isUseableByPlayer(EntityPlayer player)
+    {
+        return this.worldObj.getTileEntity(this.pos) != this ? false : player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
     }
-    
-    @Override
-    public void openInventory(final EntityPlayer player) {
+
+    public void openInventory(EntityPlayer player)
+    {
     }
-    
-    @Override
-    public void closeInventory(final EntityPlayer player) {
+
+    public void closeInventory(EntityPlayer player)
+    {
     }
-    
-    @Override
-    public boolean isItemValidForSlot(final int index, final ItemStack stack) {
+
+    /**
+     * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
+     */
+    public boolean isItemValidForSlot(int index, ItemStack stack)
+    {
         return true;
     }
-    
-    @Override
-    public String getGuiID() {
+
+    public String getGuiID()
+    {
         return "minecraft:dispenser";
     }
-    
-    @Override
-    public Container createContainer(final InventoryPlayer playerInventory, final EntityPlayer playerIn) {
+
+    public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
+    {
         return new ContainerDispenser(playerInventory, this);
     }
-    
-    @Override
-    public int getField(final int id) {
+
+    public int getField(int id)
+    {
         return 0;
     }
-    
-    @Override
-    public void setField(final int id, final int value) {
+
+    public void setField(int id, int value)
+    {
     }
-    
-    @Override
-    public int getFieldCount() {
+
+    public int getFieldCount()
+    {
         return 0;
     }
-    
-    @Override
-    public void clear() {
-        for (int i = 0; i < this.stacks.length; ++i) {
+
+    public void clear()
+    {
+        for (int i = 0; i < this.stacks.length; ++i)
+        {
             this.stacks[i] = null;
         }
-    }
-    
-    static {
-        RNG = new Random();
     }
 }

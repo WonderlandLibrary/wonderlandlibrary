@@ -1,22 +1,18 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.network.login;
 
-import net.minecraft.network.login.server.S03PacketEnableCompression;
-import net.minecraft.network.login.server.S00PacketDisconnect;
-import net.minecraft.network.login.server.S02PacketLoginSuccess;
-import net.minecraft.network.login.server.S01PacketEncryptionRequest;
 import net.minecraft.network.INetHandler;
+import net.minecraft.network.login.server.S00PacketDisconnect;
+import net.minecraft.network.login.server.S01PacketEncryptionRequest;
+import net.minecraft.network.login.server.S02PacketLoginSuccess;
+import net.minecraft.network.login.server.S03PacketEnableCompression;
 
 public interface INetHandlerLoginClient extends INetHandler
 {
-    void handleEncryptionRequest(final S01PacketEncryptionRequest p0);
-    
-    void handleLoginSuccess(final S02PacketLoginSuccess p0);
-    
-    void handleDisconnect(final S00PacketDisconnect p0);
-    
-    void handleEnableCompression(final S03PacketEnableCompression p0);
+    void handleEncryptionRequest(S01PacketEncryptionRequest packetIn);
+
+    void handleLoginSuccess(S02PacketLoginSuccess packetIn);
+
+    void handleDisconnect(S00PacketDisconnect packetIn);
+
+    void handleEnableCompression(S03PacketEnableCompression packetIn);
 }

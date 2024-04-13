@@ -1,47 +1,49 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.network.play.client;
 
-import net.minecraft.network.INetHandler;
 import java.io.IOException;
+import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.INetHandlerPlayServer;
-import net.minecraft.network.Packet;
 
 public class C09PacketHeldItemChange implements Packet<INetHandlerPlayServer>
 {
     private int slotId;
-    
-    public C09PacketHeldItemChange() {
+
+    public C09PacketHeldItemChange()
+    {
     }
-    
-    public C09PacketHeldItemChange(final int slotId) {
+
+    public C09PacketHeldItemChange(int slotId)
+    {
         this.slotId = slotId;
     }
-    
-    @Override
-    public void readPacketData(final PacketBuffer buf) throws IOException {
+
+    /**
+     * Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(PacketBuffer buf) throws IOException
+    {
         this.slotId = buf.readShort();
     }
-    
-    @Override
-    public void writePacketData(final PacketBuffer buf) throws IOException {
+
+    /**
+     * Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(PacketBuffer buf) throws IOException
+    {
         buf.writeShort(this.slotId);
     }
-    
-    @Override
-    public void processPacket(final INetHandlerPlayServer handler) {
+
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(INetHandlerPlayServer handler)
+    {
         handler.processHeldItemChange(this);
     }
-    
-    public int getSlotId() {
+
+    public int getSlotId()
+    {
         return this.slotId;
-    }
-    
-    @Override
-    public int getID() {
-        return 15;
     }
 }

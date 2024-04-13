@@ -1,89 +1,104 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
-import net.minecraft.util.EnumFacing;
+import java.util.Random;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import java.util.Random;
-import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.block.material.Material;
 
 public class BlockSign extends BlockContainer
 {
-    protected BlockSign() {
+    protected BlockSign()
+    {
         super(Material.wood);
-        final float f = 0.25f;
-        final float f2 = 1.0f;
-        this.setBlockBounds(0.5f - f, 0.0f, 0.5f - f, 0.5f + f, f2, 0.5f + f);
+        float f = 0.25F;
+        float f1 = 1.0F;
+        this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
     }
-    
-    @Override
-    public AxisAlignedBB getCollisionBoundingBox(final World worldIn, final BlockPos pos, final IBlockState state) {
+
+    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
+    {
         return null;
     }
-    
-    @Override
-    public AxisAlignedBB getSelectedBoundingBox(final World worldIn, final BlockPos pos) {
+
+    public AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos)
+    {
         this.setBlockBoundsBasedOnState(worldIn, pos);
         return super.getSelectedBoundingBox(worldIn, pos);
     }
-    
-    @Override
-    public boolean isFullCube() {
+
+    public boolean isFullCube()
+    {
         return false;
     }
-    
-    @Override
-    public boolean isPassable(final IBlockAccess worldIn, final BlockPos pos) {
+
+    public boolean isPassable(IBlockAccess worldIn, BlockPos pos)
+    {
         return true;
     }
-    
-    @Override
-    public boolean isOpaqueCube() {
+
+    /**
+     * Used to determine ambient occlusion and culling when rebuilding chunks for render
+     */
+    public boolean isOpaqueCube()
+    {
         return false;
     }
-    
-    @Override
-    public boolean canSpawnInBlock() {
+
+    public boolean func_181623_g()
+    {
         return true;
     }
-    
-    @Override
-    public TileEntity createNewTileEntity(final World worldIn, final int meta) {
+
+    /**
+     * Returns a new instance of a block's tile entity class. Called on placing the block.
+     */
+    public TileEntity createNewTileEntity(World worldIn, int meta)
+    {
         return new TileEntitySign();
     }
-    
-    @Override
-    public Item getItemDropped(final IBlockState state, final Random rand, final int fortune) {
+
+    /**
+     * Get the Item that this Block should drop when harvested.
+     *  
+     * @param fortune the level of the Fortune enchantment on the player's tool
+     */
+    public Item getItemDropped(IBlockState state, Random rand, int fortune)
+    {
         return Items.sign;
     }
-    
-    @Override
-    public Item getItem(final World worldIn, final BlockPos pos) {
+
+    /**
+     * Used by pick block on the client to get a block's item form, if it exists.
+     */
+    public Item getItem(World worldIn, BlockPos pos)
+    {
         return Items.sign;
     }
-    
-    @Override
-    public boolean onBlockActivated(final World worldIn, final BlockPos pos, final IBlockState state, final EntityPlayer playerIn, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
-        if (worldIn.isRemote) {
+
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
+    {
+        if (worldIn.isRemote)
+        {
             return true;
         }
-        final TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity instanceof TileEntitySign && ((TileEntitySign)tileentity).executeCommand(playerIn);
+        else
+        {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+            return tileentity instanceof TileEntitySign ? ((TileEntitySign)tileentity).executeCommand(playerIn) : false;
+        }
     }
-    
-    @Override
-    public boolean canPlaceBlockAt(final World worldIn, final BlockPos pos) {
-        return !this.hasInvalidNeighbor(worldIn, pos) && super.canPlaceBlockAt(worldIn, pos);
+
+    public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
+    {
+        return !this.func_181087_e(worldIn, pos) && super.canPlaceBlockAt(worldIn, pos);
     }
 }

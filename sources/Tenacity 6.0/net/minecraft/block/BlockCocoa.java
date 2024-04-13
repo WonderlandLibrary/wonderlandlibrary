@@ -1,194 +1,232 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
-import net.minecraft.block.state.BlockState;
-import net.minecraft.util.EnumWorldBlockLayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.init.Blocks;
 import java.util.Random;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public class BlockCocoa extends BlockDirectional implements IGrowable
 {
-    public static final PropertyInteger AGE;
-    
-    public BlockCocoa() {
+    public static final PropertyInteger AGE = PropertyInteger.create("age", 0, 2);
+
+    public BlockCocoa()
+    {
         super(Material.plants);
-        this.setDefaultState(this.blockState.getBaseState().withProperty((IProperty<Comparable>)BlockCocoa.FACING, EnumFacing.NORTH).withProperty((IProperty<Comparable>)BlockCocoa.AGE, 0));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(AGE, Integer.valueOf(0)));
         this.setTickRandomly(true);
     }
-    
-    @Override
-    public void updateTick(final World worldIn, final BlockPos pos, final IBlockState state, final Random rand) {
-        if (!this.canBlockStay(worldIn, pos, state)) {
+
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+    {
+        if (!this.canBlockStay(worldIn, pos, state))
+        {
             this.dropBlock(worldIn, pos, state);
         }
-        else if (worldIn.rand.nextInt(5) == 0) {
-            final int i = state.getValue((IProperty<Integer>)BlockCocoa.AGE);
-            if (i < 2) {
-                worldIn.setBlockState(pos, state.withProperty((IProperty<Comparable>)BlockCocoa.AGE, i + 1), 2);
+        else if (worldIn.rand.nextInt(5) == 0)
+        {
+            int i = ((Integer)state.getValue(AGE)).intValue();
+
+            if (i < 2)
+            {
+                worldIn.setBlockState(pos, state.withProperty(AGE, Integer.valueOf(i + 1)), 2);
             }
         }
     }
-    
-    public boolean canBlockStay(final World worldIn, BlockPos pos, final IBlockState state) {
-        pos = pos.offset(state.getValue((IProperty<EnumFacing>)BlockCocoa.FACING));
-        final IBlockState iblockstate = worldIn.getBlockState(pos);
+
+    public boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state)
+    {
+        pos = pos.offset((EnumFacing)state.getValue(FACING));
+        IBlockState iblockstate = worldIn.getBlockState(pos);
         return iblockstate.getBlock() == Blocks.log && iblockstate.getValue(BlockPlanks.VARIANT) == BlockPlanks.EnumType.JUNGLE;
     }
-    
-    @Override
-    public boolean isFullCube() {
+
+    public boolean isFullCube()
+    {
         return false;
     }
-    
-    @Override
-    public boolean isOpaqueCube() {
+
+    /**
+     * Used to determine ambient occlusion and culling when rebuilding chunks for render
+     */
+    public boolean isOpaqueCube()
+    {
         return false;
     }
-    
-    @Override
-    public AxisAlignedBB getCollisionBoundingBox(final World worldIn, final BlockPos pos, final IBlockState state) {
+
+    public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
+    {
         this.setBlockBoundsBasedOnState(worldIn, pos);
         return super.getCollisionBoundingBox(worldIn, pos, state);
     }
-    
-    @Override
-    public AxisAlignedBB getSelectedBoundingBox(final World worldIn, final BlockPos pos) {
+
+    public AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos)
+    {
         this.setBlockBoundsBasedOnState(worldIn, pos);
         return super.getSelectedBoundingBox(worldIn, pos);
     }
-    
-    @Override
-    public void setBlockBoundsBasedOnState(final IBlockAccess worldIn, final BlockPos pos) {
-        final IBlockState iblockstate = worldIn.getBlockState(pos);
-        final EnumFacing enumfacing = iblockstate.getValue((IProperty<EnumFacing>)BlockCocoa.FACING);
-        final int i = iblockstate.getValue((IProperty<Integer>)BlockCocoa.AGE);
-        final int j = 4 + i * 2;
-        final int k = 5 + i * 2;
-        final float f = j / 2.0f;
-        switch (enumfacing) {
-            case SOUTH: {
-                this.setBlockBounds((8.0f - f) / 16.0f, (12.0f - k) / 16.0f, (15.0f - j) / 16.0f, (8.0f + f) / 16.0f, 0.75f, 0.9375f);
+
+    @SuppressWarnings("incomplete-switch")
+    public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
+    {
+        IBlockState iblockstate = worldIn.getBlockState(pos);
+        EnumFacing enumfacing = (EnumFacing)iblockstate.getValue(FACING);
+        int i = ((Integer)iblockstate.getValue(AGE)).intValue();
+        int j = 4 + i * 2;
+        int k = 5 + i * 2;
+        float f = (float)j / 2.0F;
+
+        switch (enumfacing)
+        {
+            case SOUTH:
+                this.setBlockBounds((8.0F - f) / 16.0F, (12.0F - (float)k) / 16.0F, (15.0F - (float)j) / 16.0F, (8.0F + f) / 16.0F, 0.75F, 0.9375F);
                 break;
-            }
-            case NORTH: {
-                this.setBlockBounds((8.0f - f) / 16.0f, (12.0f - k) / 16.0f, 0.0625f, (8.0f + f) / 16.0f, 0.75f, (1.0f + j) / 16.0f);
+
+            case NORTH:
+                this.setBlockBounds((8.0F - f) / 16.0F, (12.0F - (float)k) / 16.0F, 0.0625F, (8.0F + f) / 16.0F, 0.75F, (1.0F + (float)j) / 16.0F);
                 break;
-            }
-            case WEST: {
-                this.setBlockBounds(0.0625f, (12.0f - k) / 16.0f, (8.0f - f) / 16.0f, (1.0f + j) / 16.0f, 0.75f, (8.0f + f) / 16.0f);
+
+            case WEST:
+                this.setBlockBounds(0.0625F, (12.0F - (float)k) / 16.0F, (8.0F - f) / 16.0F, (1.0F + (float)j) / 16.0F, 0.75F, (8.0F + f) / 16.0F);
                 break;
-            }
-            case EAST: {
-                this.setBlockBounds((15.0f - j) / 16.0f, (12.0f - k) / 16.0f, (8.0f - f) / 16.0f, 0.9375f, 0.75f, (8.0f + f) / 16.0f);
-                break;
-            }
+
+            case EAST:
+                this.setBlockBounds((15.0F - (float)j) / 16.0F, (12.0F - (float)k) / 16.0F, (8.0F - f) / 16.0F, 0.9375F, 0.75F, (8.0F + f) / 16.0F);
         }
     }
-    
-    @Override
-    public void onBlockPlacedBy(final World worldIn, final BlockPos pos, final IBlockState state, final EntityLivingBase placer, final ItemStack stack) {
-        final EnumFacing enumfacing = EnumFacing.fromAngle(placer.rotationYaw);
-        worldIn.setBlockState(pos, state.withProperty((IProperty<Comparable>)BlockCocoa.FACING, enumfacing), 2);
+
+    /**
+     * Called by ItemBlocks after a block is set in the world, to allow post-place logic
+     */
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+    {
+        EnumFacing enumfacing = EnumFacing.fromAngle((double)placer.rotationYaw);
+        worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing), 2);
     }
-    
-    @Override
-    public IBlockState onBlockPlaced(final World worldIn, final BlockPos pos, EnumFacing facing, final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer) {
-        if (!facing.getAxis().isHorizontal()) {
+
+    /**
+     * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
+     * IBlockstate
+     */
+    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    {
+        if (!facing.getAxis().isHorizontal())
+        {
             facing = EnumFacing.NORTH;
         }
-        return this.getDefaultState().withProperty((IProperty<Comparable>)BlockCocoa.FACING, facing.getOpposite()).withProperty((IProperty<Comparable>)BlockCocoa.AGE, 0);
+
+        return this.getDefaultState().withProperty(FACING, facing.getOpposite()).withProperty(AGE, Integer.valueOf(0));
     }
-    
-    @Override
-    public void onNeighborBlockChange(final World worldIn, final BlockPos pos, final IBlockState state, final Block neighborBlock) {
-        if (!this.canBlockStay(worldIn, pos, state)) {
+
+    /**
+     * Called when a neighboring block changes.
+     */
+    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+    {
+        if (!this.canBlockStay(worldIn, pos, state))
+        {
             this.dropBlock(worldIn, pos, state);
         }
     }
-    
-    private void dropBlock(final World worldIn, final BlockPos pos, final IBlockState state) {
+
+    private void dropBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
         worldIn.setBlockState(pos, Blocks.air.getDefaultState(), 3);
         this.dropBlockAsItem(worldIn, pos, state, 0);
     }
-    
-    @Override
-    public void dropBlockAsItemWithChance(final World worldIn, final BlockPos pos, final IBlockState state, final float chance, final int fortune) {
-        final int i = state.getValue((IProperty<Integer>)BlockCocoa.AGE);
+
+    /**
+     * Spawns this Block's drops into the World as EntityItems.
+     *  
+     * @param chance The chance that each Item is actually spawned (1.0 = always, 0.0 = never)
+     * @param fortune The player's fortune level
+     */
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
+    {
+        int i = ((Integer)state.getValue(AGE)).intValue();
         int j = 1;
-        if (i >= 2) {
+
+        if (i >= 2)
+        {
             j = 3;
         }
-        for (int k = 0; k < j; ++k) {
-            Block.spawnAsEntity(worldIn, pos, new ItemStack(Items.dye, 1, EnumDyeColor.BROWN.getDyeDamage()));
+
+        for (int k = 0; k < j; ++k)
+        {
+            spawnAsEntity(worldIn, pos, new ItemStack(Items.dye, 1, EnumDyeColor.BROWN.getDyeDamage()));
         }
     }
-    
-    @Override
-    public Item getItem(final World worldIn, final BlockPos pos) {
+
+    /**
+     * Used by pick block on the client to get a block's item form, if it exists.
+     */
+    public Item getItem(World worldIn, BlockPos pos)
+    {
         return Items.dye;
     }
-    
-    @Override
-    public int getDamageValue(final World worldIn, final BlockPos pos) {
+
+    public int getDamageValue(World worldIn, BlockPos pos)
+    {
         return EnumDyeColor.BROWN.getDyeDamage();
     }
-    
-    @Override
-    public boolean canGrow(final World worldIn, final BlockPos pos, final IBlockState state, final boolean isClient) {
-        return state.getValue((IProperty<Integer>)BlockCocoa.AGE) < 2;
+
+    /**
+     * Whether this IGrowable can grow
+     */
+    public boolean canGrow(World worldIn, BlockPos pos, IBlockState state, boolean isClient)
+    {
+        return ((Integer)state.getValue(AGE)).intValue() < 2;
     }
-    
-    @Override
-    public boolean canUseBonemeal(final World worldIn, final Random rand, final BlockPos pos, final IBlockState state) {
+
+    public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, IBlockState state)
+    {
         return true;
     }
-    
-    @Override
-    public void grow(final World worldIn, final Random rand, final BlockPos pos, final IBlockState state) {
-        worldIn.setBlockState(pos, state.withProperty((IProperty<Comparable>)BlockCocoa.AGE, state.getValue((IProperty<Integer>)BlockCocoa.AGE) + 1), 2);
+
+    public void grow(World worldIn, Random rand, BlockPos pos, IBlockState state)
+    {
+        worldIn.setBlockState(pos, state.withProperty(AGE, Integer.valueOf(((Integer)state.getValue(AGE)).intValue() + 1)), 2);
     }
-    
-    @Override
-    public EnumWorldBlockLayer getBlockLayer() {
+
+    public EnumWorldBlockLayer getBlockLayer()
+    {
         return EnumWorldBlockLayer.CUTOUT;
     }
-    
-    @Override
-    public IBlockState getStateFromMeta(final int meta) {
-        return this.getDefaultState().withProperty((IProperty<Comparable>)BlockCocoa.FACING, EnumFacing.getHorizontal(meta)).withProperty((IProperty<Comparable>)BlockCocoa.AGE, (meta & 0xF) >> 2);
+
+    /**
+     * Convert the given metadata into a BlockState for this Block
+     */
+    public IBlockState getStateFromMeta(int meta)
+    {
+        return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(AGE, Integer.valueOf((meta & 15) >> 2));
     }
-    
-    @Override
-    public int getMetaFromState(final IBlockState state) {
+
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
         int i = 0;
-        i |= state.getValue((IProperty<EnumFacing>)BlockCocoa.FACING).getHorizontalIndex();
-        i |= state.getValue((IProperty<Integer>)BlockCocoa.AGE) << 2;
+        i = i | ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
+        i = i | ((Integer)state.getValue(AGE)).intValue() << 2;
         return i;
     }
-    
-    @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, new IProperty[] { BlockCocoa.FACING, BlockCocoa.AGE });
-    }
-    
-    static {
-        AGE = PropertyInteger.create("age", 0, 2);
+
+    protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {FACING, AGE});
     }
 }

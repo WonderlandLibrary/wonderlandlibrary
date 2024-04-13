@@ -1,63 +1,108 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.util;
 
 import net.minecraft.client.Minecraft;
 
 public class Timer
 {
+    /** The number of timer ticks per second of real time */
     float ticksPerSecond;
+
+    /**
+     * The time reported by the high-resolution clock at the last call of updateTimer(), in seconds
+     */
     private double lastHRTime;
+
+    /**
+     * How many full ticks have turned over since the last call to updateTimer(), capped at 10.
+     */
     public int elapsedTicks;
+
+    /**
+     * How much time has elapsed since the last tick, in ticks, for use by display rendering routines (range: 0.0 -
+     * 1.0).  This field is frozen if the display is paused to eliminate jitter.
+     */
     public float renderPartialTicks;
-    public float timerSpeed;
+
+    /**
+     * A multiplier to make the timer (and therefore the game) go faster or slower.  0.5 makes the game run at half-
+     * speed.
+     */
+    public static float timerSpeed = 1.0F;
+
+    /**
+     * How much time has elapsed since the last tick, in ticks (range: 0.0 - 1.0).
+     */
     public float elapsedPartialTicks;
+
+    /**
+     * The time reported by the system clock at the last sync, in milliseconds
+     */
     private long lastSyncSysClock;
+
+    /**
+     * The time reported by the high-resolution clock at the last sync, in milliseconds
+     */
     private long lastSyncHRClock;
-    private long counter;
-    private double timeSyncAdjustment;
-    
-    public Timer(final float tps) {
-        this.timerSpeed = 1.0f;
-        this.timeSyncAdjustment = 1.0;
-        this.ticksPerSecond = tps;
+    private long field_74285_i;
+
+    /**
+     * A ratio used to sync the high-resolution clock to the system clock, updated once per second
+     */
+    private double timeSyncAdjustment = 1.0D;
+
+    public Timer(float p_i1018_1_)
+    {
+        this.ticksPerSecond = p_i1018_1_;
         this.lastSyncSysClock = Minecraft.getSystemTime();
         this.lastSyncHRClock = System.nanoTime() / 1000000L;
     }
-    
-    public void updateTimer() {
-        final long i = Minecraft.getSystemTime();
-        final long j = i - this.lastSyncSysClock;
-        final long k = System.nanoTime() / 1000000L;
-        final double d0 = k / 1000.0;
-        if (j <= 1000L && j >= 0L) {
-            this.counter += j;
-            if (this.counter > 1000L) {
-                final long l = k - this.lastSyncHRClock;
-                final double d2 = this.counter / (double)l;
-                this.timeSyncAdjustment += (d2 - this.timeSyncAdjustment) * 0.20000000298023224;
+
+    /**
+     * Updates all fields of the Timer using the current time
+     */
+    public void updateTimer()
+    {
+        long i = Minecraft.getSystemTime();
+        long j = i - this.lastSyncSysClock;
+        long k = System.nanoTime() / 1000000L;
+        double d0 = (double)k / 1000.0D;
+
+        if (j <= 1000L && j >= 0L)
+        {
+            this.field_74285_i += j;
+
+            if (this.field_74285_i > 1000L)
+            {
+                long l = k - this.lastSyncHRClock;
+                double d1 = (double)this.field_74285_i / (double)l;
+                this.timeSyncAdjustment += (d1 - this.timeSyncAdjustment) * 0.20000000298023224D;
                 this.lastSyncHRClock = k;
-                this.counter = 0L;
+                this.field_74285_i = 0L;
             }
-            if (this.counter < 0L) {
+
+            if (this.field_74285_i < 0L)
+            {
                 this.lastSyncHRClock = k;
             }
         }
-        else {
+        else
+        {
             this.lastHRTime = d0;
         }
+
         this.lastSyncSysClock = i;
-        double d3 = (d0 - this.lastHRTime) * this.timeSyncAdjustment;
+        double d2 = (d0 - this.lastHRTime) * this.timeSyncAdjustment;
         this.lastHRTime = d0;
-        d3 = MathHelper.clamp_double(d3, 0.0, 1.0);
-        this.elapsedPartialTicks += (float)(d3 * this.timerSpeed * this.ticksPerSecond);
+        d2 = MathHelper.clamp_double(d2, 0.0D, 1.0D);
+        this.elapsedPartialTicks = (float)((double)this.elapsedPartialTicks + d2 * (double)this.timerSpeed * (double)this.ticksPerSecond);
         this.elapsedTicks = (int)this.elapsedPartialTicks;
-        this.elapsedPartialTicks -= this.elapsedTicks;
-        if (this.elapsedTicks > 10) {
+        this.elapsedPartialTicks -= (float)this.elapsedTicks;
+
+        if (this.elapsedTicks > 10)
+        {
             this.elapsedTicks = 10;
         }
+
         this.renderPartialTicks = this.elapsedPartialTicks;
     }
 }

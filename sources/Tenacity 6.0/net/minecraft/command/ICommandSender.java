@@ -1,34 +1,65 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.command;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.world.World;
-import net.minecraft.util.Vec3;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 
 public interface ICommandSender
 {
-    String getName();
-    
+    /**
+     * Gets the name of this command sender (usually username, but possibly "Rcon")
+     */
+    String getCommandSenderName();
+
+    /**
+     * Get the formatted ChatComponent that will be used for the sender's username in chat
+     */
     IChatComponent getDisplayName();
-    
-    void addChatMessage(final IChatComponent p0);
-    
-    boolean canCommandSenderUseCommand(final int p0, final String p1);
-    
+
+    /**
+     * Send a chat message to the CommandSender
+     *  
+     * @param component The ChatComponent to send
+     */
+    void addChatMessage(IChatComponent component);
+
+    /**
+     * Returns {@code true} if the CommandSender is allowed to execute the command, {@code false} if not
+     *  
+     * @param permLevel The permission level required to execute the command
+     * @param commandName The name of the command
+     */
+    boolean canCommandSenderUseCommand(int permLevel, String commandName);
+
+    /**
+     * Get the position in the world. <b>{@code null} is not allowed!</b> If you are not an entity in the world, return
+     * the coordinates 0, 0, 0
+     */
     BlockPos getPosition();
-    
+
+    /**
+     * Get the position vector. <b>{@code null} is not allowed!</b> If you are not an entity in the world, return 0.0D,
+     * 0.0D, 0.0D
+     */
     Vec3 getPositionVector();
-    
+
+    /**
+     * Get the world, if available. <b>{@code null} is not allowed!</b> If you are not an entity in the world, return
+     * the overworld
+     */
     World getEntityWorld();
-    
+
+    /**
+     * Returns the entity associated with the command sender. MAY BE NULL!
+     */
     Entity getCommandSenderEntity();
-    
+
+    /**
+     * Returns true if the command sender should be sent feedback about executed commands
+     */
     boolean sendCommandFeedback();
-    
-    void setCommandStat(final CommandResultStats.Type p0, final int p1);
+
+    void setCommandStat(CommandResultStats.Type type, int amount);
 }

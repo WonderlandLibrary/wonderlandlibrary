@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.resources;
 
 import java.util.UUID;
@@ -9,27 +5,47 @@ import net.minecraft.util.ResourceLocation;
 
 public class DefaultPlayerSkin
 {
-    private static final ResourceLocation TEXTURE_STEVE;
-    private static final ResourceLocation TEXTURE_ALEX;
-    
-    public static ResourceLocation getDefaultSkinLegacy() {
-        return DefaultPlayerSkin.TEXTURE_STEVE;
+    /** The default skin for the Steve model. */
+    private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
+
+    /** The default skin for the Alex model. */
+    private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
+
+    /**
+     * Returns the default skind for versions prior to 1.8, which is always the Steve texture.
+     */
+    public static ResourceLocation getDefaultSkinLegacy()
+    {
+        return TEXTURE_STEVE;
     }
-    
-    public static ResourceLocation getDefaultSkin(final UUID playerUUID) {
-        return isSlimSkin(playerUUID) ? DefaultPlayerSkin.TEXTURE_ALEX : DefaultPlayerSkin.TEXTURE_STEVE;
+
+    /**
+     * Retrieves the default skin for this player. Depending on the model used this will be Alex or Steve.
+     *  
+     * @param playerUUID The unique ID for the player.
+     */
+    public static ResourceLocation getDefaultSkin(UUID playerUUID)
+    {
+        return isSlimSkin(playerUUID) ? TEXTURE_ALEX : TEXTURE_STEVE;
     }
-    
-    public static String getSkinType(final UUID playerUUID) {
+
+    /**
+     * Retrieves the type of skin that a player is using. The Alex model is slim while the Steve model is default.
+     *  
+     * @param playerUUID The unique ID for the player.
+     */
+    public static String getSkinType(UUID playerUUID)
+    {
         return isSlimSkin(playerUUID) ? "slim" : "default";
     }
-    
-    private static boolean isSlimSkin(final UUID playerUUID) {
-        return (playerUUID.hashCode() & 0x1) == 0x1;
-    }
-    
-    static {
-        TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
-        TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
+
+    /**
+     * Checks if a players skin model is slim or the default. The Alex model is slime while the Steve model is default.
+     *  
+     * @param playerUUID The unique ID for the player.
+     */
+    private static boolean isSlimSkin(UUID playerUUID)
+    {
+        return (playerUUID.hashCode() & 1) == 1;
     }
 }

@@ -1,93 +1,92 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.network.play.client;
 
-import net.minecraft.network.INetHandler;
-import net.minecraft.world.World;
 import java.io.IOException;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.Vec3;
-import net.minecraft.network.play.INetHandlerPlayServer;
 import net.minecraft.network.Packet;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.INetHandlerPlayServer;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 
 public class C02PacketUseEntity implements Packet<INetHandlerPlayServer>
 {
     private int entityId;
-    private Action action;
+    private C02PacketUseEntity.Action action;
     private Vec3 hitVec;
-    
-    public C02PacketUseEntity() {
+
+    public C02PacketUseEntity()
+    {
     }
-    
-    public C02PacketUseEntity(final Entity entity, final Action action) {
+
+    public C02PacketUseEntity(Entity entity, C02PacketUseEntity.Action action)
+    {
         this.entityId = entity.getEntityId();
         this.action = action;
     }
-    
-    public C02PacketUseEntity(final Entity entity, final Vec3 hitVec) {
-        this(entity, Action.INTERACT_AT);
+
+    public C02PacketUseEntity(Entity entity, Vec3 hitVec)
+    {
+        this(entity, C02PacketUseEntity.Action.INTERACT_AT);
         this.hitVec = hitVec;
     }
-    
-    @Override
-    public void readPacketData(final PacketBuffer buf) throws IOException {
+
+    /**
+     * Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(PacketBuffer buf) throws IOException
+    {
         this.entityId = buf.readVarIntFromBuffer();
-        this.action = buf.readEnumValue(Action.class);
-        if (this.action == Action.INTERACT_AT) {
-            this.hitVec = new Vec3(buf.readFloat(), buf.readFloat(), buf.readFloat());
+        this.action = (C02PacketUseEntity.Action)buf.readEnumValue(C02PacketUseEntity.Action.class);
+
+        if (this.action == C02PacketUseEntity.Action.INTERACT_AT)
+        {
+            this.hitVec = new Vec3((double)buf.readFloat(), (double)buf.readFloat(), (double)buf.readFloat());
         }
     }
-    
-    @Override
-    public void writePacketData(final PacketBuffer buf) throws IOException {
+
+    /**
+     * Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(PacketBuffer buf) throws IOException
+    {
         buf.writeVarIntToBuffer(this.entityId);
         buf.writeEnumValue(this.action);
-        if (this.action == Action.INTERACT_AT) {
+
+        if (this.action == C02PacketUseEntity.Action.INTERACT_AT)
+        {
             buf.writeFloat((float)this.hitVec.xCoord);
             buf.writeFloat((float)this.hitVec.yCoord);
             buf.writeFloat((float)this.hitVec.zCoord);
         }
     }
-    
-    @Override
-    public void processPacket(final INetHandlerPlayServer handler) {
+
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(INetHandlerPlayServer handler)
+    {
         handler.processUseEntity(this);
     }
-    
-    public Entity getEntityFromWorld(final World worldIn) {
+
+    public Entity getEntityFromWorld(World worldIn)
+    {
         return worldIn.getEntityByID(this.entityId);
     }
-    
-    public Action getAction() {
+
+    public C02PacketUseEntity.Action getAction()
+    {
         return this.action;
     }
-    
-    public Vec3 getHitVec() {
+
+    public Vec3 getHitVec()
+    {
         return this.hitVec;
     }
-    
-    @Override
-    public int getID() {
-        return 8;
-    }
-    
-    public enum Action
+
+    public static enum Action
     {
-        INTERACT(0), 
-        ATTACK(1), 
-        INTERACT_AT(2);
-        
-        private final int id;
-        
-        private Action(final int id) {
-            this.id = id;
-        }
-        
-        public int getId() {
-            return this.id;
-        }
+        INTERACT,
+        ATTACK,
+        INTERACT_AT;
     }
 }

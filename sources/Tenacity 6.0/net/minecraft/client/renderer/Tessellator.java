@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer;
 
 import net.optifine.SmartAnimations;
@@ -9,31 +5,37 @@ import net.optifine.SmartAnimations;
 public class Tessellator
 {
     private WorldRenderer worldRenderer;
-    private WorldVertexBufferUploader vboUploader;
-    private static final Tessellator instance;
-    
-    public static Tessellator getInstance() {
-        return Tessellator.instance;
+    private WorldVertexBufferUploader vboUploader = new WorldVertexBufferUploader();
+
+    /** The static instance of the Tessellator. */
+    private static final Tessellator instance = new Tessellator(2097152);
+
+    public static Tessellator getInstance()
+    {
+        return instance;
     }
-    
-    public Tessellator(final int bufferSize) {
-        this.vboUploader = new WorldVertexBufferUploader();
+
+    public Tessellator(int bufferSize)
+    {
         this.worldRenderer = new WorldRenderer(bufferSize);
     }
-    
-    public void draw() {
-        if (this.worldRenderer.animatedSprites != null) {
+
+    /**
+     * Draws the data set up in this tessellator and resets the state to prepare for new drawing.
+     */
+    public void draw()
+    {
+        if (this.worldRenderer.animatedSprites != null)
+        {
             SmartAnimations.spritesRendered(this.worldRenderer.animatedSprites);
         }
+
         this.worldRenderer.finishDrawing();
-        this.vboUploader.draw(this.worldRenderer);
+        this.vboUploader.func_181679_a(this.worldRenderer);
     }
-    
-    public WorldRenderer getWorldRenderer() {
+
+    public WorldRenderer getWorldRenderer()
+    {
         return this.worldRenderer;
-    }
-    
-    static {
-        instance = new Tessellator(2097152);
     }
 }

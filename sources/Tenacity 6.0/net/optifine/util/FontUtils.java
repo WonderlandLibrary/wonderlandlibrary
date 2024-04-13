@@ -1,112 +1,166 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.util;
 
-import java.util.Iterator;
-import java.io.InputStream;
-import java.io.IOException;
 import java.io.FileNotFoundException;
-import net.minecraft.src.Config;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
+import net.minecraft.src.Config;
 import net.minecraft.util.ResourceLocation;
 
 public class FontUtils
 {
-    public static Properties readFontProperties(final ResourceLocation locationFontTexture) {
-        final String s = locationFontTexture.getResourcePath();
-        final Properties properties = new PropertiesOrdered();
-        final String s2 = ".png";
-        if (!s.endsWith(s2)) {
+    public static Properties readFontProperties(ResourceLocation locationFontTexture)
+    {
+        String s = locationFontTexture.getResourcePath();
+        Properties properties = new PropertiesOrdered();
+        String s1 = ".png";
+
+        if (!s.endsWith(s1))
+        {
             return properties;
         }
-        final String s3 = s.substring(0, s.length() - s2.length()) + ".properties";
-        try {
-            final ResourceLocation resourcelocation = new ResourceLocation(locationFontTexture.getResourceDomain(), s3);
-            final InputStream inputstream = Config.getResourceStream(Config.getResourceManager(), resourcelocation);
-            if (inputstream == null) {
-                return properties;
-            }
-            Config.log("Loading " + s3);
-            properties.load(inputstream);
-            inputstream.close();
-        }
-        catch (FileNotFoundException ex) {}
-        catch (IOException ioexception) {
-            ioexception.printStackTrace();
-        }
-        return properties;
-    }
-    
-    public static void readCustomCharWidths(final Properties props, final float[] charWidth) {
-        for (final Object s0 : props.keySet()) {
-            final String s2 = (String)s0;
-            final String s3 = "width.";
-            if (s2.startsWith(s3)) {
-                final String s4 = s2.substring(s3.length());
-                final int i = Config.parseInt(s4, -1);
-                if (i < 0 || i >= charWidth.length) {
-                    continue;
+        else
+        {
+            String s2 = s.substring(0, s.length() - s1.length()) + ".properties";
+
+            try
+            {
+                ResourceLocation resourcelocation = new ResourceLocation(locationFontTexture.getResourceDomain(), s2);
+                InputStream inputstream = Config.getResourceStream(Config.getResourceManager(), resourcelocation);
+
+                if (inputstream == null)
+                {
+                    return properties;
                 }
-                final String s5 = props.getProperty(s2);
-                final float f = Config.parseFloat(s5, -1.0f);
-                if (f < 0.0f) {
-                    continue;
-                }
-                charWidth[i] = f;
+
+                Config.log("Loading " + s2);
+                properties.load(inputstream);
             }
+            catch (FileNotFoundException var7)
+            {
+                ;
+            }
+            catch (IOException ioexception)
+            {
+                ioexception.printStackTrace();
+            }
+
+            return properties;
         }
     }
-    
-    public static float readFloat(final Properties props, final String key, final float defOffset) {
-        final String s = props.getProperty(key);
-        if (s == null) {
+
+    public static void readCustomCharWidths(Properties props, float[] charWidth)
+    {
+        for (Object e : props.keySet())
+        {
+            String s = (String) e;
+            String s1 = "width.";
+
+            if (s.startsWith(s1))
+            {
+                String s2 = s.substring(s1.length());
+                int i = Config.parseInt(s2, -1);
+
+                if (i >= 0 && i < charWidth.length)
+                {
+                    String s3 = props.getProperty(s);
+                    float f = Config.parseFloat(s3, -1.0F);
+
+                    if (f >= 0.0F)
+                    {
+                        charWidth[i] = f;
+                    }
+                }
+            }
+        }
+    }
+
+    public static float readFloat(Properties props, String key, float defOffset)
+    {
+        String s = props.getProperty(key);
+
+        if (s == null)
+        {
             return defOffset;
         }
-        final float f = Config.parseFloat(s, Float.MIN_VALUE);
-        if (f == Float.MIN_VALUE) {
-            Config.warn("Invalid value for " + key + ": " + s);
-            return defOffset;
+        else
+        {
+            float f = Config.parseFloat(s, Float.MIN_VALUE);
+
+            if (f == Float.MIN_VALUE)
+            {
+                Config.warn("Invalid value for " + key + ": " + s);
+                return defOffset;
+            }
+            else
+            {
+                return f;
+            }
         }
-        return f;
     }
-    
-    public static boolean readBoolean(final Properties props, final String key, final boolean defVal) {
-        final String s = props.getProperty(key);
-        if (s == null) {
+
+    public static boolean readBoolean(Properties props, String key, boolean defVal)
+    {
+        String s = props.getProperty(key);
+
+        if (s == null)
+        {
             return defVal;
         }
-        final String s2 = s.toLowerCase().trim();
-        if (s2.equals("true") || s2.equals("on")) {
-            return true;
+        else
+        {
+            String s1 = s.toLowerCase().trim();
+
+            if (!s1.equals("true") && !s1.equals("on"))
+            {
+                if (!s1.equals("false") && !s1.equals("off"))
+                {
+                    Config.warn("Invalid value for " + key + ": " + s);
+                    return defVal;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return true;
+            }
         }
-        if (!s2.equals("false") && !s2.equals("off")) {
-            Config.warn("Invalid value for " + key + ": " + s);
-            return defVal;
-        }
-        return false;
     }
-    
-    public static ResourceLocation getHdFontLocation(final ResourceLocation fontLoc) {
-        if (!Config.isCustomFonts()) {
+
+    public static ResourceLocation getHdFontLocation(ResourceLocation fontLoc)
+    {
+        if (!Config.isCustomFonts())
+        {
             return fontLoc;
         }
-        if (fontLoc == null) {
+        else if (fontLoc == null)
+        {
             return fontLoc;
         }
-        if (!Config.isMinecraftThread()) {
+        else if (!Config.isMinecraftThread())
+        {
             return fontLoc;
         }
-        String s = fontLoc.getResourcePath();
-        final String s2 = "textures/";
-        final String s3 = "mcpatcher/";
-        if (!s.startsWith(s2)) {
-            return fontLoc;
+        else
+        {
+            String s = fontLoc.getResourcePath();
+            String s1 = "textures/";
+            String s2 = "mcpatcher/";
+
+            if (!s.startsWith(s1))
+            {
+                return fontLoc;
+            }
+            else
+            {
+                s = s.substring(s1.length());
+                s = s2 + s;
+                ResourceLocation resourcelocation = new ResourceLocation(fontLoc.getResourceDomain(), s);
+                return Config.hasResource(Config.getResourceManager(), resourcelocation) ? resourcelocation : fontLoc;
+            }
         }
-        s = s.substring(s2.length());
-        s = s3 + s;
-        final ResourceLocation resourcelocation = new ResourceLocation(fontLoc.getResourceDomain(), s);
-        return Config.hasResource(Config.getResourceManager(), resourcelocation) ? resourcelocation : fontLoc;
     }
 }

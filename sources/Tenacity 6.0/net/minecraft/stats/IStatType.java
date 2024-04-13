@@ -1,10 +1,9 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.stats;
 
 public interface IStatType
 {
-    String format(final int p0);
+    /**
+     * Formats a given stat for human consumption.
+     */
+    String format(int p_75843_1_);
 }

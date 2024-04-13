@@ -1,128 +1,174 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.entity;
 
 import net.minecraft.block.BlockFence;
-import java.util.Iterator;
-import net.minecraft.item.ItemStack;
-import net.minecraft.init.Items;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 public class EntityLeashKnot extends EntityHanging
 {
-    public EntityLeashKnot(final World worldIn) {
+    public EntityLeashKnot(World worldIn)
+    {
         super(worldIn);
     }
-    
-    public EntityLeashKnot(final World worldIn, final BlockPos hangingPositionIn) {
+
+    public EntityLeashKnot(World worldIn, BlockPos hangingPositionIn)
+    {
         super(worldIn, hangingPositionIn);
-        this.setPosition(hangingPositionIn.getX() + 0.5, hangingPositionIn.getY() + 0.5, hangingPositionIn.getZ() + 0.5);
-        final float f = 0.125f;
-        final float f2 = 0.1875f;
-        final float f3 = 0.25f;
-        this.setEntityBoundingBox(new AxisAlignedBB(this.posX - 0.1875, this.posY - 0.25 + 0.125, this.posZ - 0.1875, this.posX + 0.1875, this.posY + 0.25 + 0.125, this.posZ + 0.1875));
+        this.setPosition((double)hangingPositionIn.getX() + 0.5D, (double)hangingPositionIn.getY() + 0.5D, (double)hangingPositionIn.getZ() + 0.5D);
+        float f = 0.125F;
+        float f1 = 0.1875F;
+        float f2 = 0.25F;
+        this.setEntityBoundingBox(new AxisAlignedBB(this.posX - 0.1875D, this.posY - 0.25D + 0.125D, this.posZ - 0.1875D, this.posX + 0.1875D, this.posY + 0.25D + 0.125D, this.posZ + 0.1875D));
     }
-    
-    @Override
-    protected void entityInit() {
+
+    protected void entityInit()
+    {
         super.entityInit();
     }
-    
-    public void updateFacingWithBoundingBox(final EnumFacing facingDirectionIn) {
+
+    /**
+     * Updates facing and bounding box based on it
+     *  
+     * @param facingDirectionIn The direction this hanging entity faces
+     */
+    public void updateFacingWithBoundingBox(EnumFacing facingDirectionIn)
+    {
     }
-    
-    @Override
-    public int getWidthPixels() {
+
+    public int getWidthPixels()
+    {
         return 9;
     }
-    
-    @Override
-    public int getHeightPixels() {
+
+    public int getHeightPixels()
+    {
         return 9;
     }
-    
-    @Override
-    public float getEyeHeight() {
-        return -0.0625f;
+
+    public float getEyeHeight()
+    {
+        return -0.0625F;
     }
-    
-    @Override
-    public boolean isInRangeToRenderDist(final double distance) {
-        return distance < 1024.0;
+
+    /**
+     * Checks if the entity is in range to render by using the past in distance and comparing it to its average edge
+     * length * 64 * renderDistanceWeight Args: distance
+     */
+    public boolean isInRangeToRenderDist(double distance)
+    {
+        return distance < 1024.0D;
     }
-    
-    @Override
-    public void onBroken(final Entity brokenEntity) {
+
+    /**
+     * Called when this entity is broken. Entity parameter may be null.
+     */
+    public void onBroken(Entity brokenEntity)
+    {
     }
-    
-    @Override
-    public boolean writeToNBTOptional(final NBTTagCompound tagCompund) {
+
+    /**
+     * Either write this entity to the NBT tag given and return true, or return false without doing anything. If this
+     * returns false the entity is not saved on disk. Ridden entities return false here as they are saved with their
+     * rider.
+     */
+    public boolean writeToNBTOptional(NBTTagCompound tagCompund)
+    {
         return false;
     }
-    
-    @Override
-    public void writeEntityToNBT(final NBTTagCompound tagCompound) {
+
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    public void writeEntityToNBT(NBTTagCompound tagCompound)
+    {
     }
-    
-    @Override
-    public void readEntityFromNBT(final NBTTagCompound tagCompund) {
+
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    public void readEntityFromNBT(NBTTagCompound tagCompund)
+    {
     }
-    
-    @Override
-    public boolean interactFirst(final EntityPlayer playerIn) {
-        final ItemStack itemstack = playerIn.getHeldItem();
+
+    /**
+     * First layer of player interaction
+     */
+    public boolean interactFirst(EntityPlayer playerIn)
+    {
+        ItemStack itemstack = playerIn.getHeldItem();
         boolean flag = false;
-        if (itemstack != null && itemstack.getItem() == Items.lead && !this.worldObj.isRemote) {
-            final double d0 = 7.0;
-            for (final EntityLiving entityliving : this.worldObj.getEntitiesWithinAABB((Class<? extends EntityLiving>)EntityLiving.class, new AxisAlignedBB(this.posX - d0, this.posY - d0, this.posZ - d0, this.posX + d0, this.posY + d0, this.posZ + d0))) {
-                if (entityliving.getLeashed() && entityliving.getLeashedToEntity() == playerIn) {
+
+        if (itemstack != null && itemstack.getItem() == Items.lead && !this.worldObj.isRemote)
+        {
+            double d0 = 7.0D;
+
+            for (EntityLiving entityliving : this.worldObj.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(this.posX - d0, this.posY - d0, this.posZ - d0, this.posX + d0, this.posY + d0, this.posZ + d0)))
+            {
+                if (entityliving.getLeashed() && entityliving.getLeashedToEntity() == playerIn)
+                {
                     entityliving.setLeashedToEntity(this, true);
                     flag = true;
                 }
             }
         }
-        if (!this.worldObj.isRemote && !flag) {
+
+        if (!this.worldObj.isRemote && !flag)
+        {
             this.setDead();
-            if (playerIn.capabilities.isCreativeMode) {
-                final double d2 = 7.0;
-                for (final EntityLiving entityliving2 : this.worldObj.getEntitiesWithinAABB((Class<? extends EntityLiving>)EntityLiving.class, new AxisAlignedBB(this.posX - d2, this.posY - d2, this.posZ - d2, this.posX + d2, this.posY + d2, this.posZ + d2))) {
-                    if (entityliving2.getLeashed() && entityliving2.getLeashedToEntity() == this) {
-                        entityliving2.clearLeashed(true, false);
+
+            if (playerIn.capabilities.isCreativeMode)
+            {
+                double d1 = 7.0D;
+
+                for (EntityLiving entityliving1 : this.worldObj.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(this.posX - d1, this.posY - d1, this.posZ - d1, this.posX + d1, this.posY + d1, this.posZ + d1)))
+                {
+                    if (entityliving1.getLeashed() && entityliving1.getLeashedToEntity() == this)
+                    {
+                        entityliving1.clearLeashed(true, false);
                     }
                 }
             }
         }
+
         return true;
     }
-    
-    @Override
-    public boolean onValidSurface() {
+
+    /**
+     * checks to make sure painting can be placed there
+     */
+    public boolean onValidSurface()
+    {
         return this.worldObj.getBlockState(this.hangingPosition).getBlock() instanceof BlockFence;
     }
-    
-    public static EntityLeashKnot createKnot(final World worldIn, final BlockPos fence) {
-        final EntityLeashKnot entityleashknot = new EntityLeashKnot(worldIn, fence);
+
+    public static EntityLeashKnot createKnot(World worldIn, BlockPos fence)
+    {
+        EntityLeashKnot entityleashknot = new EntityLeashKnot(worldIn, fence);
         entityleashknot.forceSpawn = true;
         worldIn.spawnEntityInWorld(entityleashknot);
         return entityleashknot;
     }
-    
-    public static EntityLeashKnot getKnotForPosition(final World worldIn, final BlockPos pos) {
-        final int i = pos.getX();
-        final int j = pos.getY();
-        final int k = pos.getZ();
-        for (final EntityLeashKnot entityleashknot : worldIn.getEntitiesWithinAABB((Class<? extends EntityLeashKnot>)EntityLeashKnot.class, new AxisAlignedBB(i - 1.0, j - 1.0, k - 1.0, i + 1.0, j + 1.0, k + 1.0))) {
-            if (entityleashknot.getHangingPosition().equals(pos)) {
+
+    public static EntityLeashKnot getKnotForPosition(World worldIn, BlockPos pos)
+    {
+        int i = pos.getX();
+        int j = pos.getY();
+        int k = pos.getZ();
+
+        for (EntityLeashKnot entityleashknot : worldIn.getEntitiesWithinAABB(EntityLeashKnot.class, new AxisAlignedBB((double)i - 1.0D, (double)j - 1.0D, (double)k - 1.0D, (double)i + 1.0D, (double)j + 1.0D, (double)k + 1.0D)))
+        {
+            if (entityleashknot.getHangingPosition().equals(pos))
+            {
                 return entityleashknot;
             }
         }
+
         return null;
     }
 }

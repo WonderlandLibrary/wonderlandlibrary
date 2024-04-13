@@ -1,39 +1,36 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.reflect;
 
-import java.util.Collections;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
 
 public class ReflectorResolver
 {
-    private static final List<IResolvable> RESOLVABLES;
-    private static boolean resolved;
-    
-    protected static void register(final IResolvable resolvable) {
-        if (!ReflectorResolver.resolved) {
-            ReflectorResolver.RESOLVABLES.add(resolvable);
+    private static final List<IResolvable> RESOLVABLES = Collections.<IResolvable>synchronizedList(new ArrayList());
+    private static boolean resolved = false;
+
+    protected static void register(IResolvable resolvable)
+    {
+        if (!resolved)
+        {
+            RESOLVABLES.add(resolvable);
         }
-        else {
+        else
+        {
             resolvable.resolve();
         }
     }
-    
-    public static void resolve() {
-        if (!ReflectorResolver.resolved) {
-            for (final IResolvable iresolvable : ReflectorResolver.RESOLVABLES) {
+
+    public static void resolve()
+    {
+        if (!resolved)
+        {
+            for (IResolvable iresolvable : RESOLVABLES)
+            {
                 iresolvable.resolve();
             }
-            ReflectorResolver.resolved = true;
+
+            resolved = true;
         }
-    }
-    
-    static {
-        RESOLVABLES = Collections.synchronizedList(new ArrayList<IResolvable>());
-        ReflectorResolver.resolved = false;
     }
 }

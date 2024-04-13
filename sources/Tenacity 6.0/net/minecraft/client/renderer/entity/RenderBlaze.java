@@ -1,29 +1,23 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.entity;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBlaze;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.entity.monster.EntityBlaze;
+import net.minecraft.util.ResourceLocation;
 
 public class RenderBlaze extends RenderLiving<EntityBlaze>
 {
-    private static final ResourceLocation blazeTextures;
-    
-    public RenderBlaze(final RenderManager renderManagerIn) {
-        super(renderManagerIn, new ModelBlaze(), 0.5f);
+    private static final ResourceLocation blazeTextures = new ResourceLocation("textures/entity/blaze.png");
+
+    public RenderBlaze(RenderManager renderManagerIn)
+    {
+        super(renderManagerIn, new ModelBlaze(), 0.5F);
     }
-    
-    @Override
-    protected ResourceLocation getEntityTexture(final EntityBlaze entity) {
-        return RenderBlaze.blazeTextures;
-    }
-    
-    static {
-        blazeTextures = new ResourceLocation("textures/entity/blaze.png");
+
+    /**
+     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
+     */
+    protected ResourceLocation getEntityTexture(EntityBlaze entity)
+    {
+        return blazeTextures;
     }
 }

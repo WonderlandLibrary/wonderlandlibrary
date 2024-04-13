@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.inventory;
 
 import net.minecraft.item.ItemStack;
@@ -9,9 +5,17 @@ import net.minecraft.util.EnumFacing;
 
 public interface ISidedInventory extends IInventory
 {
-    int[] getSlotsForFace(final EnumFacing p0);
-    
-    boolean canInsertItem(final int p0, final ItemStack p1, final EnumFacing p2);
-    
-    boolean canExtractItem(final int p0, final ItemStack p1, final EnumFacing p2);
+    int[] getSlotsForFace(EnumFacing side);
+
+    /**
+     * Returns true if automation can insert the given item in the given slot from the given side. Args: slot, item,
+     * side
+     */
+    boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction);
+
+    /**
+     * Returns true if automation can extract the given item in the given slot from the given side. Args: slot, item,
+     * side
+     */
+    boolean canExtractItem(int index, ItemStack stack, EnumFacing direction);
 }

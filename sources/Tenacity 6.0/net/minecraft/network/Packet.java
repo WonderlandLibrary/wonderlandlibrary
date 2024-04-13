@@ -1,20 +1,21 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.network;
 
 import java.io.IOException;
 
 public interface Packet<T extends INetHandler>
 {
-    void readPacketData(final PacketBuffer p0) throws IOException;
-    
-    void writePacketData(final PacketBuffer p0) throws IOException;
-    
-    void processPacket(final T p0);
-    
-    default int getID() {
-        return 99;
-    }
+    /**
+     * Reads the raw packet data from the data stream.
+     */
+    void readPacketData(PacketBuffer buf) throws IOException;
+
+    /**
+     * Writes the raw packet data to the data stream.
+     */
+    void writePacketData(PacketBuffer buf) throws IOException;
+
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    void processPacket(T handler);
 }

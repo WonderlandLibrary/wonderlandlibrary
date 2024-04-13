@@ -1,220 +1,222 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.util;
 
 import java.util.Iterator;
 
-public class LinkedList<T>
-{
-    private Node<T> first;
-    private Node<T> last;
+public class LinkedList<T> {
+
+    private LinkedList.Node<T> first;
+    private LinkedList.Node<T> last;
     private int size;
-    
-    public void addFirst(final Node<T> tNode) {
+
+    public void addFirst(LinkedList.Node<T> tNode) {
         this.checkNoParent(tNode);
+
         if (this.isEmpty()) {
             this.first = tNode;
             this.last = tNode;
-        }
-        else {
-            final Node<T> node = this.first;
-            ((Node<Object>)tNode).setNext((Node<Object>)node);
-            ((Node<Object>)node).setPrev((Node<Object>)tNode);
+        } else {
+            LinkedList.Node<T> node = this.first;
+            tNode.setNext(node);
+            node.setPrev(tNode);
             this.first = tNode;
         }
-        ((Node<Object>)tNode).setParent(this);
+
+        tNode.setParent(this);
         ++this.size;
     }
-    
-    public void addLast(final Node<T> tNode) {
+
+    public void addLast(LinkedList.Node<T> tNode) {
         this.checkNoParent(tNode);
+
         if (this.isEmpty()) {
             this.first = tNode;
             this.last = tNode;
-        }
-        else {
-            final Node<T> node = this.last;
-            ((Node<Object>)tNode).setPrev((Node<Object>)node);
-            ((Node<Object>)node).setNext((Node<Object>)tNode);
+        } else {
+            LinkedList.Node<T> node = this.last;
+            tNode.setPrev(node);
+            node.setNext(tNode);
             this.last = tNode;
         }
-        ((Node<Object>)tNode).setParent(this);
+
+        tNode.setParent(this);
         ++this.size;
     }
-    
-    public void addAfter(final Node<T> nodePrev, final Node<T> tNode) {
+
+    public void addAfter(LinkedList.Node<T> nodePrev, LinkedList.Node<T> tNode) {
         if (nodePrev == null) {
             this.addFirst(tNode);
-        }
-        else if (nodePrev == this.last) {
+        } else if (nodePrev == this.last) {
             this.addLast(tNode);
-        }
-        else {
+        } else {
             this.checkParent(nodePrev);
             this.checkNoParent(tNode);
-            final Node<T> nodeNext = nodePrev.getNext();
-            ((Node<Object>)nodePrev).setNext((Node<Object>)tNode);
-            ((Node<Object>)tNode).setPrev((Node<Object>)nodePrev);
-            ((Node<Object>)nodeNext).setPrev((Node<Object>)tNode);
-            ((Node<Object>)tNode).setNext((Node<Object>)nodeNext);
-            ((Node<Object>)tNode).setParent(this);
+            LinkedList.Node<T> nodeNext = nodePrev.getNext();
+            nodePrev.setNext(tNode);
+            tNode.setPrev(nodePrev);
+            nodeNext.setPrev(tNode);
+            tNode.setNext(nodeNext);
+            tNode.setParent(this);
             ++this.size;
         }
     }
-    
-    public Node<T> remove(final Node<T> tNode) {
+
+    public LinkedList.Node<T> remove(LinkedList.Node<T> tNode) {
         this.checkParent(tNode);
-        final Node<T> prev = tNode.getPrev();
-        final Node<T> next = tNode.getNext();
+        LinkedList.Node<T> prev = tNode.getPrev();
+        LinkedList.Node<T> next = tNode.getNext();
+
         if (prev != null) {
-            ((Node<Object>)prev).setNext((Node<Object>)next);
-        }
-        else {
+            prev.setNext(next);
+        } else {
             this.first = next;
         }
+
         if (next != null) {
-            ((Node<Object>)next).setPrev((Node<Object>)prev);
-        }
-        else {
+            next.setPrev(prev);
+        } else {
             this.last = prev;
         }
-        ((Node<Object>)tNode).setPrev(null);
-        ((Node<Object>)tNode).setNext(null);
-        ((Node<Object>)tNode).setParent(null);
+
+        tNode.setPrev(null);
+        tNode.setNext(null);
+        tNode.setParent(null);
         --this.size;
         return tNode;
     }
-    
-    public void moveAfter(final Node<T> nodePrev, final Node<T> node) {
+
+    public void moveAfter(LinkedList.Node<T> nodePrev, LinkedList.Node<T> node) {
         this.remove(node);
         this.addAfter(nodePrev, node);
     }
-    
-    public boolean find(final Node<T> nodeFind, final Node<T> nodeFrom, final Node<T> nodeTo) {
+
+    public boolean find(LinkedList.Node<T> nodeFind, LinkedList.Node<T> nodeFrom, LinkedList.Node<T> nodeTo) {
         this.checkParent(nodeFrom);
+
         if (nodeTo != null) {
             this.checkParent(nodeTo);
         }
-        Node<T> node;
+
+        LinkedList.Node<T> node;
+
         for (node = nodeFrom; node != null && node != nodeTo; node = node.getNext()) {
             if (node == nodeFind) {
                 return true;
             }
         }
+
         if (node != nodeTo) {
             throw new IllegalArgumentException("Sublist is not linked, from: " + nodeFrom + ", to: " + nodeTo);
-        }
-        return false;
-    }
-    
-    private void checkParent(final Node<T> node) {
-        if (((Node<Object>)node).parent != this) {
-            throw new IllegalArgumentException("Node has different parent, node: " + node + ", parent: " + ((Node<Object>)node).parent + ", this: " + this);
+        } else {
+            return false;
         }
     }
-    
-    private void checkNoParent(final Node<T> node) {
-        if (((Node<Object>)node).parent != null) {
-            throw new IllegalArgumentException("Node has different parent, node: " + node + ", parent: " + ((Node<Object>)node).parent + ", this: " + this);
+
+    private void checkParent(LinkedList.Node<T> node) {
+        if (node.parent != this) {
+            throw new IllegalArgumentException("Node has different parent, node: " + node + ", parent: " + node.parent + ", this: " + this);
         }
     }
-    
-    public boolean contains(final Node<T> node) {
-        return ((Node<Object>)node).parent == this;
+
+    private void checkNoParent(LinkedList.Node<T> node) {
+        if (node.parent != null) {
+            throw new IllegalArgumentException("Node has different parent, node: " + node + ", parent: " + node.parent + ", this: " + this);
+        }
     }
-    
-    public Iterator<Node<T>> iterator() {
-        final Iterator<Node<T>> iterator = new Iterator<Node<T>>() {
-            Node<T> node = LinkedList.this.getFirst();
-            
-            @Override
+
+    public boolean contains(LinkedList.Node<T> node) {
+        return node.parent == this;
+    }
+
+    public Iterator<LinkedList.Node<T>> iterator() {
+        Iterator<LinkedList.Node<T>> iterator = new Iterator<LinkedList.Node<T>>() {
+            LinkedList.Node<T> node = LinkedList.this.getFirst();
+
             public boolean hasNext() {
                 return this.node != null;
             }
-            
-            @Override
-            public Node<T> next() {
-                final Node<T> node = this.node;
+
+            public LinkedList.Node<T> next() {
+                LinkedList.Node<T> node = this.node;
+
                 if (this.node != null) {
-                    this.node = (Node<T>)((Node<Object>)this.node).next;
+                    this.node = this.node.next;
                 }
+
                 return node;
             }
-            
-            @Override
+
             public void remove() {
                 throw new UnsupportedOperationException("remove");
             }
         };
         return iterator;
     }
-    
-    public Node<T> getFirst() {
+
+    public LinkedList.Node<T> getFirst() {
         return this.first;
     }
-    
-    public Node<T> getLast() {
+
+    public LinkedList.Node<T> getLast() {
         return this.last;
     }
-    
+
     public int getSize() {
         return this.size;
     }
-    
+
     public boolean isEmpty() {
         return this.size <= 0;
     }
-    
-    @Override
+
     public String toString() {
-        final StringBuffer stringbuffer = new StringBuffer();
-        for (final Node<T> node : this) {
+        StringBuffer stringbuffer = new StringBuffer();
+
+        for (Iterator<Node<T>> it = iterator(); it.hasNext(); ) {
+            Node<T> node = it.next();
             if (stringbuffer.length() > 0) {
                 stringbuffer.append(", ");
             }
             stringbuffer.append(node.getItem());
         }
+
         return "" + this.size + " [" + stringbuffer.toString() + "]";
     }
-    
-    public static class Node<T>
-    {
+
+    public static class Node<T> {
+
         private final T item;
-        private Node<T> prev;
-        private Node<T> next;
+        private LinkedList.Node<T> prev;
+        private LinkedList.Node<T> next;
         private LinkedList<T> parent;
-        
-        public Node(final T item) {
+
+        public Node(T item) {
             this.item = item;
         }
-        
+
         public T getItem() {
             return this.item;
         }
-        
-        public Node<T> getPrev() {
+
+        public LinkedList.Node<T> getPrev() {
             return this.prev;
         }
-        
-        public Node<T> getNext() {
+
+        public LinkedList.Node<T> getNext() {
             return this.next;
         }
-        
-        private void setPrev(final Node<T> prev) {
+
+        private void setPrev(LinkedList.Node<T> prev) {
             this.prev = prev;
         }
-        
-        private void setNext(final Node<T> next) {
+
+        private void setNext(LinkedList.Node<T> next) {
             this.next = next;
         }
-        
-        private void setParent(final LinkedList<T> parent) {
+
+        private void setParent(LinkedList<T> parent) {
             this.parent = parent;
         }
-        
-        @Override
+
         public String toString() {
             return "" + this.item;
         }

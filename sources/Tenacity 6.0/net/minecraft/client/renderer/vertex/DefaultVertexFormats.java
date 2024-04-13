@@ -1,137 +1,126 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.vertex;
 
 import java.lang.reflect.Field;
-import net.optifine.shaders.SVertexFormat;
 import net.minecraft.src.Config;
-import net.optifine.reflect.ReflectorField;
 import net.optifine.reflect.ReflectorClass;
+import net.optifine.reflect.ReflectorField;
+import net.optifine.shaders.SVertexFormat;
 
 public class DefaultVertexFormats
 {
-    public static VertexFormat BLOCK;
-    public static VertexFormat ITEM;
-    private static final VertexFormat BLOCK_VANILLA;
-    private static final VertexFormat ITEM_VANILLA;
-    public static ReflectorClass Attributes;
-    public static ReflectorField Attributes_DEFAULT_BAKED_FORMAT;
-    private static final VertexFormat FORGE_BAKED;
-    public static final VertexFormat OLDMODEL_POSITION_TEX_NORMAL;
-    public static final VertexFormat PARTICLE_POSITION_TEX_COLOR_LMAP;
-    public static final VertexFormat POSITION;
-    public static final VertexFormat POSITION_COLOR;
-    public static final VertexFormat POSITION_TEX;
-    public static final VertexFormat POSITION_NORMAL;
-    public static final VertexFormat POSITION_TEX_COLOR;
-    public static final VertexFormat POSITION_TEX_NORMAL;
-    public static final VertexFormat POSITION_TEX_LMAP_COLOR;
-    public static final VertexFormat POSITION_TEX_COLOR_NORMAL;
-    public static final VertexFormatElement POSITION_3F;
-    public static final VertexFormatElement COLOR_4UB;
-    public static final VertexFormatElement TEX_2F;
-    public static final VertexFormatElement TEX_2S;
-    public static final VertexFormatElement NORMAL_3B;
-    public static final VertexFormatElement PADDING_1B;
-    
-    public static void updateVertexFormats() {
-        if (Config.isShaders()) {
-            DefaultVertexFormats.BLOCK = SVertexFormat.makeDefVertexFormatBlock();
-            DefaultVertexFormats.ITEM = SVertexFormat.makeDefVertexFormatItem();
-            if (DefaultVertexFormats.Attributes_DEFAULT_BAKED_FORMAT.exists()) {
-                SVertexFormat.setDefBakedFormat((VertexFormat)DefaultVertexFormats.Attributes_DEFAULT_BAKED_FORMAT.getValue());
+    public static VertexFormat BLOCK = new VertexFormat();
+    public static VertexFormat ITEM = new VertexFormat();
+    private static final VertexFormat BLOCK_VANILLA = BLOCK;
+    private static final VertexFormat ITEM_VANILLA = ITEM;
+    public static ReflectorClass Attributes = new ReflectorClass("net.minecraftforge.client.model.Attributes");
+    public static ReflectorField Attributes_DEFAULT_BAKED_FORMAT = new ReflectorField(Attributes, "DEFAULT_BAKED_FORMAT");
+    private static final VertexFormat FORGE_BAKED = SVertexFormat.duplicate((VertexFormat)getFieldValue(Attributes_DEFAULT_BAKED_FORMAT));
+    public static final VertexFormat field_181703_c = new VertexFormat();
+    public static final VertexFormat field_181704_d = new VertexFormat();
+    public static final VertexFormat field_181705_e = new VertexFormat();
+    public static final VertexFormat field_181706_f = new VertexFormat();
+    public static final VertexFormat field_181707_g = new VertexFormat();
+    public static final VertexFormat field_181708_h = new VertexFormat();
+    public static final VertexFormat field_181709_i = new VertexFormat();
+    public static final VertexFormat field_181710_j = new VertexFormat();
+    public static final VertexFormat field_181711_k = new VertexFormat();
+    public static final VertexFormat field_181712_l = new VertexFormat();
+    public static final VertexFormatElement field_181713_m = new VertexFormatElement(0, VertexFormatElement.EnumType.FLOAT, VertexFormatElement.EnumUsage.POSITION, 3);
+    public static final VertexFormatElement field_181714_n = new VertexFormatElement(0, VertexFormatElement.EnumType.UBYTE, VertexFormatElement.EnumUsage.COLOR, 4);
+    public static final VertexFormatElement field_181715_o = new VertexFormatElement(0, VertexFormatElement.EnumType.FLOAT, VertexFormatElement.EnumUsage.UV, 2);
+    public static final VertexFormatElement field_181716_p = new VertexFormatElement(1, VertexFormatElement.EnumType.SHORT, VertexFormatElement.EnumUsage.UV, 2);
+    public static final VertexFormatElement field_181717_q = new VertexFormatElement(0, VertexFormatElement.EnumType.BYTE, VertexFormatElement.EnumUsage.NORMAL, 3);
+    public static final VertexFormatElement field_181718_r = new VertexFormatElement(0, VertexFormatElement.EnumType.BYTE, VertexFormatElement.EnumUsage.PADDING, 1);
+
+    public static void updateVertexFormats()
+    {
+        if (Config.isShaders())
+        {
+            BLOCK = SVertexFormat.makeDefVertexFormatBlock();
+            ITEM = SVertexFormat.makeDefVertexFormatItem();
+
+            if (Attributes_DEFAULT_BAKED_FORMAT.exists())
+            {
+                SVertexFormat.setDefBakedFormat((VertexFormat)Attributes_DEFAULT_BAKED_FORMAT.getValue());
             }
         }
-        else {
-            DefaultVertexFormats.BLOCK = DefaultVertexFormats.BLOCK_VANILLA;
-            DefaultVertexFormats.ITEM = DefaultVertexFormats.ITEM_VANILLA;
-            if (DefaultVertexFormats.Attributes_DEFAULT_BAKED_FORMAT.exists()) {
-                SVertexFormat.copy(DefaultVertexFormats.FORGE_BAKED, (VertexFormat)DefaultVertexFormats.Attributes_DEFAULT_BAKED_FORMAT.getValue());
+        else
+        {
+            BLOCK = BLOCK_VANILLA;
+            ITEM = ITEM_VANILLA;
+
+            if (Attributes_DEFAULT_BAKED_FORMAT.exists())
+            {
+                SVertexFormat.copy(FORGE_BAKED, (VertexFormat)Attributes_DEFAULT_BAKED_FORMAT.getValue());
             }
         }
     }
-    
-    public static Object getFieldValue(final ReflectorField p_getFieldValue_0_) {
-        try {
-            final Field field = p_getFieldValue_0_.getTargetField();
-            if (field == null) {
+
+    public static Object getFieldValue(ReflectorField p_getFieldValue_0_)
+    {
+        try
+        {
+            Field field = p_getFieldValue_0_.getTargetField();
+
+            if (field == null)
+            {
                 return null;
             }
-            final Object object = field.get(null);
-            return object;
+            else
+            {
+                Object object = field.get((Object)null);
+                return object;
+            }
         }
-        catch (Throwable throwable) {
+        catch (Throwable throwable)
+        {
             throwable.printStackTrace();
             return null;
         }
     }
-    
-    static {
-        DefaultVertexFormats.BLOCK = new VertexFormat();
-        DefaultVertexFormats.ITEM = new VertexFormat();
-        BLOCK_VANILLA = DefaultVertexFormats.BLOCK;
-        ITEM_VANILLA = DefaultVertexFormats.ITEM;
-        DefaultVertexFormats.Attributes = new ReflectorClass("net.minecraftforge.client.model.Attributes");
-        DefaultVertexFormats.Attributes_DEFAULT_BAKED_FORMAT = new ReflectorField(DefaultVertexFormats.Attributes, "DEFAULT_BAKED_FORMAT");
-        FORGE_BAKED = SVertexFormat.duplicate((VertexFormat)getFieldValue(DefaultVertexFormats.Attributes_DEFAULT_BAKED_FORMAT));
-        OLDMODEL_POSITION_TEX_NORMAL = new VertexFormat();
-        PARTICLE_POSITION_TEX_COLOR_LMAP = new VertexFormat();
-        POSITION = new VertexFormat();
-        POSITION_COLOR = new VertexFormat();
-        POSITION_TEX = new VertexFormat();
-        POSITION_NORMAL = new VertexFormat();
-        POSITION_TEX_COLOR = new VertexFormat();
-        POSITION_TEX_NORMAL = new VertexFormat();
-        POSITION_TEX_LMAP_COLOR = new VertexFormat();
-        POSITION_TEX_COLOR_NORMAL = new VertexFormat();
-        POSITION_3F = new VertexFormatElement(0, VertexFormatElement.EnumType.FLOAT, VertexFormatElement.EnumUsage.POSITION, 3);
-        COLOR_4UB = new VertexFormatElement(0, VertexFormatElement.EnumType.UBYTE, VertexFormatElement.EnumUsage.COLOR, 4);
-        TEX_2F = new VertexFormatElement(0, VertexFormatElement.EnumType.FLOAT, VertexFormatElement.EnumUsage.UV, 2);
-        TEX_2S = new VertexFormatElement(1, VertexFormatElement.EnumType.SHORT, VertexFormatElement.EnumUsage.UV, 2);
-        NORMAL_3B = new VertexFormatElement(0, VertexFormatElement.EnumType.BYTE, VertexFormatElement.EnumUsage.NORMAL, 3);
-        PADDING_1B = new VertexFormatElement(0, VertexFormatElement.EnumType.BYTE, VertexFormatElement.EnumUsage.PADDING, 1);
-        DefaultVertexFormats.BLOCK.addElement(DefaultVertexFormats.POSITION_3F);
-        DefaultVertexFormats.BLOCK.addElement(DefaultVertexFormats.COLOR_4UB);
-        DefaultVertexFormats.BLOCK.addElement(DefaultVertexFormats.TEX_2F);
-        DefaultVertexFormats.BLOCK.addElement(DefaultVertexFormats.TEX_2S);
-        DefaultVertexFormats.ITEM.addElement(DefaultVertexFormats.POSITION_3F);
-        DefaultVertexFormats.ITEM.addElement(DefaultVertexFormats.COLOR_4UB);
-        DefaultVertexFormats.ITEM.addElement(DefaultVertexFormats.TEX_2F);
-        DefaultVertexFormats.ITEM.addElement(DefaultVertexFormats.NORMAL_3B);
-        DefaultVertexFormats.ITEM.addElement(DefaultVertexFormats.PADDING_1B);
-        DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL.addElement(DefaultVertexFormats.POSITION_3F);
-        DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL.addElement(DefaultVertexFormats.TEX_2F);
-        DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL.addElement(DefaultVertexFormats.NORMAL_3B);
-        DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL.addElement(DefaultVertexFormats.PADDING_1B);
-        DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP.addElement(DefaultVertexFormats.POSITION_3F);
-        DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP.addElement(DefaultVertexFormats.TEX_2F);
-        DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP.addElement(DefaultVertexFormats.COLOR_4UB);
-        DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP.addElement(DefaultVertexFormats.TEX_2S);
-        DefaultVertexFormats.POSITION.addElement(DefaultVertexFormats.POSITION_3F);
-        DefaultVertexFormats.POSITION_COLOR.addElement(DefaultVertexFormats.POSITION_3F);
-        DefaultVertexFormats.POSITION_COLOR.addElement(DefaultVertexFormats.COLOR_4UB);
-        DefaultVertexFormats.POSITION_TEX.addElement(DefaultVertexFormats.POSITION_3F);
-        DefaultVertexFormats.POSITION_TEX.addElement(DefaultVertexFormats.TEX_2F);
-        DefaultVertexFormats.POSITION_NORMAL.addElement(DefaultVertexFormats.POSITION_3F);
-        DefaultVertexFormats.POSITION_NORMAL.addElement(DefaultVertexFormats.NORMAL_3B);
-        DefaultVertexFormats.POSITION_NORMAL.addElement(DefaultVertexFormats.PADDING_1B);
-        DefaultVertexFormats.POSITION_TEX_COLOR.addElement(DefaultVertexFormats.POSITION_3F);
-        DefaultVertexFormats.POSITION_TEX_COLOR.addElement(DefaultVertexFormats.TEX_2F);
-        DefaultVertexFormats.POSITION_TEX_COLOR.addElement(DefaultVertexFormats.COLOR_4UB);
-        DefaultVertexFormats.POSITION_TEX_NORMAL.addElement(DefaultVertexFormats.POSITION_3F);
-        DefaultVertexFormats.POSITION_TEX_NORMAL.addElement(DefaultVertexFormats.TEX_2F);
-        DefaultVertexFormats.POSITION_TEX_NORMAL.addElement(DefaultVertexFormats.NORMAL_3B);
-        DefaultVertexFormats.POSITION_TEX_NORMAL.addElement(DefaultVertexFormats.PADDING_1B);
-        DefaultVertexFormats.POSITION_TEX_LMAP_COLOR.addElement(DefaultVertexFormats.POSITION_3F);
-        DefaultVertexFormats.POSITION_TEX_LMAP_COLOR.addElement(DefaultVertexFormats.TEX_2F);
-        DefaultVertexFormats.POSITION_TEX_LMAP_COLOR.addElement(DefaultVertexFormats.TEX_2S);
-        DefaultVertexFormats.POSITION_TEX_LMAP_COLOR.addElement(DefaultVertexFormats.COLOR_4UB);
-        DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL.addElement(DefaultVertexFormats.POSITION_3F);
-        DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL.addElement(DefaultVertexFormats.TEX_2F);
-        DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL.addElement(DefaultVertexFormats.COLOR_4UB);
-        DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL.addElement(DefaultVertexFormats.NORMAL_3B);
-        DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL.addElement(DefaultVertexFormats.PADDING_1B);
+
+    static
+    {
+        BLOCK.func_181721_a(field_181713_m);
+        BLOCK.func_181721_a(field_181714_n);
+        BLOCK.func_181721_a(field_181715_o);
+        BLOCK.func_181721_a(field_181716_p);
+        ITEM.func_181721_a(field_181713_m);
+        ITEM.func_181721_a(field_181714_n);
+        ITEM.func_181721_a(field_181715_o);
+        ITEM.func_181721_a(field_181717_q);
+        ITEM.func_181721_a(field_181718_r);
+        field_181703_c.func_181721_a(field_181713_m);
+        field_181703_c.func_181721_a(field_181715_o);
+        field_181703_c.func_181721_a(field_181717_q);
+        field_181703_c.func_181721_a(field_181718_r);
+        field_181704_d.func_181721_a(field_181713_m);
+        field_181704_d.func_181721_a(field_181715_o);
+        field_181704_d.func_181721_a(field_181714_n);
+        field_181704_d.func_181721_a(field_181716_p);
+        field_181705_e.func_181721_a(field_181713_m);
+        field_181706_f.func_181721_a(field_181713_m);
+        field_181706_f.func_181721_a(field_181714_n);
+        field_181707_g.func_181721_a(field_181713_m);
+        field_181707_g.func_181721_a(field_181715_o);
+        field_181708_h.func_181721_a(field_181713_m);
+        field_181708_h.func_181721_a(field_181717_q);
+        field_181708_h.func_181721_a(field_181718_r);
+        field_181709_i.func_181721_a(field_181713_m);
+        field_181709_i.func_181721_a(field_181715_o);
+        field_181709_i.func_181721_a(field_181714_n);
+        field_181710_j.func_181721_a(field_181713_m);
+        field_181710_j.func_181721_a(field_181715_o);
+        field_181710_j.func_181721_a(field_181717_q);
+        field_181710_j.func_181721_a(field_181718_r);
+        field_181711_k.func_181721_a(field_181713_m);
+        field_181711_k.func_181721_a(field_181715_o);
+        field_181711_k.func_181721_a(field_181716_p);
+        field_181711_k.func_181721_a(field_181714_n);
+        field_181712_l.func_181721_a(field_181713_m);
+        field_181712_l.func_181721_a(field_181715_o);
+        field_181712_l.func_181721_a(field_181714_n);
+        field_181712_l.func_181721_a(field_181717_q);
+        field_181712_l.func_181721_a(field_181718_r);
     }
 }

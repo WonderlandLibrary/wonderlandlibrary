@@ -1,23 +1,33 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.world.chunk.storage;
 
-import net.minecraft.world.MinecraftException;
 import java.io.IOException;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.MinecraftException;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
 public interface IChunkLoader
 {
-    Chunk loadChunk(final World p0, final int p1, final int p2) throws IOException;
-    
-    void saveChunk(final World p0, final Chunk p1) throws MinecraftException, IOException;
-    
-    void saveExtraChunkData(final World p0, final Chunk p1) throws IOException;
-    
+    /**
+     * Loads the specified(XZ) chunk into the specified world.
+     */
+    Chunk loadChunk(World worldIn, int x, int z) throws IOException;
+
+    void saveChunk(World worldIn, Chunk chunkIn) throws MinecraftException, IOException;
+
+    /**
+     * Save extra data associated with this Chunk not normally saved during autosave, only during chunk unload.
+     * Currently unused.
+     */
+    void saveExtraChunkData(World worldIn, Chunk chunkIn) throws IOException;
+
+    /**
+     * Called every World.tick()
+     */
     void chunkTick();
-    
+
+    /**
+     * Save extra data not associated with any Chunk.  Not saved during autosave, only during world unload.  Currently
+     * unused.
+     */
     void saveExtraData();
 }

@@ -1,35 +1,52 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.command;
 
 import net.minecraft.server.MinecraftServer;
 
 public class CommandSetPlayerTimeout extends CommandBase
 {
-    @Override
-    public String getCommandName() {
+    /**
+     * Gets the name of the command
+     */
+    public String getCommandName()
+    {
         return "setidletimeout";
     }
-    
-    @Override
-    public int getRequiredPermissionLevel() {
+
+    /**
+     * Return the required permission level for this command.
+     */
+    public int getRequiredPermissionLevel()
+    {
         return 3;
     }
-    
-    @Override
-    public String getCommandUsage(final ICommandSender sender) {
+
+    /**
+     * Gets the usage string for the command.
+     *  
+     * @param sender The {@link ICommandSender} who is requesting usage details.
+     */
+    public String getCommandUsage(ICommandSender sender)
+    {
         return "commands.setidletimeout.usage";
     }
-    
-    @Override
-    public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
-        if (args.length != 1) {
+
+    /**
+     * Callback when the command is invoked
+     *  
+     * @param sender The {@link ICommandSender sender} who executed the command
+     * @param args The arguments that were passed with the command
+     */
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException
+    {
+        if (args.length != 1)
+        {
             throw new WrongUsageException("commands.setidletimeout.usage", new Object[0]);
         }
-        final int i = CommandBase.parseInt(args[0], 0);
-        MinecraftServer.getServer().setPlayerIdleTimeout(i);
-        CommandBase.notifyOperators(sender, this, "commands.setidletimeout.success", i);
+        else
+        {
+            int i = parseInt(args[0], 0);
+            MinecraftServer.getServer().setPlayerIdleTimeout(i);
+            notifyOperators(sender, this, "commands.setidletimeout.success", new Object[] {Integer.valueOf(i)});
+        }
     }
 }

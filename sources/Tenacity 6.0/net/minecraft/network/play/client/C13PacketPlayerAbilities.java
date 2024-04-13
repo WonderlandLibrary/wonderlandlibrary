@@ -1,15 +1,10 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.network.play.client;
 
-import net.minecraft.network.INetHandler;
 import java.io.IOException;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.entity.player.PlayerCapabilities;
-import net.minecraft.network.play.INetHandlerPlayServer;
 import net.minecraft.network.Packet;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.INetHandlerPlayServer;
 
 public class C13PacketPlayerAbilities implements Packet<INetHandlerPlayServer>
 {
@@ -19,11 +14,13 @@ public class C13PacketPlayerAbilities implements Packet<INetHandlerPlayServer>
     private boolean creativeMode;
     private float flySpeed;
     private float walkSpeed;
-    
-    public C13PacketPlayerAbilities() {
+
+    public C13PacketPlayerAbilities()
+    {
     }
-    
-    public C13PacketPlayerAbilities(final PlayerCapabilities capabilities) {
+
+    public C13PacketPlayerAbilities(PlayerCapabilities capabilities)
+    {
         this.setInvulnerable(capabilities.disableDamage);
         this.setFlying(capabilities.isFlying);
         this.setAllowFlying(capabilities.allowFlying);
@@ -31,85 +28,108 @@ public class C13PacketPlayerAbilities implements Packet<INetHandlerPlayServer>
         this.setFlySpeed(capabilities.getFlySpeed());
         this.setWalkSpeed(capabilities.getWalkSpeed());
     }
-    
-    @Override
-    public void readPacketData(final PacketBuffer buf) throws IOException {
-        final byte b0 = buf.readByte();
-        this.setInvulnerable((b0 & 0x1) > 0);
-        this.setFlying((b0 & 0x2) > 0);
-        this.setAllowFlying((b0 & 0x4) > 0);
-        this.setCreativeMode((b0 & 0x8) > 0);
+
+    /**
+     * Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(PacketBuffer buf) throws IOException
+    {
+        byte b0 = buf.readByte();
+        this.setInvulnerable((b0 & 1) > 0);
+        this.setFlying((b0 & 2) > 0);
+        this.setAllowFlying((b0 & 4) > 0);
+        this.setCreativeMode((b0 & 8) > 0);
         this.setFlySpeed(buf.readFloat());
         this.setWalkSpeed(buf.readFloat());
     }
-    
-    @Override
-    public void writePacketData(final PacketBuffer buf) throws IOException {
+
+    /**
+     * Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(PacketBuffer buf) throws IOException
+    {
         byte b0 = 0;
-        if (this.isInvulnerable()) {
-            b0 |= 0x1;
+
+        if (this.isInvulnerable())
+        {
+            b0 = (byte)(b0 | 1);
         }
-        if (this.isFlying()) {
-            b0 |= 0x2;
+
+        if (this.isFlying())
+        {
+            b0 = (byte)(b0 | 2);
         }
-        if (this.isAllowFlying()) {
-            b0 |= 0x4;
+
+        if (this.isAllowFlying())
+        {
+            b0 = (byte)(b0 | 4);
         }
-        if (this.isCreativeMode()) {
-            b0 |= 0x8;
+
+        if (this.isCreativeMode())
+        {
+            b0 = (byte)(b0 | 8);
         }
+
         buf.writeByte(b0);
         buf.writeFloat(this.flySpeed);
         buf.writeFloat(this.walkSpeed);
     }
-    
-    @Override
-    public void processPacket(final INetHandlerPlayServer handler) {
+
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(INetHandlerPlayServer handler)
+    {
         handler.processPlayerAbilities(this);
     }
-    
-    public boolean isInvulnerable() {
+
+    public boolean isInvulnerable()
+    {
         return this.invulnerable;
     }
-    
-    public void setInvulnerable(final boolean isInvulnerable) {
+
+    public void setInvulnerable(boolean isInvulnerable)
+    {
         this.invulnerable = isInvulnerable;
     }
-    
-    public boolean isFlying() {
+
+    public boolean isFlying()
+    {
         return this.flying;
     }
-    
-    public void setFlying(final boolean isFlying) {
+
+    public void setFlying(boolean isFlying)
+    {
         this.flying = isFlying;
     }
-    
-    public boolean isAllowFlying() {
+
+    public boolean isAllowFlying()
+    {
         return this.allowFlying;
     }
-    
-    public void setAllowFlying(final boolean isAllowFlying) {
+
+    public void setAllowFlying(boolean isAllowFlying)
+    {
         this.allowFlying = isAllowFlying;
     }
-    
-    public boolean isCreativeMode() {
+
+    public boolean isCreativeMode()
+    {
         return this.creativeMode;
     }
-    
-    public void setCreativeMode(final boolean isCreativeMode) {
+
+    public void setCreativeMode(boolean isCreativeMode)
+    {
         this.creativeMode = isCreativeMode;
     }
-    
-    public void setFlySpeed(final float flySpeedIn) {
+
+    public void setFlySpeed(float flySpeedIn)
+    {
         this.flySpeed = flySpeedIn;
     }
-    
-    public void setWalkSpeed(final float walkSpeedIn) {
+
+    public void setWalkSpeed(float walkSpeedIn)
+    {
         this.walkSpeed = walkSpeedIn;
-    }
-    
-    @Override
-    public int getID() {
-        return 19;
     }
 }

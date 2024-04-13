@@ -1,121 +1,141 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.chunk;
 
-import java.util.Iterator;
 import com.google.common.collect.Lists;
-import net.minecraft.client.renderer.RegionRenderCacheBuilder;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
+import net.minecraft.client.renderer.RegionRenderCacheBuilder;
 
 public class ChunkCompileTaskGenerator
 {
     private final RenderChunk renderChunk;
-    private final ReentrantLock lock;
-    private final List<Runnable> listFinishRunnables;
-    private final Type type;
+    private final ReentrantLock lock = new ReentrantLock();
+    private final List<Runnable> listFinishRunnables = Lists.<Runnable>newArrayList();
+    private final ChunkCompileTaskGenerator.Type type;
     private RegionRenderCacheBuilder regionRenderCacheBuilder;
     private CompiledChunk compiledChunk;
-    private Status status;
+    private ChunkCompileTaskGenerator.Status status = ChunkCompileTaskGenerator.Status.PENDING;
     private boolean finished;
-    
-    public ChunkCompileTaskGenerator(final RenderChunk renderChunkIn, final Type typeIn) {
-        this.lock = new ReentrantLock();
-        this.listFinishRunnables = (List<Runnable>)Lists.newArrayList();
-        this.status = Status.PENDING;
+
+    public ChunkCompileTaskGenerator(RenderChunk renderChunkIn, ChunkCompileTaskGenerator.Type typeIn)
+    {
         this.renderChunk = renderChunkIn;
         this.type = typeIn;
     }
-    
-    public Status getStatus() {
+
+    public ChunkCompileTaskGenerator.Status getStatus()
+    {
         return this.status;
     }
-    
-    public RenderChunk getRenderChunk() {
+
+    public RenderChunk getRenderChunk()
+    {
         return this.renderChunk;
     }
-    
-    public CompiledChunk getCompiledChunk() {
+
+    public CompiledChunk getCompiledChunk()
+    {
         return this.compiledChunk;
     }
-    
-    public void setCompiledChunk(final CompiledChunk compiledChunkIn) {
+
+    public void setCompiledChunk(CompiledChunk compiledChunkIn)
+    {
         this.compiledChunk = compiledChunkIn;
     }
-    
-    public RegionRenderCacheBuilder getRegionRenderCacheBuilder() {
+
+    public RegionRenderCacheBuilder getRegionRenderCacheBuilder()
+    {
         return this.regionRenderCacheBuilder;
     }
-    
-    public void setRegionRenderCacheBuilder(final RegionRenderCacheBuilder regionRenderCacheBuilderIn) {
+
+    public void setRegionRenderCacheBuilder(RegionRenderCacheBuilder regionRenderCacheBuilderIn)
+    {
         this.regionRenderCacheBuilder = regionRenderCacheBuilderIn;
     }
-    
-    public void setStatus(final Status statusIn) {
+
+    public void setStatus(ChunkCompileTaskGenerator.Status statusIn)
+    {
         this.lock.lock();
-        try {
+
+        try
+        {
             this.status = statusIn;
         }
-        finally {
+        finally
+        {
             this.lock.unlock();
         }
     }
-    
-    public void finish() {
+
+    public void finish()
+    {
         this.lock.lock();
-        try {
-            if (this.type == Type.REBUILD_CHUNK && this.status != Status.DONE) {
+
+        try
+        {
+            if (this.type == ChunkCompileTaskGenerator.Type.REBUILD_CHUNK && this.status != ChunkCompileTaskGenerator.Status.DONE)
+            {
                 this.renderChunk.setNeedsUpdate(true);
             }
+
             this.finished = true;
-            this.status = Status.DONE;
-            for (final Runnable runnable : this.listFinishRunnables) {
+            this.status = ChunkCompileTaskGenerator.Status.DONE;
+
+            for (Runnable runnable : this.listFinishRunnables)
+            {
                 runnable.run();
             }
         }
-        finally {
+        finally
+        {
             this.lock.unlock();
         }
     }
-    
-    public void addFinishRunnable(final Runnable p_178539_1_) {
+
+    public void addFinishRunnable(Runnable p_178539_1_)
+    {
         this.lock.lock();
-        try {
+
+        try
+        {
             this.listFinishRunnables.add(p_178539_1_);
-            if (this.finished) {
+
+            if (this.finished)
+            {
                 p_178539_1_.run();
             }
         }
-        finally {
+        finally
+        {
             this.lock.unlock();
         }
     }
-    
-    public ReentrantLock getLock() {
+
+    public ReentrantLock getLock()
+    {
         return this.lock;
     }
-    
-    public Type getType() {
+
+    public ChunkCompileTaskGenerator.Type getType()
+    {
         return this.type;
     }
-    
-    public boolean isFinished() {
+
+    public boolean isFinished()
+    {
         return this.finished;
     }
-    
-    public enum Status
+
+    public static enum Status
     {
-        PENDING, 
-        COMPILING, 
-        UPLOADING, 
+        PENDING,
+        COMPILING,
+        UPLOADING,
         DONE;
     }
-    
-    public enum Type
+
+    public static enum Type
     {
-        REBUILD_CHUNK, 
+        REBUILD_CHUNK,
         RESORT_TRANSPARENCY;
     }
 }

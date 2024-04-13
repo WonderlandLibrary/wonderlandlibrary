@@ -1,74 +1,87 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.entity.ai.attributes;
 
-import java.util.Iterator;
-import java.util.Collection;
 import com.google.common.collect.HashMultimap;
-import net.minecraft.server.management.LowerStringMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
+import net.minecraft.server.management.LowerStringMap;
 
 public abstract class BaseAttributeMap
 {
-    protected final Map<IAttribute, IAttributeInstance> attributes;
-    protected final Map<String, IAttributeInstance> attributesByName;
-    protected final Multimap<IAttribute, IAttribute> field_180377_c;
-    
-    public BaseAttributeMap() {
-        this.attributes = (Map<IAttribute, IAttributeInstance>)Maps.newHashMap();
-        this.attributesByName = new LowerStringMap<IAttributeInstance>();
-        this.field_180377_c = (Multimap<IAttribute, IAttribute>)HashMultimap.create();
+    protected final Map<IAttribute, IAttributeInstance> attributes = Maps.<IAttribute, IAttributeInstance>newHashMap();
+    protected final Map<String, IAttributeInstance> attributesByName = new LowerStringMap();
+    protected final Multimap<IAttribute, IAttribute> field_180377_c = HashMultimap.<IAttribute, IAttribute>create();
+
+    public IAttributeInstance getAttributeInstance(IAttribute attribute)
+    {
+        return (IAttributeInstance)this.attributes.get(attribute);
     }
-    
-    public IAttributeInstance getAttributeInstance(final IAttribute attribute) {
-        return this.attributes.get(attribute);
+
+    public IAttributeInstance getAttributeInstanceByName(String attributeName)
+    {
+        return (IAttributeInstance)this.attributesByName.get(attributeName);
     }
-    
-    public IAttributeInstance getAttributeInstanceByName(final String attributeName) {
-        return this.attributesByName.get(attributeName);
-    }
-    
-    public IAttributeInstance registerAttribute(final IAttribute attribute) {
-        if (this.attributesByName.containsKey(attribute.getAttributeUnlocalizedName())) {
+
+    /**
+     * Registers an attribute with this AttributeMap, returns a modifiable AttributeInstance associated with this map
+     */
+    public IAttributeInstance registerAttribute(IAttribute attribute)
+    {
+        if (this.attributesByName.containsKey(attribute.getAttributeUnlocalizedName()))
+        {
             throw new IllegalArgumentException("Attribute is already registered!");
         }
-        final IAttributeInstance iattributeinstance = this.func_180376_c(attribute);
-        this.attributesByName.put(attribute.getAttributeUnlocalizedName(), iattributeinstance);
-        this.attributes.put(attribute, iattributeinstance);
-        for (IAttribute iattribute = attribute.func_180372_d(); iattribute != null; iattribute = iattribute.func_180372_d()) {
-            this.field_180377_c.put((Object)iattribute, (Object)attribute);
+        else
+        {
+            IAttributeInstance iattributeinstance = this.func_180376_c(attribute);
+            this.attributesByName.put(attribute.getAttributeUnlocalizedName(), iattributeinstance);
+            this.attributes.put(attribute, iattributeinstance);
+
+            for (IAttribute iattribute = attribute.func_180372_d(); iattribute != null; iattribute = iattribute.func_180372_d())
+            {
+                this.field_180377_c.put(iattribute, attribute);
+            }
+
+            return iattributeinstance;
         }
-        return iattributeinstance;
     }
-    
-    protected abstract IAttributeInstance func_180376_c(final IAttribute p0);
-    
-    public Collection<IAttributeInstance> getAllAttributes() {
+
+    protected abstract IAttributeInstance func_180376_c(IAttribute p_180376_1_);
+
+    public Collection<IAttributeInstance> getAllAttributes()
+    {
         return this.attributesByName.values();
     }
-    
-    public void func_180794_a(final IAttributeInstance instance) {
+
+    public void func_180794_a(IAttributeInstance p_180794_1_)
+    {
     }
-    
-    public void removeAttributeModifiers(final Multimap<String, AttributeModifier> modifiers) {
-        for (final Map.Entry<String, AttributeModifier> entry : modifiers.entries()) {
-            final IAttributeInstance iattributeinstance = this.getAttributeInstanceByName(entry.getKey());
-            if (iattributeinstance != null) {
-                iattributeinstance.removeModifier(entry.getValue());
+
+    public void removeAttributeModifiers(Multimap<String, AttributeModifier> p_111148_1_)
+    {
+        for (Entry<String, AttributeModifier> entry : p_111148_1_.entries())
+        {
+            IAttributeInstance iattributeinstance = this.getAttributeInstanceByName((String)entry.getKey());
+
+            if (iattributeinstance != null)
+            {
+                iattributeinstance.removeModifier((AttributeModifier)entry.getValue());
             }
         }
     }
-    
-    public void applyAttributeModifiers(final Multimap<String, AttributeModifier> modifiers) {
-        for (final Map.Entry<String, AttributeModifier> entry : modifiers.entries()) {
-            final IAttributeInstance iattributeinstance = this.getAttributeInstanceByName(entry.getKey());
-            if (iattributeinstance != null) {
-                iattributeinstance.removeModifier(entry.getValue());
-                iattributeinstance.applyModifier(entry.getValue());
+
+    public void applyAttributeModifiers(Multimap<String, AttributeModifier> p_111147_1_)
+    {
+        for (Entry<String, AttributeModifier> entry : p_111147_1_.entries())
+        {
+            IAttributeInstance iattributeinstance = this.getAttributeInstanceByName((String)entry.getKey());
+
+            if (iattributeinstance != null)
+            {
+                iattributeinstance.removeModifier((AttributeModifier)entry.getValue());
+                iattributeinstance.applyModifier((AttributeModifier)entry.getValue());
             }
         }
     }

@@ -1,174 +1,223 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
-import net.minecraft.block.state.BlockState;
-import net.minecraft.util.EnumWorldBlockLayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.util.EnumParticleTypes;
-import java.util.Random;
-import net.minecraft.item.ItemStack;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.stats.StatList;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.Entity;
 import java.util.List;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
-import net.minecraft.tileentity.TileEntityBrewingStand;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraft.util.StatCollector;
-import net.minecraft.block.properties.IProperty;
+import java.util.Random;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityBrewingStand;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 
 public class BlockBrewingStand extends BlockContainer
 {
-    public static final PropertyBool[] HAS_BOTTLE;
-    
-    public BlockBrewingStand() {
+    public static final PropertyBool[] HAS_BOTTLE = new PropertyBool[] {PropertyBool.create("has_bottle_0"), PropertyBool.create("has_bottle_1"), PropertyBool.create("has_bottle_2")};
+
+    public BlockBrewingStand()
+    {
         super(Material.iron);
-        this.setDefaultState(this.blockState.getBaseState().withProperty((IProperty<Comparable>)BlockBrewingStand.HAS_BOTTLE[0], false).withProperty((IProperty<Comparable>)BlockBrewingStand.HAS_BOTTLE[1], false).withProperty((IProperty<Comparable>)BlockBrewingStand.HAS_BOTTLE[2], false));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(HAS_BOTTLE[0], Boolean.valueOf(false)).withProperty(HAS_BOTTLE[1], Boolean.valueOf(false)).withProperty(HAS_BOTTLE[2], Boolean.valueOf(false)));
     }
-    
-    @Override
-    public String getLocalizedName() {
+
+    /**
+     * Gets the localized name of this block. Used for the statistics page.
+     */
+    public String getLocalizedName()
+    {
         return StatCollector.translateToLocal("item.brewingStand.name");
     }
-    
-    @Override
-    public boolean isOpaqueCube() {
+
+    /**
+     * Used to determine ambient occlusion and culling when rebuilding chunks for render
+     */
+    public boolean isOpaqueCube()
+    {
         return false;
     }
-    
-    @Override
-    public int getRenderType() {
+
+    /**
+     * The type of render function called. 3 for standard block models, 2 for TESR's, 1 for liquids, -1 is no render
+     */
+    public int getRenderType()
+    {
         return 3;
     }
-    
-    @Override
-    public TileEntity createNewTileEntity(final World worldIn, final int meta) {
+
+    /**
+     * Returns a new instance of a block's tile entity class. Called on placing the block.
+     */
+    public TileEntity createNewTileEntity(World worldIn, int meta)
+    {
         return new TileEntityBrewingStand();
     }
-    
-    @Override
-    public boolean isFullCube() {
+
+    public boolean isFullCube()
+    {
         return false;
     }
-    
-    @Override
-    public void addCollisionBoxesToList(final World worldIn, final BlockPos pos, final IBlockState state, final AxisAlignedBB mask, final List<AxisAlignedBB> list, final Entity collidingEntity) {
-        this.setBlockBounds(0.4375f, 0.0f, 0.4375f, 0.5625f, 0.875f, 0.5625f);
+
+    /**
+     * Add all collision boxes of this Block to the list that intersect with the given mask.
+     *  
+     * @param collidingEntity the Entity colliding with this Block
+     */
+    public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
+    {
+        this.setBlockBounds(0.4375F, 0.0F, 0.4375F, 0.5625F, 0.875F, 0.5625F);
         super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
         this.setBlockBoundsForItemRender();
         super.addCollisionBoxesToList(worldIn, pos, state, mask, list, collidingEntity);
     }
-    
-    @Override
-    public void setBlockBoundsForItemRender() {
-        this.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 0.125f, 1.0f);
+
+    /**
+     * Sets the block's bounds for rendering it as an item
+     */
+    public void setBlockBoundsForItemRender()
+    {
+        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
     }
-    
-    @Override
-    public boolean onBlockActivated(final World worldIn, final BlockPos pos, final IBlockState state, final EntityPlayer playerIn, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
-        if (worldIn.isRemote) {
+
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
+    {
+        if (worldIn.isRemote)
+        {
             return true;
         }
-        final TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof TileEntityBrewingStand) {
-            playerIn.displayGUIChest((IInventory)tileentity);
-            playerIn.triggerAchievement(StatList.field_181729_M);
+        else
+        {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+
+            if (tileentity instanceof TileEntityBrewingStand)
+            {
+                playerIn.displayGUIChest((TileEntityBrewingStand)tileentity);
+                playerIn.triggerAchievement(StatList.field_181729_M);
+            }
+
+            return true;
         }
-        return true;
     }
-    
-    @Override
-    public void onBlockPlacedBy(final World worldIn, final BlockPos pos, final IBlockState state, final EntityLivingBase placer, final ItemStack stack) {
-        if (stack.hasDisplayName()) {
-            final TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof TileEntityBrewingStand) {
+
+    /**
+     * Called by ItemBlocks after a block is set in the world, to allow post-place logic
+     */
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+    {
+        if (stack.hasDisplayName())
+        {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+
+            if (tileentity instanceof TileEntityBrewingStand)
+            {
                 ((TileEntityBrewingStand)tileentity).setName(stack.getDisplayName());
             }
         }
     }
-    
-    @Override
-    public void randomDisplayTick(final World worldIn, final BlockPos pos, final IBlockState state, final Random rand) {
-        final double d0 = pos.getX() + 0.4f + rand.nextFloat() * 0.2f;
-        final double d2 = pos.getY() + 0.7f + rand.nextFloat() * 0.3f;
-        final double d3 = pos.getZ() + 0.4f + rand.nextFloat() * 0.2f;
-        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d2, d3, 0.0, 0.0, 0.0, new int[0]);
+
+    public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+    {
+        double d0 = (double)((float)pos.getX() + 0.4F + rand.nextFloat() * 0.2F);
+        double d1 = (double)((float)pos.getY() + 0.7F + rand.nextFloat() * 0.3F);
+        double d2 = (double)((float)pos.getZ() + 0.4F + rand.nextFloat() * 0.2F);
+        worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, 0.0D, 0.0D, 0.0D, new int[0]);
     }
-    
-    @Override
-    public void breakBlock(final World worldIn, final BlockPos pos, final IBlockState state) {
-        final TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof TileEntityBrewingStand) {
-            InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory)tileentity);
+
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+
+        if (tileentity instanceof TileEntityBrewingStand)
+        {
+            InventoryHelper.dropInventoryItems(worldIn, pos, (TileEntityBrewingStand)tileentity);
         }
+
         super.breakBlock(worldIn, pos, state);
     }
-    
-    @Override
-    public Item getItemDropped(final IBlockState state, final Random rand, final int fortune) {
+
+    /**
+     * Get the Item that this Block should drop when harvested.
+     *  
+     * @param fortune the level of the Fortune enchantment on the player's tool
+     */
+    public Item getItemDropped(IBlockState state, Random rand, int fortune)
+    {
         return Items.brewing_stand;
     }
-    
-    @Override
-    public Item getItem(final World worldIn, final BlockPos pos) {
+
+    /**
+     * Used by pick block on the client to get a block's item form, if it exists.
+     */
+    public Item getItem(World worldIn, BlockPos pos)
+    {
         return Items.brewing_stand;
     }
-    
-    @Override
-    public boolean hasComparatorInputOverride() {
+
+    public boolean hasComparatorInputOverride()
+    {
         return true;
     }
-    
-    @Override
-    public int getComparatorInputOverride(final World worldIn, final BlockPos pos) {
+
+    public int getComparatorInputOverride(World worldIn, BlockPos pos)
+    {
         return Container.calcRedstone(worldIn.getTileEntity(pos));
     }
-    
-    @Override
-    public EnumWorldBlockLayer getBlockLayer() {
+
+    public EnumWorldBlockLayer getBlockLayer()
+    {
         return EnumWorldBlockLayer.CUTOUT;
     }
-    
-    @Override
-    public IBlockState getStateFromMeta(final int meta) {
+
+    /**
+     * Convert the given metadata into a BlockState for this Block
+     */
+    public IBlockState getStateFromMeta(int meta)
+    {
         IBlockState iblockstate = this.getDefaultState();
-        for (int i = 0; i < 3; ++i) {
-            iblockstate = iblockstate.withProperty((IProperty<Comparable>)BlockBrewingStand.HAS_BOTTLE[i], (meta & 1 << i) > 0);
+
+        for (int i = 0; i < 3; ++i)
+        {
+            iblockstate = iblockstate.withProperty(HAS_BOTTLE[i], Boolean.valueOf((meta & 1 << i) > 0));
         }
+
         return iblockstate;
     }
-    
-    @Override
-    public int getMetaFromState(final IBlockState state) {
+
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
         int i = 0;
-        for (int j = 0; j < 3; ++j) {
-            if (state.getValue((IProperty<Boolean>)BlockBrewingStand.HAS_BOTTLE[j])) {
+
+        for (int j = 0; j < 3; ++j)
+        {
+            if (((Boolean)state.getValue(HAS_BOTTLE[j])).booleanValue())
+            {
                 i |= 1 << j;
             }
         }
+
         return i;
     }
-    
-    @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, new IProperty[] { BlockBrewingStand.HAS_BOTTLE[0], BlockBrewingStand.HAS_BOTTLE[1], BlockBrewingStand.HAS_BOTTLE[2] });
-    }
-    
-    static {
-        HAS_BOTTLE = new PropertyBool[] { PropertyBool.create("has_bottle_0"), PropertyBool.create("has_bottle_1"), PropertyBool.create("has_bottle_2") };
+
+    protected BlockState createBlockState()
+    {
+        return new BlockState(this, new IProperty[] {HAS_BOTTLE[0], HAS_BOTTLE[1], HAS_BOTTLE[2]});
     }
 }

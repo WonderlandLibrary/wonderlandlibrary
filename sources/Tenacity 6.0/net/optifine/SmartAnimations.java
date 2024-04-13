@@ -1,63 +1,63 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine;
 
+import java.util.BitSet;
 import net.minecraft.src.Config;
 import net.optifine.shaders.Shaders;
-import java.util.BitSet;
 
 public class SmartAnimations
 {
     private static boolean active;
-    private static BitSet spritesRendered;
-    private static BitSet texturesRendered;
-    
-    public static boolean isActive() {
-        return SmartAnimations.active && !Shaders.isShadowPass;
+    private static BitSet spritesRendered = new BitSet();
+    private static BitSet texturesRendered = new BitSet();
+
+    public static boolean isActive()
+    {
+        return active && !Shaders.isShadowPass;
     }
-    
-    public static void update() {
-        SmartAnimations.active = Config.getGameSettings().ofSmartAnimations;
+
+    public static void update()
+    {
+        active = Config.getGameSettings().ofSmartAnimations;
     }
-    
-    public static void spriteRendered(final int animationIndex) {
-        if (animationIndex >= 0) {
-            SmartAnimations.spritesRendered.set(animationIndex);
+
+    public static void spriteRendered(int animationIndex)
+    {
+        spritesRendered.set(animationIndex);
+    }
+
+    public static void spritesRendered(BitSet animationIndexes)
+    {
+        if (animationIndexes != null)
+        {
+            spritesRendered.or(animationIndexes);
         }
     }
-    
-    public static void spritesRendered(final BitSet animationIndexes) {
-        if (animationIndexes != null) {
-            SmartAnimations.spritesRendered.or(animationIndexes);
+
+    public static boolean isSpriteRendered(int animationIndex)
+    {
+        return spritesRendered.get(animationIndex);
+    }
+
+    public static void resetSpritesRendered()
+    {
+        spritesRendered.clear();
+    }
+
+    public static void textureRendered(int textureId)
+    {
+        if (textureId >= 0)
+        {
+            texturesRendered.set(textureId);
         }
     }
-    
-    public static boolean isSpriteRendered(final int animationIndex) {
-        return animationIndex >= 0 && SmartAnimations.spritesRendered.get(animationIndex);
+
+    public static boolean isTextureRendered(int texId)
+    {
+        return texId < 0 ? false : texturesRendered.get(texId);
     }
-    
-    public static void resetSpritesRendered() {
-        SmartAnimations.spritesRendered.clear();
-    }
-    
-    public static void textureRendered(final int textureId) {
-        if (textureId >= 0) {
-            SmartAnimations.texturesRendered.set(textureId);
-        }
-    }
-    
-    public static boolean isTextureRendered(final int texId) {
-        return texId >= 0 && SmartAnimations.texturesRendered.get(texId);
-    }
-    
-    public static void resetTexturesRendered() {
-        SmartAnimations.texturesRendered.clear();
-    }
-    
-    static {
-        SmartAnimations.spritesRendered = new BitSet();
-        SmartAnimations.texturesRendered = new BitSet();
+
+    public static void resetTexturesRendered()
+    {
+        texturesRendered.clear();
     }
 }

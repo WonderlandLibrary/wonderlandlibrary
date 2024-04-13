@@ -1,37 +1,30 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.entity;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.Entity;
-import net.minecraft.client.renderer.entity.layers.LayerSnowmanHead;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelSnowMan;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.layers.LayerSnowmanHead;
 import net.minecraft.entity.monster.EntitySnowman;
+import net.minecraft.util.ResourceLocation;
 
 public class RenderSnowMan extends RenderLiving<EntitySnowman>
 {
-    private static final ResourceLocation snowManTextures;
-    
-    public RenderSnowMan(final RenderManager renderManagerIn) {
-        super(renderManagerIn, new ModelSnowMan(), 0.5f);
-        ((RendererLivingEntity<EntityLivingBase>)this).addLayer(new LayerSnowmanHead(this));
+    private static final ResourceLocation snowManTextures = new ResourceLocation("textures/entity/snowman.png");
+
+    public RenderSnowMan(RenderManager renderManagerIn)
+    {
+        super(renderManagerIn, new ModelSnowMan(), 0.5F);
+        this.addLayer(new LayerSnowmanHead(this));
     }
-    
-    @Override
-    protected ResourceLocation getEntityTexture(final EntitySnowman entity) {
-        return RenderSnowMan.snowManTextures;
+
+    /**
+     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
+     */
+    protected ResourceLocation getEntityTexture(EntitySnowman entity)
+    {
+        return snowManTextures;
     }
-    
-    @Override
-    public ModelSnowMan getMainModel() {
+
+    public ModelSnowMan getMainModel()
+    {
         return (ModelSnowMan)super.getMainModel();
-    }
-    
-    static {
-        snowManTextures = new ResourceLocation("textures/entity/snowman.png");
     }
 }

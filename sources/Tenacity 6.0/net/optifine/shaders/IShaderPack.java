@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.shaders;
 
 import java.io.InputStream;
@@ -9,10 +5,10 @@ import java.io.InputStream;
 public interface IShaderPack
 {
     String getName();
-    
-    InputStream getResourceAsStream(final String p0);
-    
-    boolean hasDirectory(final String p0);
-    
+
+    InputStream getResourceAsStream(String var1);
+
+    boolean hasDirectory(String var1);
+
     void close();
 }

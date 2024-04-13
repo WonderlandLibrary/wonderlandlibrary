@@ -1,90 +1,107 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.util;
 
 import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Deque;
 
 public class IteratorCache
 {
-    private static Deque<IteratorReusable<Object>> dequeIterators;
-    
-    public static Iterator<Object> getReadOnly(final List list) {
-        synchronized (IteratorCache.dequeIterators) {
-            IteratorReusable<Object> iteratorreusable = IteratorCache.dequeIterators.pollFirst();
-            if (iteratorreusable == null) {
-                iteratorreusable = new IteratorReadOnly();
+    private static Deque<IteratorCache.IteratorReusable<Object>> dequeIterators = new ArrayDeque();
+
+    public static Iterator<Object> getReadOnly(List list)
+    {
+        synchronized (dequeIterators)
+        {
+            IteratorCache.IteratorReusable<Object> iteratorreusable = (IteratorCache.IteratorReusable)dequeIterators.pollFirst();
+
+            if (iteratorreusable == null)
+            {
+                iteratorreusable = new IteratorCache.IteratorReadOnly();
             }
+
             iteratorreusable.setList(list);
             return iteratorreusable;
         }
     }
-    
-    private static void finished(final IteratorReusable<Object> iterator) {
-        synchronized (IteratorCache.dequeIterators) {
-            if (IteratorCache.dequeIterators.size() <= 1000) {
+
+    private static void finished(IteratorCache.IteratorReusable<Object> iterator)
+    {
+        synchronized (dequeIterators)
+        {
+            if (dequeIterators.size() <= 1000)
+            {
                 iterator.setList(null);
-                IteratorCache.dequeIterators.addLast(iterator);
+                dequeIterators.addLast(iterator);
             }
         }
     }
-    
-    static {
-        IteratorCache.dequeIterators = new ArrayDeque<IteratorReusable<Object>>();
-        for (int i = 0; i < 1000; ++i) {
-            final IteratorReadOnly iteratorcache$iteratorreadonly = new IteratorReadOnly();
-            IteratorCache.dequeIterators.add(iteratorcache$iteratorreadonly);
+
+    static
+    {
+        for (int i = 0; i < 1000; ++i)
+        {
+            IteratorCache.IteratorReadOnly iteratorcache$iteratorreadonly = new IteratorCache.IteratorReadOnly();
+            dequeIterators.add(iteratorcache$iteratorreadonly);
         }
     }
-    
-    public static class IteratorReadOnly implements IteratorReusable<Object>
+
+    public static class IteratorReadOnly implements IteratorCache.IteratorReusable<Object>
     {
         private List<Object> list;
         private int index;
         private boolean hasNext;
-        
-        @Override
-        public void setList(final List<Object> list) {
-            if (this.hasNext) {
+
+        public void setList(List<Object> list)
+        {
+            if (this.hasNext)
+            {
                 throw new RuntimeException("Iterator still used, oldList: " + this.list + ", newList: " + list);
             }
-            this.list = list;
-            this.index = 0;
-            this.hasNext = (list != null && this.index < list.size());
+            else
+            {
+                this.list = list;
+                this.index = 0;
+                this.hasNext = list != null && this.index < list.size();
+            }
         }
-        
-        @Override
-        public Object next() {
-            if (!this.hasNext) {
+
+        public Object next()
+        {
+            if (!this.hasNext)
+            {
                 return null;
             }
-            final Object object = this.list.get(this.index);
-            ++this.index;
-            this.hasNext = (this.index < this.list.size());
-            return object;
+            else
+            {
+                Object object = this.list.get(this.index);
+                ++this.index;
+                this.hasNext = this.index < this.list.size();
+                return object;
+            }
         }
-        
-        @Override
-        public boolean hasNext() {
-            if (!this.hasNext) {
-                finished(this);
+
+        public boolean hasNext()
+        {
+            if (!this.hasNext)
+            {
+                IteratorCache.finished(this);
                 return false;
             }
-            return this.hasNext;
+            else
+            {
+                return this.hasNext;
+            }
         }
-        
-        @Override
-        public void remove() {
+
+        public void remove()
+        {
             throw new UnsupportedOperationException("remove");
         }
     }
-    
+
     public interface IteratorReusable<E> extends Iterator<E>
     {
-        void setList(final List<E> p0);
+        void setList(List<E> var1);
     }
 }

@@ -1,13 +1,9 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.entity.model;
 
-import java.util.List;
 import java.util.ArrayList;
-import net.minecraft.client.model.ModelRenderer;
+import java.util.List;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelRenderer;
 
 public abstract class ModelAdapter
 {
@@ -15,55 +11,67 @@ public abstract class ModelAdapter
     private String name;
     private float shadowSize;
     private String[] aliases;
-    
-    public ModelAdapter(final Class entityClass, final String name, final float shadowSize) {
+
+    public ModelAdapter(Class entityClass, String name, float shadowSize)
+    {
         this.entityClass = entityClass;
         this.name = name;
         this.shadowSize = shadowSize;
     }
-    
-    public ModelAdapter(final Class entityClass, final String name, final float shadowSize, final String[] aliases) {
+
+    public ModelAdapter(Class entityClass, String name, float shadowSize, String[] aliases)
+    {
         this.entityClass = entityClass;
         this.name = name;
         this.shadowSize = shadowSize;
         this.aliases = aliases;
     }
-    
-    public Class getEntityClass() {
+
+    public Class getEntityClass()
+    {
         return this.entityClass;
     }
-    
-    public String getName() {
+
+    public String getName()
+    {
         return this.name;
     }
-    
-    public String[] getAliases() {
+
+    public String[] getAliases()
+    {
         return this.aliases;
     }
-    
-    public float getShadowSize() {
+
+    public float getShadowSize()
+    {
         return this.shadowSize;
     }
-    
+
     public abstract ModelBase makeModel();
-    
-    public abstract ModelRenderer getModelRenderer(final ModelBase p0, final String p1);
-    
+
+    public abstract ModelRenderer getModelRenderer(ModelBase var1, String var2);
+
     public abstract String[] getModelRendererNames();
-    
-    public abstract IEntityRenderer makeEntityRender(final ModelBase p0, final float p1);
-    
-    public ModelRenderer[] getModelRenderers(final ModelBase model) {
-        final String[] astring = this.getModelRendererNames();
-        final List<ModelRenderer> list = new ArrayList<ModelRenderer>();
-        for (int i = 0; i < astring.length; ++i) {
-            final String s = astring[i];
-            final ModelRenderer modelrenderer = this.getModelRenderer(model, s);
-            if (modelrenderer != null) {
+
+    public abstract IEntityRenderer makeEntityRender(ModelBase var1, float var2);
+
+    public ModelRenderer[] getModelRenderers(ModelBase model)
+    {
+        String[] astring = this.getModelRendererNames();
+        List<ModelRenderer> list = new ArrayList();
+
+        for (int i = 0; i < astring.length; ++i)
+        {
+            String s = astring[i];
+            ModelRenderer modelrenderer = this.getModelRenderer(model, s);
+
+            if (modelrenderer != null)
+            {
                 list.add(modelrenderer);
             }
         }
-        final ModelRenderer[] amodelrenderer = list.toArray(new ModelRenderer[list.size()]);
+
+        ModelRenderer[] amodelrenderer = (ModelRenderer[])((ModelRenderer[])list.toArray(new ModelRenderer[list.size()]));
         return amodelrenderer;
     }
 }

@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.item;
 
 import net.minecraft.block.Block;
@@ -10,37 +6,53 @@ public class ItemColored extends ItemBlock
 {
     private final Block coloredBlock;
     private String[] subtypeNames;
-    
-    public ItemColored(final Block block, final boolean hasSubtypes) {
+
+    public ItemColored(Block block, boolean hasSubtypes)
+    {
         super(block);
         this.coloredBlock = block;
-        if (hasSubtypes) {
+
+        if (hasSubtypes)
+        {
             this.setMaxDamage(0);
             this.setHasSubtypes(true);
         }
     }
-    
-    @Override
-    public int getColorFromItemStack(final ItemStack stack, final int renderPass) {
+
+    public int getColorFromItemStack(ItemStack stack, int renderPass)
+    {
         return this.coloredBlock.getRenderColor(this.coloredBlock.getStateFromMeta(stack.getMetadata()));
     }
-    
-    @Override
-    public int getMetadata(final int damage) {
+
+    /**
+     * Converts the given ItemStack damage value into a metadata value to be placed in the world when this Item is
+     * placed as a Block (mostly used with ItemBlocks).
+     */
+    public int getMetadata(int damage)
+    {
         return damage;
     }
-    
-    public ItemColored setSubtypeNames(final String[] names) {
+
+    public ItemColored setSubtypeNames(String[] names)
+    {
         this.subtypeNames = names;
         return this;
     }
-    
-    @Override
-    public String getUnlocalizedName(final ItemStack stack) {
-        if (this.subtypeNames == null) {
+
+    /**
+     * Returns the unlocalized name of this item. This version accepts an ItemStack so different stacks can have
+     * different names based on their damage or NBT.
+     */
+    public String getUnlocalizedName(ItemStack stack)
+    {
+        if (this.subtypeNames == null)
+        {
             return super.getUnlocalizedName(stack);
         }
-        final int i = stack.getMetadata();
-        return (i >= 0 && i < this.subtypeNames.length) ? (super.getUnlocalizedName(stack) + "." + this.subtypeNames[i]) : super.getUnlocalizedName(stack);
+        else
+        {
+            int i = stack.getMetadata();
+            return i >= 0 && i < this.subtypeNames.length ? super.getUnlocalizedName(stack) + "." + this.subtypeNames[i] : super.getUnlocalizedName(stack);
+        }
     }
 }

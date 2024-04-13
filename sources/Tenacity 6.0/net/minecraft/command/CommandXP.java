@@ -1,79 +1,118 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.command;
 
-import net.minecraft.server.MinecraftServer;
 import java.util.List;
-import net.minecraft.util.BlockPos;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 
 public class CommandXP extends CommandBase
 {
-    @Override
-    public String getCommandName() {
+    /**
+     * Gets the name of the command
+     */
+    public String getCommandName()
+    {
         return "xp";
     }
-    
-    @Override
-    public int getRequiredPermissionLevel() {
+
+    /**
+     * Return the required permission level for this command.
+     */
+    public int getRequiredPermissionLevel()
+    {
         return 2;
     }
-    
-    @Override
-    public String getCommandUsage(final ICommandSender sender) {
+
+    /**
+     * Gets the usage string for the command.
+     *  
+     * @param sender The {@link ICommandSender} who is requesting usage details.
+     */
+    public String getCommandUsage(ICommandSender sender)
+    {
         return "commands.xp.usage";
     }
-    
-    @Override
-    public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
-        if (args.length <= 0) {
+
+    /**
+     * Callback when the command is invoked
+     *  
+     * @param sender The {@link ICommandSender sender} who executed the command
+     * @param args The arguments that were passed with the command
+     */
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException
+    {
+        if (args.length <= 0)
+        {
             throw new WrongUsageException("commands.xp.usage", new Object[0]);
         }
-        String s = args[0];
-        final boolean flag = s.endsWith("l") || s.endsWith("L");
-        if (flag && s.length() > 1) {
-            s = s.substring(0, s.length() - 1);
-        }
-        int i = CommandBase.parseInt(s);
-        final boolean flag2 = i < 0;
-        if (flag2) {
-            i *= -1;
-        }
-        final EntityPlayer entityplayer = (args.length > 1) ? CommandBase.getPlayer(sender, args[1]) : CommandBase.getCommandSenderAsPlayer(sender);
-        if (flag) {
-            sender.setCommandStat(CommandResultStats.Type.QUERY_RESULT, entityplayer.experienceLevel);
-            if (flag2) {
-                entityplayer.addExperienceLevel(-i);
-                CommandBase.notifyOperators(sender, this, "commands.xp.success.negative.levels", i, entityplayer.getName());
+        else
+        {
+            String s = args[0];
+            boolean flag = s.endsWith("l") || s.endsWith("L");
+
+            if (flag && s.length() > 1)
+            {
+                s = s.substring(0, s.length() - 1);
             }
-            else {
-                entityplayer.addExperienceLevel(i);
-                CommandBase.notifyOperators(sender, this, "commands.xp.success.levels", i, entityplayer.getName());
+
+            int i = parseInt(s);
+            boolean flag1 = i < 0;
+
+            if (flag1)
+            {
+                i *= -1;
             }
-        }
-        else {
-            sender.setCommandStat(CommandResultStats.Type.QUERY_RESULT, entityplayer.experienceTotal);
-            if (flag2) {
-                throw new CommandException("commands.xp.failure.widthdrawXp", new Object[0]);
+
+            EntityPlayer entityplayer = args.length > 1 ? getPlayer(sender, args[1]) : getCommandSenderAsPlayer(sender);
+
+            if (flag)
+            {
+                sender.setCommandStat(CommandResultStats.Type.QUERY_RESULT, entityplayer.experienceLevel);
+
+                if (flag1)
+                {
+                    entityplayer.addExperienceLevel(-i);
+                    notifyOperators(sender, this, "commands.xp.success.negative.levels", new Object[] {Integer.valueOf(i), entityplayer.getCommandSenderName()});
+                }
+                else
+                {
+                    entityplayer.addExperienceLevel(i);
+                    notifyOperators(sender, this, "commands.xp.success.levels", new Object[] {Integer.valueOf(i), entityplayer.getCommandSenderName()});
+                }
             }
-            entityplayer.addExperience(i);
-            CommandBase.notifyOperators(sender, this, "commands.xp.success", i, entityplayer.getName());
+            else
+            {
+                sender.setCommandStat(CommandResultStats.Type.QUERY_RESULT, entityplayer.experienceTotal);
+
+                if (flag1)
+                {
+                    throw new CommandException("commands.xp.failure.widthdrawXp", new Object[0]);
+                }
+
+                entityplayer.addExperience(i);
+                notifyOperators(sender, this, "commands.xp.success", new Object[] {Integer.valueOf(i), entityplayer.getCommandSenderName()});
+            }
         }
     }
-    
-    @Override
-    public List<String> addTabCompletionOptions(final ICommandSender sender, final String[] args, final BlockPos pos) {
-        return (args.length == 2) ? CommandBase.getListOfStringsMatchingLastWord(args, this.getAllUsernames()) : null;
+
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
+    {
+        return args.length == 2 ? getListOfStringsMatchingLastWord(args, this.getAllUsernames()) : null;
     }
-    
-    protected String[] getAllUsernames() {
+
+    protected String[] getAllUsernames()
+    {
         return MinecraftServer.getServer().getAllUsernames();
     }
-    
-    @Override
-    public boolean isUsernameIndex(final String[] args, final int index) {
+
+    /**
+     * Return whether the specified command parameter index is a username parameter.
+     *  
+     * @param args The arguments that were given
+     * @param index The argument index that we are checking
+     */
+    public boolean isUsernameIndex(String[] args, int index)
+    {
         return index == 1;
     }
 }

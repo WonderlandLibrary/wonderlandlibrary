@@ -1,57 +1,62 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.entity;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.MathHelper;
-import net.minecraft.client.renderer.entity.layers.LayerCreeperCharge;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelCreeper;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.layers.LayerCreeperCharge;
 import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 
 public class RenderCreeper extends RenderLiving<EntityCreeper>
 {
-    private static final ResourceLocation creeperTextures;
-    
-    public RenderCreeper(final RenderManager renderManagerIn) {
-        super(renderManagerIn, new ModelCreeper(), 0.5f);
-        ((RendererLivingEntity<EntityLivingBase>)this).addLayer(new LayerCreeperCharge(this));
+    private static final ResourceLocation creeperTextures = new ResourceLocation("textures/entity/creeper/creeper.png");
+
+    public RenderCreeper(RenderManager renderManagerIn)
+    {
+        super(renderManagerIn, new ModelCreeper(), 0.5F);
+        this.addLayer(new LayerCreeperCharge(this));
     }
-    
-    @Override
-    protected void preRenderCallback(final EntityCreeper entitylivingbaseIn, final float partialTickTime) {
+
+    /**
+     * Allows the render to do any OpenGL state modifications necessary before the model is rendered. Args:
+     * entityLiving, partialTickTime
+     */
+    protected void preRenderCallback(EntityCreeper entitylivingbaseIn, float partialTickTime)
+    {
         float f = entitylivingbaseIn.getCreeperFlashIntensity(partialTickTime);
-        final float f2 = 1.0f + MathHelper.sin(f * 100.0f) * f * 0.01f;
-        f = MathHelper.clamp_float(f, 0.0f, 1.0f);
-        f *= f;
-        f *= f;
-        final float f3 = (1.0f + f * 0.4f) * f2;
-        final float f4 = (1.0f + f * 0.1f) / f2;
-        GlStateManager.scale(f3, f4, f3);
+        float f1 = 1.0F + MathHelper.sin(f * 100.0F) * f * 0.01F;
+        f = MathHelper.clamp_float(f, 0.0F, 1.0F);
+        f = f * f;
+        f = f * f;
+        float f2 = (1.0F + f * 0.4F) * f1;
+        float f3 = (1.0F + f * 0.1F) / f1;
+        GlStateManager.scale(f2, f3, f2);
     }
-    
-    @Override
-    protected int getColorMultiplier(final EntityCreeper entitylivingbaseIn, final float lightBrightness, final float partialTickTime) {
-        final float f = entitylivingbaseIn.getCreeperFlashIntensity(partialTickTime);
-        if ((int)(f * 10.0f) % 2 == 0) {
+
+    /**
+     * Returns an ARGB int color back. Args: entityLiving, lightBrightness, partialTickTime
+     */
+    protected int getColorMultiplier(EntityCreeper entitylivingbaseIn, float lightBrightness, float partialTickTime)
+    {
+        float f = entitylivingbaseIn.getCreeperFlashIntensity(partialTickTime);
+
+        if ((int)(f * 10.0F) % 2 == 0)
+        {
             return 0;
         }
-        int i = (int)(f * 0.2f * 255.0f);
-        i = MathHelper.clamp_int(i, 0, 255);
-        return i << 24 | 0xFFFFFF;
+        else
+        {
+            int i = (int)(f * 0.2F * 255.0F);
+            i = MathHelper.clamp_int(i, 0, 255);
+            return i << 24 | 16777215;
+        }
     }
-    
-    @Override
-    protected ResourceLocation getEntityTexture(final EntityCreeper entity) {
-        return RenderCreeper.creeperTextures;
-    }
-    
-    static {
-        creeperTextures = new ResourceLocation("textures/entity/creeper/creeper.png");
+
+    /**
+     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
+     */
+    protected ResourceLocation getEntityTexture(EntityCreeper entity)
+    {
+        return creeperTextures;
     }
 }

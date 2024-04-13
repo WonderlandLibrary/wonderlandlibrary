@@ -1,121 +1,148 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.util;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
-import java.util.Iterator;
 import com.google.common.collect.Lists;
+import java.util.Iterator;
 import java.util.List;
 
 public abstract class ChatComponentStyle implements IChatComponent
 {
-    protected List<IChatComponent> siblings;
+    protected List<IChatComponent> siblings = Lists.<IChatComponent>newArrayList();
     private ChatStyle style;
-    
-    public ChatComponentStyle() {
-        this.siblings = (List<IChatComponent>)Lists.newArrayList();
-    }
-    
-    @Override
-    public IChatComponent appendSibling(final IChatComponent component) {
+
+    /**
+     * Appends the given component to the end of this one.
+     */
+    public IChatComponent appendSibling(IChatComponent component)
+    {
         component.getChatStyle().setParentStyle(this.getChatStyle());
         this.siblings.add(component);
         return this;
     }
-    
-    @Override
-    public List<IChatComponent> getSiblings() {
+
+    public List<IChatComponent> getSiblings()
+    {
         return this.siblings;
     }
-    
-    @Override
-    public IChatComponent appendText(final String text) {
+
+    /**
+     * Appends the given text to the end of this component.
+     */
+    public IChatComponent appendText(String text)
+    {
         return this.appendSibling(new ChatComponentText(text));
     }
-    
-    @Override
-    public IChatComponent setChatStyle(final ChatStyle style) {
+
+    public IChatComponent setChatStyle(ChatStyle style)
+    {
         this.style = style;
-        for (final IChatComponent ichatcomponent : this.siblings) {
+
+        for (IChatComponent ichatcomponent : this.siblings)
+        {
             ichatcomponent.getChatStyle().setParentStyle(this.getChatStyle());
         }
+
         return this;
     }
-    
-    @Override
-    public ChatStyle getChatStyle() {
-        if (this.style == null) {
+
+    public ChatStyle getChatStyle()
+    {
+        if (this.style == null)
+        {
             this.style = new ChatStyle();
-            for (final IChatComponent ichatcomponent : this.siblings) {
+
+            for (IChatComponent ichatcomponent : this.siblings)
+            {
                 ichatcomponent.getChatStyle().setParentStyle(this.style);
             }
         }
+
         return this.style;
     }
-    
-    @Override
-    public Iterator<IChatComponent> iterator() {
-        return (Iterator<IChatComponent>)Iterators.concat((Iterator)Iterators.forArray((Object[])new ChatComponentStyle[] { this }), (Iterator)createDeepCopyIterator(this.siblings));
+
+    public Iterator<IChatComponent> iterator()
+    {
+        return Iterators.<IChatComponent>concat(Iterators.<IChatComponent>forArray(new ChatComponentStyle[] {this}), createDeepCopyIterator(this.siblings));
     }
-    
-    @Override
-    public final String getUnformattedText() {
-        final StringBuilder stringbuilder = new StringBuilder();
-        for (final IChatComponent ichatcomponent : this) {
+
+    /**
+     * Get the text of this component, <em>and all child components</em>, with all special formatting codes removed.
+     */
+    public final String getUnformattedText()
+    {
+        StringBuilder stringbuilder = new StringBuilder();
+
+        for (IChatComponent ichatcomponent : this)
+        {
             stringbuilder.append(ichatcomponent.getUnformattedTextForChat());
         }
+
         return stringbuilder.toString();
     }
-    
-    @Override
-    public final String getFormattedText() {
-        final StringBuilder stringbuilder = new StringBuilder();
-        for (final IChatComponent ichatcomponent : this) {
+
+    /**
+     * Gets the text of this component, with formatting codes added for rendering.
+     */
+    public final String getFormattedText()
+    {
+        StringBuilder stringbuilder = new StringBuilder();
+
+        for (IChatComponent ichatcomponent : this)
+        {
             stringbuilder.append(ichatcomponent.getChatStyle().getFormattingCode());
             stringbuilder.append(ichatcomponent.getUnformattedTextForChat());
-            stringbuilder.append(EnumChatFormatting.RESET);
+            stringbuilder.append((Object)EnumChatFormatting.RESET);
         }
+
         return stringbuilder.toString();
     }
-    
-    public static Iterator<IChatComponent> createDeepCopyIterator(final Iterable<IChatComponent> components) {
-        Iterator<IChatComponent> iterator = (Iterator<IChatComponent>)Iterators.concat(Iterators.transform((Iterator)components.iterator(), (Function)new Function<IChatComponent, Iterator<IChatComponent>>() {
-            public Iterator<IChatComponent> apply(final IChatComponent p_apply_1_) {
+
+    public static Iterator<IChatComponent> createDeepCopyIterator(Iterable<IChatComponent> components)
+    {
+        Iterator<IChatComponent> iterator = Iterators.concat(Iterators.transform(components.iterator(), new Function<IChatComponent, Iterator<IChatComponent>>()
+        {
+            public Iterator<IChatComponent> apply(IChatComponent p_apply_1_)
+            {
                 return p_apply_1_.iterator();
             }
         }));
-        iterator = (Iterator<IChatComponent>)Iterators.transform((Iterator)iterator, (Function)new Function<IChatComponent, IChatComponent>() {
-            public IChatComponent apply(final IChatComponent p_apply_1_) {
-                final IChatComponent ichatcomponent = p_apply_1_.createCopy();
+        iterator = Iterators.transform(iterator, new Function<IChatComponent, IChatComponent>()
+        {
+            public IChatComponent apply(IChatComponent p_apply_1_)
+            {
+                IChatComponent ichatcomponent = p_apply_1_.createCopy();
                 ichatcomponent.setChatStyle(ichatcomponent.getChatStyle().createDeepCopy());
                 return ichatcomponent;
             }
         });
         return iterator;
     }
-    
-    @Override
-    public boolean equals(final Object p_equals_1_) {
-        if (this == p_equals_1_) {
+
+    public boolean equals(Object p_equals_1_)
+    {
+        if (this == p_equals_1_)
+        {
             return true;
         }
-        if (!(p_equals_1_ instanceof ChatComponentStyle)) {
+        else if (!(p_equals_1_ instanceof ChatComponentStyle))
+        {
             return false;
         }
-        final ChatComponentStyle chatcomponentstyle = (ChatComponentStyle)p_equals_1_;
-        return this.siblings.equals(chatcomponentstyle.siblings) && this.getChatStyle().equals(chatcomponentstyle.getChatStyle());
+        else
+        {
+            ChatComponentStyle chatcomponentstyle = (ChatComponentStyle)p_equals_1_;
+            return this.siblings.equals(chatcomponentstyle.siblings) && this.getChatStyle().equals(chatcomponentstyle.getChatStyle());
+        }
     }
-    
-    @Override
-    public int hashCode() {
+
+    public int hashCode()
+    {
         return 31 * this.style.hashCode() + this.siblings.hashCode();
     }
-    
-    @Override
-    public String toString() {
+
+    public String toString()
+    {
         return "BaseComponent{style=" + this.style + ", siblings=" + this.siblings + '}';
     }
 }

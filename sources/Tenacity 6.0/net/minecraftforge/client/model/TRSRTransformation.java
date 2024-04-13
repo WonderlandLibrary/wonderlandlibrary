@@ -1,19 +1,17 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraftforge.client.model;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.lwjgl.util.vector.Matrix4f;
+import org.apache.commons.lang3.NotImplementedException;
 
 public class TRSRTransformation
 {
-    public TRSRTransformation(final Matrix4f matrix) {
+    public TRSRTransformation(Matrix4f matrix)
+    {
         throw new NotImplementedException("Forge dummy class");
     }
-    
-    public static boolean isInteger(final Matrix4f matrix) {
+
+    public static boolean isInteger(Matrix4f matrix)
+    {
         return false;
     }
 }

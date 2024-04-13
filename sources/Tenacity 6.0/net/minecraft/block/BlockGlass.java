@@ -1,39 +1,38 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
-import dev.tenacity.module.impl.render.XRay;
-import net.minecraft.util.EnumWorldBlockLayer;
 import java.util.Random;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.util.EnumWorldBlockLayer;
 
 public class BlockGlass extends BlockBreakable
 {
-    public BlockGlass(final Material materialIn, final boolean ignoreSimilarity) {
+    public BlockGlass(Material materialIn, boolean ignoreSimilarity)
+    {
         super(materialIn, ignoreSimilarity);
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
-    
-    @Override
-    public int quantityDropped(final Random random) {
+
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random random)
+    {
         return 0;
     }
-    
-    @Override
-    public EnumWorldBlockLayer getBlockLayer() {
-        return XRay.enabled ? EnumWorldBlockLayer.TRANSLUCENT : EnumWorldBlockLayer.CUTOUT;
+
+    public EnumWorldBlockLayer getBlockLayer()
+    {
+        return EnumWorldBlockLayer.CUTOUT;
     }
-    
-    @Override
-    public boolean isFullCube() {
+
+    public boolean isFullCube()
+    {
         return false;
     }
-    
-    @Override
-    protected boolean canSilkHarvest() {
+
+    protected boolean canSilkHarvest()
+    {
         return true;
     }
 }

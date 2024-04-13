@@ -1,95 +1,143 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.command;
 
-import net.minecraft.server.MinecraftServer;
 import java.util.List;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.S29PacketSoundEffect;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S29PacketSoundEffect;
 
 public class CommandPlaySound extends CommandBase
 {
-    @Override
-    public String getCommandName() {
+    /**
+     * Gets the name of the command
+     */
+    public String getCommandName()
+    {
         return "playsound";
     }
-    
-    @Override
-    public int getRequiredPermissionLevel() {
+
+    /**
+     * Return the required permission level for this command.
+     */
+    public int getRequiredPermissionLevel()
+    {
         return 2;
     }
-    
-    @Override
-    public String getCommandUsage(final ICommandSender sender) {
+
+    /**
+     * Gets the usage string for the command.
+     *  
+     * @param sender The {@link ICommandSender} who is requesting usage details.
+     */
+    public String getCommandUsage(ICommandSender sender)
+    {
         return "commands.playsound.usage";
     }
-    
-    @Override
-    public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
-        if (args.length < 2) {
+
+    /**
+     * Callback when the command is invoked
+     *  
+     * @param sender The {@link ICommandSender sender} who executed the command
+     * @param args The arguments that were passed with the command
+     */
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException
+    {
+        if (args.length < 2)
+        {
             throw new WrongUsageException(this.getCommandUsage(sender), new Object[0]);
         }
-        int i = 0;
-        final String s = args[i++];
-        final EntityPlayerMP entityplayermp = CommandBase.getPlayer(sender, args[i++]);
-        final Vec3 vec3 = sender.getPositionVector();
-        double d0 = vec3.xCoord;
-        if (args.length > i) {
-            d0 = CommandBase.parseDouble(d0, args[i++], true);
-        }
-        double d2 = vec3.yCoord;
-        if (args.length > i) {
-            d2 = CommandBase.parseDouble(d2, args[i++], 0, 0, false);
-        }
-        double d3 = vec3.zCoord;
-        if (args.length > i) {
-            d3 = CommandBase.parseDouble(d3, args[i++], true);
-        }
-        double d4 = 1.0;
-        if (args.length > i) {
-            d4 = CommandBase.parseDouble(args[i++], 0.0, 3.4028234663852886E38);
-        }
-        double d5 = 1.0;
-        if (args.length > i) {
-            d5 = CommandBase.parseDouble(args[i++], 0.0, 2.0);
-        }
-        double d6 = 0.0;
-        if (args.length > i) {
-            d6 = CommandBase.parseDouble(args[i], 0.0, 1.0);
-        }
-        final double d7 = (d4 > 1.0) ? (d4 * 16.0) : 16.0;
-        final double d8 = entityplayermp.getDistance(d0, d2, d3);
-        if (d8 > d7) {
-            if (d6 <= 0.0) {
-                throw new CommandException("commands.playsound.playerTooFar", new Object[] { entityplayermp.getName() });
+        else
+        {
+            int i = 0;
+            String s = args[i++];
+            EntityPlayerMP entityplayermp = getPlayer(sender, args[i++]);
+            Vec3 vec3 = sender.getPositionVector();
+            double d0 = vec3.xCoord;
+
+            if (args.length > i)
+            {
+                d0 = parseDouble(d0, args[i++], true);
             }
-            final double d9 = d0 - entityplayermp.posX;
-            final double d10 = d2 - entityplayermp.posY;
-            final double d11 = d3 - entityplayermp.posZ;
-            final double d12 = Math.sqrt(d9 * d9 + d10 * d10 + d11 * d11);
-            if (d12 > 0.0) {
-                d0 = entityplayermp.posX + d9 / d12 * 2.0;
-                d2 = entityplayermp.posY + d10 / d12 * 2.0;
-                d3 = entityplayermp.posZ + d11 / d12 * 2.0;
+
+            double d1 = vec3.yCoord;
+
+            if (args.length > i)
+            {
+                d1 = parseDouble(d1, args[i++], 0, 0, false);
             }
-            d4 = d6;
+
+            double d2 = vec3.zCoord;
+
+            if (args.length > i)
+            {
+                d2 = parseDouble(d2, args[i++], true);
+            }
+
+            double d3 = 1.0D;
+
+            if (args.length > i)
+            {
+                d3 = parseDouble(args[i++], 0.0D, 3.4028234663852886E38D);
+            }
+
+            double d4 = 1.0D;
+
+            if (args.length > i)
+            {
+                d4 = parseDouble(args[i++], 0.0D, 2.0D);
+            }
+
+            double d5 = 0.0D;
+
+            if (args.length > i)
+            {
+                d5 = parseDouble(args[i], 0.0D, 1.0D);
+            }
+
+            double d6 = d3 > 1.0D ? d3 * 16.0D : 16.0D;
+            double d7 = entityplayermp.getDistance(d0, d1, d2);
+
+            if (d7 > d6)
+            {
+                if (d5 <= 0.0D)
+                {
+                    throw new CommandException("commands.playsound.playerTooFar", new Object[] {entityplayermp.getCommandSenderName()});
+                }
+
+                double d8 = d0 - entityplayermp.posX;
+                double d9 = d1 - entityplayermp.posY;
+                double d10 = d2 - entityplayermp.posZ;
+                double d11 = Math.sqrt(d8 * d8 + d9 * d9 + d10 * d10);
+
+                if (d11 > 0.0D)
+                {
+                    d0 = entityplayermp.posX + d8 / d11 * 2.0D;
+                    d1 = entityplayermp.posY + d9 / d11 * 2.0D;
+                    d2 = entityplayermp.posZ + d10 / d11 * 2.0D;
+                }
+
+                d3 = d5;
+            }
+
+            entityplayermp.playerNetServerHandler.sendPacket(new S29PacketSoundEffect(s, d0, d1, d2, (float)d3, (float)d4));
+            notifyOperators(sender, this, "commands.playsound.success", new Object[] {s, entityplayermp.getCommandSenderName()});
         }
-        entityplayermp.playerNetServerHandler.sendPacket(new S29PacketSoundEffect(s, d0, d2, d3, (float)d4, (float)d5));
-        CommandBase.notifyOperators(sender, this, "commands.playsound.success", s, entityplayermp.getName());
     }
-    
-    @Override
-    public List<String> addTabCompletionOptions(final ICommandSender sender, final String[] args, final BlockPos pos) {
-        return (args.length == 2) ? CommandBase.getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : ((args.length > 2 && args.length <= 5) ? CommandBase.func_175771_a(args, 2, pos) : null);
+
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
+    {
+        return args.length == 2 ? getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : (args.length > 2 && args.length <= 5 ? func_175771_a(args, 2, pos) : null);
     }
-    
-    @Override
-    public boolean isUsernameIndex(final String[] args, final int index) {
+
+    /**
+     * Return whether the specified command parameter index is a username parameter.
+     *  
+     * @param args The arguments that were given
+     * @param index The argument index that we are checking
+     */
+    public boolean isUsernameIndex(String[] args, int index)
+    {
         return index == 1;
     }
 }

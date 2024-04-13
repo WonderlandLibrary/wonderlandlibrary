@@ -1,95 +1,125 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.gui;
 
-import java.util.Iterator;
-import net.minecraft.client.gui.IFontRenderer;
-import net.optifine.util.StrUtils;
-import java.util.List;
-import net.minecraft.client.settings.GameSettings;
-import java.util.Collection;
-import java.util.Arrays;
 import java.util.ArrayList;
-import net.optifine.Lang;
+import java.util.Arrays;
+import java.util.List;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.src.Config;
+import net.optifine.Lang;
 import net.optifine.shaders.config.ShaderOption;
 import net.optifine.shaders.gui.GuiButtonShaderOption;
-import net.minecraft.client.gui.GuiButton;
+import net.optifine.util.StrUtils;
 
 public class TooltipProviderShaderOptions extends TooltipProviderOptions
 {
-    @Override
-    public String[] getTooltipLines(final GuiButton btn, final int width) {
-        if (!(btn instanceof GuiButtonShaderOption)) {
+    public String[] getTooltipLines(GuiButton btn, int width)
+    {
+        if (!(btn instanceof GuiButtonShaderOption))
+        {
             return null;
         }
-        final GuiButtonShaderOption guibuttonshaderoption = (GuiButtonShaderOption)btn;
-        final ShaderOption shaderoption = guibuttonshaderoption.getShaderOption();
-        final String[] astring = this.makeTooltipLines(shaderoption, width);
-        return astring;
+        else
+        {
+            GuiButtonShaderOption guibuttonshaderoption = (GuiButtonShaderOption)btn;
+            ShaderOption shaderoption = guibuttonshaderoption.getShaderOption();
+            String[] astring = this.makeTooltipLines(shaderoption, width);
+            return astring;
+        }
     }
-    
-    private String[] makeTooltipLines(final ShaderOption so, final int width) {
-        final String s = so.getNameText();
-        final String s2 = Config.normalize(so.getDescriptionText()).trim();
-        final String[] astring = this.splitDescription(s2);
-        final GameSettings gamesettings = Config.getGameSettings();
+
+    private String[] makeTooltipLines(ShaderOption so, int width)
+    {
+        String s = so.getNameText();
+        String s1 = Config.normalize(so.getDescriptionText()).trim();
+        String[] astring = this.splitDescription(s1);
+        GameSettings gamesettings = Config.getGameSettings();
+        String s2 = null;
+
+        if (!s.equals(so.getName()) && gamesettings.advancedItemTooltips)
+        {
+            s2 = "\u00a78" + Lang.get("of.general.id") + ": " + so.getName();
+        }
+
         String s3 = null;
-        if (!s.equals(so.getName()) && gamesettings.advancedItemTooltips) {
-            s3 = "§8" + Lang.get("of.general.id") + ": " + so.getName();
+
+        if (so.getPaths() != null && gamesettings.advancedItemTooltips)
+        {
+            s3 = "\u00a78" + Lang.get("of.general.from") + ": " + Config.arrayToString((Object[])so.getPaths());
         }
+
         String s4 = null;
-        if (so.getPaths() != null && gamesettings.advancedItemTooltips) {
-            s4 = "§8" + Lang.get("of.general.from") + ": " + Config.arrayToString(so.getPaths());
+
+        if (so.getValueDefault() != null && gamesettings.advancedItemTooltips)
+        {
+            String s5 = so.isEnabled() ? so.getValueText(so.getValueDefault()) : Lang.get("of.general.ambiguous");
+            s4 = "\u00a78" + Lang.getDefault() + ": " + s5;
         }
-        String s5 = null;
-        if (so.getValueDefault() != null && gamesettings.advancedItemTooltips) {
-            final String s6 = so.isEnabled() ? so.getValueText(so.getValueDefault()) : Lang.get("of.general.ambiguous");
-            s5 = "§8" + Lang.getDefault() + ": " + s6;
-        }
-        final List<String> list = new ArrayList<String>();
+
+        List<String> list = new ArrayList();
         list.add(s);
-        list.addAll(Arrays.asList(astring));
-        if (s3 != null) {
+        list.addAll(Arrays.<String>asList(astring));
+
+        if (s2 != null)
+        {
+            list.add(s2);
+        }
+
+        if (s3 != null)
+        {
             list.add(s3);
         }
-        if (s4 != null) {
+
+        if (s4 != null)
+        {
             list.add(s4);
         }
-        if (s5 != null) {
-            list.add(s5);
-        }
-        final String[] astring2 = this.makeTooltipLines(width, list);
-        return astring2;
+
+        String[] astring1 = this.makeTooltipLines(width, list);
+        return astring1;
     }
-    
-    private String[] splitDescription(String desc) {
-        if (desc.length() <= 0) {
+
+    private String[] splitDescription(String desc)
+    {
+        if (desc.length() <= 0)
+        {
             return new String[0];
         }
-        desc = StrUtils.removePrefix(desc, "//");
-        final String[] astring = desc.split("\\. ");
-        for (int i = 0; i < astring.length; ++i) {
-            astring[i] = "- " + astring[i].trim();
-            astring[i] = StrUtils.removeSuffix(astring[i], ".");
+        else
+        {
+            desc = StrUtils.removePrefix(desc, "//");
+            String[] astring = desc.split("\\. ");
+
+            for (int i = 0; i < astring.length; ++i)
+            {
+                astring[i] = "- " + astring[i].trim();
+                astring[i] = StrUtils.removeSuffix(astring[i], ".");
+            }
+
+            return astring;
         }
-        return astring;
     }
-    
-    private String[] makeTooltipLines(final int width, final List<String> args) {
-        final IFontRenderer fontrenderer = Config.getMinecraft().fontRendererObj;
-        final List<String> list = new ArrayList<String>();
-        for (int i = 0; i < args.size(); ++i) {
-            final String s = args.get(i);
-            if (s != null && s.length() > 0) {
-                for (final String s2 : fontrenderer.listFormattedStringToWidth(s, width)) {
-                    list.add(s2);
+
+    private String[] makeTooltipLines(int width, List<String> args)
+    {
+        FontRenderer fontrenderer = Config.getMinecraft().fontRendererObj;
+        List<String> list = new ArrayList();
+
+        for (int i = 0; i < args.size(); ++i)
+        {
+            String s = (String)args.get(i);
+
+            if (s != null && s.length() > 0)
+            {
+                for (String s1 : fontrenderer.listFormattedStringToWidth(s, width))
+                {
+                    list.add(s1);
                 }
             }
         }
-        final String[] astring = list.toArray(new String[list.size()]);
+
+        String[] astring = (String[])((String[])list.toArray(new String[list.size()]));
         return astring;
     }
 }

@@ -1,37 +1,46 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.item;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 
 public class ItemFlintAndSteel extends Item
 {
-    public ItemFlintAndSteel() {
+    public ItemFlintAndSteel()
+    {
         this.maxStackSize = 1;
         this.setMaxDamage(64);
         this.setCreativeTab(CreativeTabs.tabTools);
     }
-    
-    @Override
-    public boolean onItemUse(final ItemStack stack, final EntityPlayer playerIn, final World worldIn, BlockPos pos, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+
+    /**
+     * Called when a Block is right-clicked with this Item
+     *  
+     * @param pos The block being right-clicked
+     * @param side The side being right-clicked
+     */
+    public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+    {
         pos = pos.offset(side);
-        if (!playerIn.canPlayerEdit(pos, side, stack)) {
+
+        if (!playerIn.canPlayerEdit(pos, side, stack))
+        {
             return false;
         }
-        if (worldIn.getBlockState(pos).getBlock().getMaterial() == Material.air) {
-            worldIn.playSoundEffect(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, "fire.ignite", 1.0f, ItemFlintAndSteel.itemRand.nextFloat() * 0.4f + 0.8f);
-            worldIn.setBlockState(pos, Blocks.fire.getDefaultState());
+        else
+        {
+            if (worldIn.getBlockState(pos).getBlock().getMaterial() == Material.air)
+            {
+                worldIn.playSoundEffect((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, "fire.ignite", 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
+                worldIn.setBlockState(pos, Blocks.fire.getDefaultState());
+            }
+
+            stack.damageItem(1, playerIn);
+            return true;
         }
-        stack.damageItem(1, playerIn);
-        return true;
     }
 }

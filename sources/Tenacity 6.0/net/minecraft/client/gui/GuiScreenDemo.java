@@ -1,87 +1,97 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.gui;
 
-import org.apache.logging.log4j.LogManager;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.renderer.GlStateManager;
 import java.io.IOException;
 import java.net.URI;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.ResourceLocation;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class GuiScreenDemo extends GuiScreen
 {
-    private static final Logger logger;
-    private static final ResourceLocation field_146348_f;
-    
-    @Override
-    public void initGui() {
+    private static final Logger logger = LogManager.getLogger();
+    private static final ResourceLocation field_146348_f = new ResourceLocation("textures/gui/demo_background.png");
+
+    /**
+     * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
+     * window resizes, the buttonList is cleared beforehand.
+     */
+    public void initGui()
+    {
         this.buttonList.clear();
-        final int i = -16;
+        int i = -16;
         this.buttonList.add(new GuiButton(1, this.width / 2 - 116, this.height / 2 + 62 + i, 114, 20, I18n.format("demo.help.buy", new Object[0])));
         this.buttonList.add(new GuiButton(2, this.width / 2 + 2, this.height / 2 + 62 + i, 114, 20, I18n.format("demo.help.later", new Object[0])));
     }
-    
-    @Override
-    protected void actionPerformed(final GuiButton button) throws IOException {
-        switch (button.id) {
-            case 1: {
+
+    /**
+     * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
+     */
+    protected void actionPerformed(GuiButton button) throws IOException
+    {
+        switch (button.id)
+        {
+            case 1:
                 button.enabled = false;
-                try {
-                    final Class<?> oclass = Class.forName("java.awt.Desktop");
-                    final Object object = oclass.getMethod("getDesktop", (Class<?>[])new Class[0]).invoke(null, new Object[0]);
-                    oclass.getMethod("browse", URI.class).invoke(object, new URI("http://www.minecraft.net/store?source=demo"));
+
+                try
+                {
+                    Class<?> oclass = Class.forName("java.awt.Desktop");
+                    Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object)null, new Object[0]);
+                    oclass.getMethod("browse", new Class[] {URI.class}).invoke(object, new Object[] {new URI("http://www.minecraft.net/store?source=demo")});
                 }
-                catch (Throwable throwable) {
-                    GuiScreenDemo.logger.error("Couldn't open link", throwable);
+                catch (Throwable throwable)
+                {
+                    logger.error("Couldn\'t open link", throwable);
                 }
+
                 break;
-            }
-            case 2: {
-                this.mc2.displayGuiScreen(null);
-                this.mc2.setIngameFocus();
-                break;
-            }
+
+            case 2:
+                this.mc.displayGuiScreen((GuiScreen)null);
+                this.mc.setIngameFocus();
         }
     }
-    
-    @Override
-    public void updateScreen() {
+
+    /**
+     * Called from the main game loop to update the screen.
+     */
+    public void updateScreen()
+    {
         super.updateScreen();
     }
-    
-    @Override
-    public void drawDefaultBackground() {
+
+    /**
+     * Draws either a gradient over the background screen (when it exists) or a flat gradient over background.png
+     */
+    public void drawDefaultBackground()
+    {
         super.drawDefaultBackground();
-        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-        this.mc2.getTextureManager().bindTexture(GuiScreenDemo.field_146348_f);
-        final int i = (this.width - 248) / 2;
-        final int j = (this.height - 166) / 2;
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.mc.getTextureManager().bindTexture(field_146348_f);
+        int i = (this.width - 248) / 2;
+        int j = (this.height - 166) / 2;
         this.drawTexturedModalRect(i, j, 0, 0, 248, 166);
     }
-    
-    @Override
-    public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
+
+    /**
+     * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
+     */
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
         this.drawDefaultBackground();
-        final int i = (this.width - 248) / 2 + 10;
+        int i = (this.width - 248) / 2 + 10;
         int j = (this.height - 166) / 2 + 8;
-        this.fontRendererObj.drawString(I18n.format("demo.help.title", new Object[0]), (float)i, (float)j, 2039583);
-        j += 12;
-        final GameSettings gamesettings = this.mc2.gameSettings;
-        this.fontRendererObj.drawString(I18n.format("demo.help.movementShort", GameSettings.getKeyDisplayString(gamesettings.keyBindForward.getKeyCode()), GameSettings.getKeyDisplayString(gamesettings.keyBindLeft.getKeyCode()), GameSettings.getKeyDisplayString(gamesettings.keyBindBack.getKeyCode()), GameSettings.getKeyDisplayString(gamesettings.keyBindRight.getKeyCode())), (float)i, (float)j, 5197647);
-        this.fontRendererObj.drawString(I18n.format("demo.help.movementMouse", new Object[0]), (float)i, (float)(j + 12), 5197647);
-        this.fontRendererObj.drawString(I18n.format("demo.help.jump", GameSettings.getKeyDisplayString(gamesettings.keyBindJump.getKeyCode())), (float)i, (float)(j + 24), 5197647);
-        this.fontRendererObj.drawString(I18n.format("demo.help.inventory", GameSettings.getKeyDisplayString(gamesettings.keyBindInventory.getKeyCode())), (float)i, (float)(j + 36), 5197647);
+        this.fontRendererObj.drawString(I18n.format("demo.help.title", new Object[0]), i, j, 2039583);
+        j = j + 12;
+        GameSettings gamesettings = this.mc.gameSettings;
+        this.fontRendererObj.drawString(I18n.format("demo.help.movementShort", new Object[] {GameSettings.getKeyDisplayString(gamesettings.keyBindForward.getKeyCode()), GameSettings.getKeyDisplayString(gamesettings.keyBindLeft.getKeyCode()), GameSettings.getKeyDisplayString(gamesettings.keyBindBack.getKeyCode()), GameSettings.getKeyDisplayString(gamesettings.keyBindRight.getKeyCode())}), i, j, 5197647);
+        this.fontRendererObj.drawString(I18n.format("demo.help.movementMouse", new Object[0]), i, j + 12, 5197647);
+        this.fontRendererObj.drawString(I18n.format("demo.help.jump", new Object[] {GameSettings.getKeyDisplayString(gamesettings.keyBindJump.getKeyCode())}), i, j + 24, 5197647);
+        this.fontRendererObj.drawString(I18n.format("demo.help.inventory", new Object[] {GameSettings.getKeyDisplayString(gamesettings.keyBindInventory.getKeyCode())}), i, j + 36, 5197647);
         this.fontRendererObj.drawSplitString(I18n.format("demo.help.fullWrapped", new Object[0]), i, j + 68, 218, 2039583);
         super.drawScreen(mouseX, mouseY, partialTicks);
-    }
-    
-    static {
-        logger = LogManager.getLogger();
-        field_146348_f = new ResourceLocation("textures/gui/demo_background.png");
     }
 }

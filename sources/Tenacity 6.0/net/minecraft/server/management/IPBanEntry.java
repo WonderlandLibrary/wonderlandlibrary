@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.server.management;
 
 import com.google.gson.JsonObject;
@@ -9,25 +5,30 @@ import java.util.Date;
 
 public class IPBanEntry extends BanEntry<String>
 {
-    public IPBanEntry(final String valueIn) {
-        this(valueIn, null, null, null, null);
+    public IPBanEntry(String p_i46330_1_)
+    {
+        this(p_i46330_1_, (Date)null, (String)null, (Date)null, (String)null);
     }
-    
-    public IPBanEntry(final String valueIn, final Date startDate, final String banner, final Date endDate, final String banReason) {
-        super(valueIn, startDate, banner, endDate, banReason);
+
+    public IPBanEntry(String p_i1159_1_, Date startDate, String banner, Date endDate, String p_i1159_5_)
+    {
+        super(p_i1159_1_, startDate, banner, endDate, p_i1159_5_);
     }
-    
-    public IPBanEntry(final JsonObject json) {
-        super(getIPFromJson(json), json);
+
+    public IPBanEntry(JsonObject p_i46331_1_)
+    {
+        super(getIPFromJson(p_i46331_1_), p_i46331_1_);
     }
-    
-    private static String getIPFromJson(final JsonObject json) {
+
+    private static String getIPFromJson(JsonObject json)
+    {
         return json.has("ip") ? json.get("ip").getAsString() : null;
     }
-    
-    @Override
-    protected void onSerialization(final JsonObject data) {
-        if (this.getValue() != null) {
+
+    protected void onSerialization(JsonObject data)
+    {
+        if (this.getValue() != null)
+        {
             data.addProperty("ip", (String)this.getValue());
             super.onSerialization(data);
         }

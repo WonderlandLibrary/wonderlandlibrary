@@ -1,52 +1,68 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.world.pathfinder;
 
-import net.minecraft.util.MathHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.IntHashMap;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 
 public abstract class NodeProcessor
 {
     protected IBlockAccess blockaccess;
-    protected IntHashMap<PathPoint> pointMap;
+    protected IntHashMap<PathPoint> pointMap = new IntHashMap();
     protected int entitySizeX;
     protected int entitySizeY;
     protected int entitySizeZ;
-    
-    public NodeProcessor() {
-        this.pointMap = new IntHashMap<PathPoint>();
-    }
-    
-    public void initProcessor(final IBlockAccess iblockaccessIn, final Entity entityIn) {
+
+    public void initProcessor(IBlockAccess iblockaccessIn, Entity entityIn)
+    {
         this.blockaccess = iblockaccessIn;
         this.pointMap.clearMap();
-        this.entitySizeX = MathHelper.floor_float(entityIn.width + 1.0f);
-        this.entitySizeY = MathHelper.floor_float(entityIn.height + 1.0f);
-        this.entitySizeZ = MathHelper.floor_float(entityIn.width + 1.0f);
+        this.entitySizeX = MathHelper.floor_float(entityIn.width + 1.0F);
+        this.entitySizeY = MathHelper.floor_float(entityIn.height + 1.0F);
+        this.entitySizeZ = MathHelper.floor_float(entityIn.width + 1.0F);
     }
-    
-    public void postProcess() {
-        this.blockaccess = null;
+
+    /**
+     * This method is called when all nodes have been processed and PathEntity is created.
+     *  {@link net.minecraft.world.pathfinder.WalkNodeProcessor WalkNodeProcessor} uses this to change its field {@link
+     * net.minecraft.world.pathfinder.WalkNodeProcessor#avoidsWater avoidsWater}
+     */
+    public void postProcess()
+    {
     }
-    
-    protected PathPoint openPoint(final int x, final int y, final int z) {
-        final int i = PathPoint.makeHash(x, y, z);
-        PathPoint pathpoint = this.pointMap.lookup(i);
-        if (pathpoint == null) {
+
+    /**
+     * Returns a mapped point or creates and adds one
+     */
+    protected PathPoint openPoint(int x, int y, int z)
+    {
+        int i = PathPoint.makeHash(x, y, z);
+        PathPoint pathpoint = (PathPoint)this.pointMap.lookup(i);
+
+        if (pathpoint == null)
+        {
             pathpoint = new PathPoint(x, y, z);
             this.pointMap.addKey(i, pathpoint);
         }
+
         return pathpoint;
     }
-    
-    public abstract PathPoint getPathPointTo(final Entity p0);
-    
-    public abstract PathPoint getPathPointToCoords(final Entity p0, final double p1, final double p2, final double p3);
-    
-    public abstract int findPathOptions(final PathPoint[] p0, final Entity p1, final PathPoint p2, final PathPoint p3, final float p4);
+
+    /**
+     * Returns given entity's position as PathPoint
+     */
+    public abstract PathPoint getPathPointTo(Entity entityIn);
+
+    /**
+     * Returns PathPoint for given coordinates
+     *  
+     * @param entityIn entity which size will be used to center position
+     * @param x target x coordinate
+     * @param y target y coordinate
+     * @param target z coordinate
+     */
+    public abstract PathPoint getPathPointToCoords(Entity entityIn, double x, double y, double target);
+
+    public abstract int findPathOptions(PathPoint[] pathOptions, Entity entityIn, PathPoint currentPoint, PathPoint targetPoint, float maxDistance);
 }

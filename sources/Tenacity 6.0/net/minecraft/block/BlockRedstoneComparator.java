@@ -1,279 +1,343 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.block;
 
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.block.state.BlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import java.util.List;
-import net.minecraft.entity.Entity;
 import com.google.common.base.Predicate;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.entity.item.EntityItemFrame;
+import java.util.List;
+import java.util.Random;
 import net.minecraft.block.material.Material;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityComparator;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItemFrame;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import java.util.Random;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.StatCollector;
-import net.minecraft.block.properties.IProperty;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityComparator;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public class BlockRedstoneComparator extends BlockRedstoneDiode implements ITileEntityProvider
 {
-    public static final PropertyBool POWERED;
-    public static final PropertyEnum<Mode> MODE;
-    
-    public BlockRedstoneComparator(final boolean powered) {
+    public static final PropertyBool POWERED = PropertyBool.create("powered");
+    public static final PropertyEnum<BlockRedstoneComparator.Mode> MODE = PropertyEnum.<BlockRedstoneComparator.Mode>create("mode", BlockRedstoneComparator.Mode.class);
+
+    public BlockRedstoneComparator(boolean powered)
+    {
         super(powered);
-        this.setDefaultState(this.blockState.getBaseState().withProperty((IProperty<Comparable>)BlockRedstoneComparator.FACING, EnumFacing.NORTH).withProperty((IProperty<Comparable>)BlockRedstoneComparator.POWERED, false).withProperty(BlockRedstoneComparator.MODE, Mode.COMPARE));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(POWERED, Boolean.valueOf(false)).withProperty(MODE, BlockRedstoneComparator.Mode.COMPARE));
         this.isBlockContainer = true;
     }
-    
-    @Override
-    public String getLocalizedName() {
+
+    /**
+     * Gets the localized name of this block. Used for the statistics page.
+     */
+    public String getLocalizedName()
+    {
         return StatCollector.translateToLocal("item.comparator.name");
     }
-    
-    @Override
-    public Item getItemDropped(final IBlockState state, final Random rand, final int fortune) {
+
+    /**
+     * Get the Item that this Block should drop when harvested.
+     *  
+     * @param fortune the level of the Fortune enchantment on the player's tool
+     */
+    public Item getItemDropped(IBlockState state, Random rand, int fortune)
+    {
         return Items.comparator;
     }
-    
-    @Override
-    public Item getItem(final World worldIn, final BlockPos pos) {
+
+    /**
+     * Used by pick block on the client to get a block's item form, if it exists.
+     */
+    public Item getItem(World worldIn, BlockPos pos)
+    {
         return Items.comparator;
     }
-    
-    @Override
-    protected int getDelay(final IBlockState state) {
+
+    protected int getDelay(IBlockState state)
+    {
         return 2;
     }
-    
-    @Override
-    protected IBlockState getPoweredState(final IBlockState unpoweredState) {
-        final Boolean obool = unpoweredState.getValue((IProperty<Boolean>)BlockRedstoneComparator.POWERED);
-        final Mode blockredstonecomparator$mode = unpoweredState.getValue(BlockRedstoneComparator.MODE);
-        final EnumFacing enumfacing = unpoweredState.getValue((IProperty<EnumFacing>)BlockRedstoneComparator.FACING);
-        return Blocks.powered_comparator.getDefaultState().withProperty((IProperty<Comparable>)BlockRedstoneComparator.FACING, enumfacing).withProperty((IProperty<Comparable>)BlockRedstoneComparator.POWERED, obool).withProperty(BlockRedstoneComparator.MODE, blockredstonecomparator$mode);
+
+    protected IBlockState getPoweredState(IBlockState unpoweredState)
+    {
+        Boolean obool = (Boolean)unpoweredState.getValue(POWERED);
+        BlockRedstoneComparator.Mode blockredstonecomparator$mode = (BlockRedstoneComparator.Mode)unpoweredState.getValue(MODE);
+        EnumFacing enumfacing = (EnumFacing)unpoweredState.getValue(FACING);
+        return Blocks.powered_comparator.getDefaultState().withProperty(FACING, enumfacing).withProperty(POWERED, obool).withProperty(MODE, blockredstonecomparator$mode);
     }
-    
-    @Override
-    protected IBlockState getUnpoweredState(final IBlockState poweredState) {
-        final Boolean obool = poweredState.getValue((IProperty<Boolean>)BlockRedstoneComparator.POWERED);
-        final Mode blockredstonecomparator$mode = poweredState.getValue(BlockRedstoneComparator.MODE);
-        final EnumFacing enumfacing = poweredState.getValue((IProperty<EnumFacing>)BlockRedstoneComparator.FACING);
-        return Blocks.unpowered_comparator.getDefaultState().withProperty((IProperty<Comparable>)BlockRedstoneComparator.FACING, enumfacing).withProperty((IProperty<Comparable>)BlockRedstoneComparator.POWERED, obool).withProperty(BlockRedstoneComparator.MODE, blockredstonecomparator$mode);
+
+    protected IBlockState getUnpoweredState(IBlockState poweredState)
+    {
+        Boolean obool = (Boolean)poweredState.getValue(POWERED);
+        BlockRedstoneComparator.Mode blockredstonecomparator$mode = (BlockRedstoneComparator.Mode)poweredState.getValue(MODE);
+        EnumFacing enumfacing = (EnumFacing)poweredState.getValue(FACING);
+        return Blocks.unpowered_comparator.getDefaultState().withProperty(FACING, enumfacing).withProperty(POWERED, obool).withProperty(MODE, blockredstonecomparator$mode);
     }
-    
-    @Override
-    protected boolean isPowered(final IBlockState state) {
-        return this.isRepeaterPowered || state.getValue((IProperty<Boolean>)BlockRedstoneComparator.POWERED);
+
+    protected boolean isPowered(IBlockState state)
+    {
+        return this.isRepeaterPowered || ((Boolean)state.getValue(POWERED)).booleanValue();
     }
-    
-    @Override
-    protected int getActiveSignal(final IBlockAccess worldIn, final BlockPos pos, final IBlockState state) {
-        final TileEntity tileentity = worldIn.getTileEntity(pos);
-        return (tileentity instanceof TileEntityComparator) ? ((TileEntityComparator)tileentity).getOutputSignal() : 0;
+
+    protected int getActiveSignal(IBlockAccess worldIn, BlockPos pos, IBlockState state)
+    {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+        return tileentity instanceof TileEntityComparator ? ((TileEntityComparator)tileentity).getOutputSignal() : 0;
     }
-    
-    private int calculateOutput(final World worldIn, final BlockPos pos, final IBlockState state) {
-        return (state.getValue(BlockRedstoneComparator.MODE) == Mode.SUBTRACT) ? Math.max(this.calculateInputStrength(worldIn, pos, state) - this.getPowerOnSides(worldIn, pos, state), 0) : this.calculateInputStrength(worldIn, pos, state);
+
+    private int calculateOutput(World worldIn, BlockPos pos, IBlockState state)
+    {
+        return state.getValue(MODE) == BlockRedstoneComparator.Mode.SUBTRACT ? Math.max(this.calculateInputStrength(worldIn, pos, state) - this.getPowerOnSides(worldIn, pos, state), 0) : this.calculateInputStrength(worldIn, pos, state);
     }
-    
-    @Override
-    protected boolean shouldBePowered(final World worldIn, final BlockPos pos, final IBlockState state) {
-        final int i = this.calculateInputStrength(worldIn, pos, state);
-        if (i >= 15) {
+
+    protected boolean shouldBePowered(World worldIn, BlockPos pos, IBlockState state)
+    {
+        int i = this.calculateInputStrength(worldIn, pos, state);
+
+        if (i >= 15)
+        {
             return true;
         }
-        if (i == 0) {
+        else if (i == 0)
+        {
             return false;
         }
-        final int j = this.getPowerOnSides(worldIn, pos, state);
-        return j == 0 || i >= j;
+        else
+        {
+            int j = this.getPowerOnSides(worldIn, pos, state);
+            return j == 0 ? true : i >= j;
+        }
     }
-    
-    @Override
-    protected int calculateInputStrength(final World worldIn, final BlockPos pos, final IBlockState state) {
+
+    protected int calculateInputStrength(World worldIn, BlockPos pos, IBlockState state)
+    {
         int i = super.calculateInputStrength(worldIn, pos, state);
-        final EnumFacing enumfacing = state.getValue((IProperty<EnumFacing>)BlockRedstoneComparator.FACING);
+        EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
         BlockPos blockpos = pos.offset(enumfacing);
         Block block = worldIn.getBlockState(blockpos).getBlock();
-        if (block.hasComparatorInputOverride()) {
+
+        if (block.hasComparatorInputOverride())
+        {
             i = block.getComparatorInputOverride(worldIn, blockpos);
         }
-        else if (i < 15 && block.isNormalCube()) {
+        else if (i < 15 && block.isNormalCube())
+        {
             blockpos = blockpos.offset(enumfacing);
             block = worldIn.getBlockState(blockpos).getBlock();
-            if (block.hasComparatorInputOverride()) {
+
+            if (block.hasComparatorInputOverride())
+            {
                 i = block.getComparatorInputOverride(worldIn, blockpos);
             }
-            else if (block.getMaterial() == Material.air) {
-                final EntityItemFrame entityitemframe = this.findItemFrame(worldIn, enumfacing, blockpos);
-                if (entityitemframe != null) {
+            else if (block.getMaterial() == Material.air)
+            {
+                EntityItemFrame entityitemframe = this.findItemFrame(worldIn, enumfacing, blockpos);
+
+                if (entityitemframe != null)
+                {
                     i = entityitemframe.func_174866_q();
                 }
             }
         }
+
         return i;
     }
-    
-    private EntityItemFrame findItemFrame(final World worldIn, final EnumFacing facing, final BlockPos pos) {
-        final List<EntityItemFrame> list = worldIn.getEntitiesWithinAABB((Class<? extends EntityItemFrame>)EntityItemFrame.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1), (com.google.common.base.Predicate<? super EntityItemFrame>)new Predicate<Entity>() {
-            public boolean apply(final Entity p_apply_1_) {
+
+    private EntityItemFrame findItemFrame(World worldIn, final EnumFacing facing, BlockPos pos)
+    {
+        List<EntityItemFrame> list = worldIn.<EntityItemFrame>getEntitiesWithinAABB(EntityItemFrame.class, new AxisAlignedBB((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), (double)(pos.getX() + 1), (double)(pos.getY() + 1), (double)(pos.getZ() + 1)), new Predicate<Entity>()
+        {
+            public boolean apply(Entity p_apply_1_)
+            {
                 return p_apply_1_ != null && p_apply_1_.getHorizontalFacing() == facing;
             }
         });
-        return (list.size() == 1) ? list.get(0) : null;
+        return list.size() == 1 ? (EntityItemFrame)list.get(0) : null;
     }
-    
-    @Override
-    public boolean onBlockActivated(final World worldIn, final BlockPos pos, IBlockState state, final EntityPlayer playerIn, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
-        if (!playerIn.capabilities.allowEdit) {
+
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
+    {
+        if (!playerIn.capabilities.allowEdit)
+        {
             return false;
         }
-        state = state.cycleProperty(BlockRedstoneComparator.MODE);
-        worldIn.playSoundEffect(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, "random.click", 0.3f, (state.getValue(BlockRedstoneComparator.MODE) == Mode.SUBTRACT) ? 0.55f : 0.5f);
-        worldIn.setBlockState(pos, state, 2);
-        this.onStateChange(worldIn, pos, state);
-        return true;
+        else
+        {
+            state = state.cycleProperty(MODE);
+            worldIn.playSoundEffect((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, "random.click", 0.3F, state.getValue(MODE) == BlockRedstoneComparator.Mode.SUBTRACT ? 0.55F : 0.5F);
+            worldIn.setBlockState(pos, state, 2);
+            this.onStateChange(worldIn, pos, state);
+            return true;
+        }
     }
-    
-    @Override
-    protected void updateState(final World worldIn, final BlockPos pos, final IBlockState state) {
-        if (!worldIn.isBlockTickPending(pos, this)) {
-            final int i = this.calculateOutput(worldIn, pos, state);
-            final TileEntity tileentity = worldIn.getTileEntity(pos);
-            final int j = (tileentity instanceof TileEntityComparator) ? ((TileEntityComparator)tileentity).getOutputSignal() : 0;
-            if (i != j || this.isPowered(state) != this.shouldBePowered(worldIn, pos, state)) {
-                if (this.isFacingTowardsRepeater(worldIn, pos, state)) {
+
+    protected void updateState(World worldIn, BlockPos pos, IBlockState state)
+    {
+        if (!worldIn.isBlockTickPending(pos, this))
+        {
+            int i = this.calculateOutput(worldIn, pos, state);
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+            int j = tileentity instanceof TileEntityComparator ? ((TileEntityComparator)tileentity).getOutputSignal() : 0;
+
+            if (i != j || this.isPowered(state) != this.shouldBePowered(worldIn, pos, state))
+            {
+                if (this.isFacingTowardsRepeater(worldIn, pos, state))
+                {
                     worldIn.updateBlockTick(pos, this, 2, -1);
                 }
-                else {
+                else
+                {
                     worldIn.updateBlockTick(pos, this, 2, 0);
                 }
             }
         }
     }
-    
-    private void onStateChange(final World worldIn, final BlockPos pos, final IBlockState state) {
-        final int i = this.calculateOutput(worldIn, pos, state);
-        final TileEntity tileentity = worldIn.getTileEntity(pos);
+
+    private void onStateChange(World worldIn, BlockPos pos, IBlockState state)
+    {
+        int i = this.calculateOutput(worldIn, pos, state);
+        TileEntity tileentity = worldIn.getTileEntity(pos);
         int j = 0;
-        if (tileentity instanceof TileEntityComparator) {
-            final TileEntityComparator tileentitycomparator = (TileEntityComparator)tileentity;
+
+        if (tileentity instanceof TileEntityComparator)
+        {
+            TileEntityComparator tileentitycomparator = (TileEntityComparator)tileentity;
             j = tileentitycomparator.getOutputSignal();
             tileentitycomparator.setOutputSignal(i);
         }
-        if (j != i || state.getValue(BlockRedstoneComparator.MODE) == Mode.COMPARE) {
-            final boolean flag1 = this.shouldBePowered(worldIn, pos, state);
-            final boolean flag2 = this.isPowered(state);
-            if (flag2 && !flag1) {
-                worldIn.setBlockState(pos, state.withProperty((IProperty<Comparable>)BlockRedstoneComparator.POWERED, false), 2);
+
+        if (j != i || state.getValue(MODE) == BlockRedstoneComparator.Mode.COMPARE)
+        {
+            boolean flag1 = this.shouldBePowered(worldIn, pos, state);
+            boolean flag = this.isPowered(state);
+
+            if (flag && !flag1)
+            {
+                worldIn.setBlockState(pos, state.withProperty(POWERED, Boolean.valueOf(false)), 2);
             }
-            else if (!flag2 && flag1) {
-                worldIn.setBlockState(pos, state.withProperty((IProperty<Comparable>)BlockRedstoneComparator.POWERED, true), 2);
+            else if (!flag && flag1)
+            {
+                worldIn.setBlockState(pos, state.withProperty(POWERED, Boolean.valueOf(true)), 2);
             }
+
             this.notifyNeighbors(worldIn, pos, state);
         }
     }
-    
-    @Override
-    public void updateTick(final World worldIn, final BlockPos pos, final IBlockState state, final Random rand) {
-        if (this.isRepeaterPowered) {
-            worldIn.setBlockState(pos, this.getUnpoweredState(state).withProperty((IProperty<Comparable>)BlockRedstoneComparator.POWERED, true), 4);
+
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+    {
+        if (this.isRepeaterPowered)
+        {
+            worldIn.setBlockState(pos, this.getUnpoweredState(state).withProperty(POWERED, Boolean.valueOf(true)), 4);
         }
+
         this.onStateChange(worldIn, pos, state);
     }
-    
-    @Override
-    public void onBlockAdded(final World worldIn, final BlockPos pos, final IBlockState state) {
+
+    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
+    {
         super.onBlockAdded(worldIn, pos, state);
         worldIn.setTileEntity(pos, this.createNewTileEntity(worldIn, 0));
     }
-    
-    @Override
-    public void breakBlock(final World worldIn, final BlockPos pos, final IBlockState state) {
+
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
         super.breakBlock(worldIn, pos, state);
         worldIn.removeTileEntity(pos);
         this.notifyNeighbors(worldIn, pos, state);
     }
-    
-    @Override
-    public boolean onBlockEventReceived(final World worldIn, final BlockPos pos, final IBlockState state, final int eventID, final int eventParam) {
+
+    /**
+     * Called on both Client and Server when World#addBlockEvent is called
+     */
+    public boolean onBlockEventReceived(World worldIn, BlockPos pos, IBlockState state, int eventID, int eventParam)
+    {
         super.onBlockEventReceived(worldIn, pos, state, eventID, eventParam);
-        final TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity != null && tileentity.receiveClientEvent(eventID, eventParam);
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+        return tileentity == null ? false : tileentity.receiveClientEvent(eventID, eventParam);
     }
-    
-    @Override
-    public TileEntity createNewTileEntity(final World worldIn, final int meta) {
+
+    /**
+     * Returns a new instance of a block's tile entity class. Called on placing the block.
+     */
+    public TileEntity createNewTileEntity(World worldIn, int meta)
+    {
         return new TileEntityComparator();
     }
-    
-    @Override
-    public IBlockState getStateFromMeta(final int meta) {
-        return this.getDefaultState().withProperty((IProperty<Comparable>)BlockRedstoneComparator.FACING, EnumFacing.getHorizontal(meta)).withProperty((IProperty<Comparable>)BlockRedstoneComparator.POWERED, (meta & 0x8) > 0).withProperty(BlockRedstoneComparator.MODE, ((meta & 0x4) > 0) ? Mode.SUBTRACT : Mode.COMPARE);
+
+    /**
+     * Convert the given metadata into a BlockState for this Block
+     */
+    public IBlockState getStateFromMeta(int meta)
+    {
+        return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(POWERED, Boolean.valueOf((meta & 8) > 0)).withProperty(MODE, (meta & 4) > 0 ? BlockRedstoneComparator.Mode.SUBTRACT : BlockRedstoneComparator.Mode.COMPARE);
     }
-    
-    @Override
-    public int getMetaFromState(final IBlockState state) {
+
+    /**
+     * Convert the BlockState into the correct metadata value
+     */
+    public int getMetaFromState(IBlockState state)
+    {
         int i = 0;
-        i |= state.getValue((IProperty<EnumFacing>)BlockRedstoneComparator.FACING).getHorizontalIndex();
-        if (state.getValue((IProperty<Boolean>)BlockRedstoneComparator.POWERED)) {
-            i |= 0x8;
+        i = i | ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
+
+        if (((Boolean)state.getValue(POWERED)).booleanValue())
+        {
+            i |= 8;
         }
-        if (state.getValue(BlockRedstoneComparator.MODE) == Mode.SUBTRACT) {
-            i |= 0x4;
+
+        if (state.getValue(MODE) == BlockRedstoneComparator.Mode.SUBTRACT)
+        {
+            i |= 4;
         }
+
         return i;
     }
-    
-    @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, new IProperty[] { BlockRedstoneComparator.FACING, BlockRedstoneComparator.MODE, BlockRedstoneComparator.POWERED });
-    }
-    
-    @Override
-    public IBlockState onBlockPlaced(final World worldIn, final BlockPos pos, final EnumFacing facing, final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer) {
-        return this.getDefaultState().withProperty((IProperty<Comparable>)BlockRedstoneComparator.FACING, placer.getHorizontalFacing().getOpposite()).withProperty((IProperty<Comparable>)BlockRedstoneComparator.POWERED, false).withProperty(BlockRedstoneComparator.MODE, Mode.COMPARE);
-    }
-    
-    static {
-        POWERED = PropertyBool.create("powered");
-        MODE = PropertyEnum.create("mode", Mode.class);
-    }
-    
-    public enum Mode implements IStringSerializable
+
+    protected BlockState createBlockState()
     {
-        COMPARE("compare"), 
+        return new BlockState(this, new IProperty[] {FACING, MODE, POWERED});
+    }
+
+    /**
+     * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
+     * IBlockstate
+     */
+    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    {
+        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(POWERED, Boolean.valueOf(false)).withProperty(MODE, BlockRedstoneComparator.Mode.COMPARE);
+    }
+
+    public static enum Mode implements IStringSerializable
+    {
+        COMPARE("compare"),
         SUBTRACT("subtract");
-        
+
         private final String name;
-        
-        private Mode(final String name) {
+
+        private Mode(String name)
+        {
             this.name = name;
         }
-        
-        @Override
-        public String toString() {
+
+        public String toString()
+        {
             return this.name;
         }
-        
-        @Override
-        public String getName() {
+
+        public String getName()
+        {
             return this.name;
         }
     }

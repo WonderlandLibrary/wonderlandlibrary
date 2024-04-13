@@ -1,93 +1,100 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.resources;
 
-import org.apache.logging.log4j.LogManager;
-import com.google.common.collect.Sets;
-import java.util.SortedSet;
-import net.minecraft.util.StringTranslate;
 import com.google.common.collect.Lists;
-import java.util.Iterator;
-import java.io.IOException;
-import net.minecraft.client.resources.data.LanguageMetadataSection;
-import java.util.List;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 import net.minecraft.client.resources.data.IMetadataSerializer;
+import net.minecraft.client.resources.data.LanguageMetadataSection;
+import net.minecraft.util.StringTranslate;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class LanguageManager implements IResourceManagerReloadListener
 {
-    private static final Logger logger;
+    private static final Logger logger = LogManager.getLogger();
     private final IMetadataSerializer theMetadataSerializer;
     private String currentLanguage;
-    protected static final Locale currentLocale;
-    private Map<String, Language> languageMap;
-    
-    public LanguageManager(final IMetadataSerializer theMetadataSerializerIn, final String currentLanguageIn) {
-        this.languageMap = (Map<String, Language>)Maps.newHashMap();
+    protected static final Locale currentLocale = new Locale();
+    private Map<String, Language> languageMap = Maps.<String, Language>newHashMap();
+
+    public LanguageManager(IMetadataSerializer theMetadataSerializerIn, String currentLanguageIn)
+    {
         this.theMetadataSerializer = theMetadataSerializerIn;
         this.currentLanguage = currentLanguageIn;
-        I18n.setLocale(LanguageManager.currentLocale);
+        I18n.setLocale(currentLocale);
     }
-    
-    public void parseLanguageMetadata(final List<IResourcePack> resourcesPacks) {
+
+    public void parseLanguageMetadata(List<IResourcePack> p_135043_1_)
+    {
         this.languageMap.clear();
-        for (final IResourcePack iresourcepack : resourcesPacks) {
-            try {
-                final LanguageMetadataSection languagemetadatasection = iresourcepack.getPackMetadata(this.theMetadataSerializer, "language");
-                if (languagemetadatasection == null) {
-                    continue;
-                }
-                for (final Language language : languagemetadatasection.getLanguages()) {
-                    if (!this.languageMap.containsKey(language.getLanguageCode())) {
-                        this.languageMap.put(language.getLanguageCode(), language);
+
+        for (IResourcePack iresourcepack : p_135043_1_)
+        {
+            try
+            {
+                LanguageMetadataSection languagemetadatasection = (LanguageMetadataSection)iresourcepack.getPackMetadata(this.theMetadataSerializer, "language");
+
+                if (languagemetadatasection != null)
+                {
+                    for (Language language : languagemetadatasection.getLanguages())
+                    {
+                        if (!this.languageMap.containsKey(language.getLanguageCode()))
+                        {
+                            this.languageMap.put(language.getLanguageCode(), language);
+                        }
                     }
                 }
             }
-            catch (RuntimeException runtimeexception) {
-                LanguageManager.logger.warn("Unable to parse metadata section of resourcepack: " + iresourcepack.getPackName(), (Throwable)runtimeexception);
+            catch (RuntimeException runtimeexception)
+            {
+                logger.warn((String)("Unable to parse metadata section of resourcepack: " + iresourcepack.getPackName()), (Throwable)runtimeexception);
             }
-            catch (IOException ioexception) {
-                LanguageManager.logger.warn("Unable to parse metadata section of resourcepack: " + iresourcepack.getPackName(), (Throwable)ioexception);
+            catch (IOException ioexception)
+            {
+                logger.warn((String)("Unable to parse metadata section of resourcepack: " + iresourcepack.getPackName()), (Throwable)ioexception);
             }
         }
     }
-    
-    @Override
-    public void onResourceManagerReload(final IResourceManager resourceManager) {
-        final List<String> list = (List<String>)Lists.newArrayList((Object[])new String[] { "en_US" });
-        if (!"en_US".equals(this.currentLanguage)) {
+
+    public void onResourceManagerReload(IResourceManager resourceManager)
+    {
+        List<String> list = Lists.newArrayList(new String[] {"en_US"});
+
+        if (!"en_US".equals(this.currentLanguage))
+        {
             list.add(this.currentLanguage);
         }
-        LanguageManager.currentLocale.loadLocaleDataFiles(resourceManager, list);
-        StringTranslate.replaceWith(LanguageManager.currentLocale.properties);
+
+        currentLocale.loadLocaleDataFiles(resourceManager, list);
+        StringTranslate.replaceWith(currentLocale.properties);
     }
-    
-    public boolean isCurrentLocaleUnicode() {
-        return LanguageManager.currentLocale.isUnicode();
+
+    public boolean isCurrentLocaleUnicode()
+    {
+        return currentLocale.isUnicode();
     }
-    
-    public boolean isCurrentLanguageBidirectional() {
+
+    public boolean isCurrentLanguageBidirectional()
+    {
         return this.getCurrentLanguage() != null && this.getCurrentLanguage().isBidirectional();
     }
-    
-    public void setCurrentLanguage(final Language currentLanguageIn) {
+
+    public void setCurrentLanguage(Language currentLanguageIn)
+    {
         this.currentLanguage = currentLanguageIn.getLanguageCode();
     }
-    
-    public Language getCurrentLanguage() {
-        return this.languageMap.containsKey(this.currentLanguage) ? this.languageMap.get(this.currentLanguage) : this.languageMap.get("en_US");
+
+    public Language getCurrentLanguage()
+    {
+        return this.languageMap.containsKey(this.currentLanguage) ? (Language)this.languageMap.get(this.currentLanguage) : (Language)this.languageMap.get("en_US");
     }
-    
-    public SortedSet<Language> getLanguages() {
-        return (SortedSet<Language>)Sets.newTreeSet((Iterable)this.languageMap.values());
-    }
-    
-    static {
-        logger = LogManager.getLogger();
-        currentLocale = new Locale();
+
+    public SortedSet<Language> getLanguages()
+    {
+        return Sets.newTreeSet(this.languageMap.values());
     }
 }

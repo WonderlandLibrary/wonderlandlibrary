@@ -1,67 +1,77 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.nbt;
 
-import java.util.Arrays;
 import java.io.DataInput;
-import java.io.IOException;
 import java.io.DataOutput;
+import java.io.IOException;
+import java.util.Arrays;
 
 public class NBTTagByteArray extends NBTBase
 {
+    /** The byte array stored in the tag. */
     private byte[] data;
-    
-    NBTTagByteArray() {
+
+    NBTTagByteArray()
+    {
     }
-    
-    public NBTTagByteArray(final byte[] data) {
+
+    public NBTTagByteArray(byte[] data)
+    {
         this.data = data;
     }
-    
-    @Override
-    void write(final DataOutput output) throws IOException {
+
+    /**
+     * Write the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void write(DataOutput output) throws IOException
+    {
         output.writeInt(this.data.length);
         output.write(this.data);
     }
-    
-    @Override
-    void read(final DataInput input, final int depth, final NBTSizeTracker sizeTracker) throws IOException {
+
+    void read(DataInput input, int depth, NBTSizeTracker sizeTracker) throws IOException
+    {
         sizeTracker.read(192L);
-        final int i = input.readInt();
-        sizeTracker.read(8 * i);
-        input.readFully(this.data = new byte[i]);
+        int i = input.readInt();
+        sizeTracker.read((long)(8 * i));
+        this.data = new byte[i];
+        input.readFully(this.data);
     }
-    
-    @Override
-    public byte getId() {
-        return 7;
+
+    /**
+     * Gets the type byte for the tag.
+     */
+    public byte getId()
+    {
+        return (byte)7;
     }
-    
-    @Override
-    public String toString() {
+
+    public String toString()
+    {
         return "[" + this.data.length + " bytes]";
     }
-    
-    @Override
-    public NBTBase copy() {
-        final byte[] abyte = new byte[this.data.length];
+
+    /**
+     * Creates a clone of the tag.
+     */
+    public NBTBase copy()
+    {
+        byte[] abyte = new byte[this.data.length];
         System.arraycopy(this.data, 0, abyte, 0, this.data.length);
         return new NBTTagByteArray(abyte);
     }
-    
-    @Override
-    public boolean equals(final Object p_equals_1_) {
-        return super.equals(p_equals_1_) && Arrays.equals(this.data, ((NBTTagByteArray)p_equals_1_).data);
+
+    public boolean equals(Object p_equals_1_)
+    {
+        return super.equals(p_equals_1_) ? Arrays.equals(this.data, ((NBTTagByteArray)p_equals_1_).data) : false;
     }
-    
-    @Override
-    public int hashCode() {
+
+    public int hashCode()
+    {
         return super.hashCode() ^ Arrays.hashCode(this.data);
     }
-    
-    public byte[] getByteArray() {
+
+    public byte[] getByteArray()
+    {
         return this.data;
     }
 }

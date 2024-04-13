@@ -1,117 +1,163 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 
 public class InventoryCraftResult implements IInventory
 {
-    private ItemStack[] stackResult;
-    
-    public InventoryCraftResult() {
-        this.stackResult = new ItemStack[1];
-    }
-    
-    @Override
-    public int getSizeInventory() {
+    /** A list of one item containing the result of the crafting formula */
+    private ItemStack[] stackResult = new ItemStack[1];
+
+    /**
+     * Returns the number of slots in the inventory.
+     */
+    public int getSizeInventory()
+    {
         return 1;
     }
-    
-    @Override
-    public ItemStack getStackInSlot(final int index) {
+
+    /**
+     * Returns the stack in the given slot.
+     *  
+     * @param index The slot to retrieve from.
+     */
+    public ItemStack getStackInSlot(int index)
+    {
         return this.stackResult[0];
     }
-    
-    @Override
-    public String getName() {
+
+    /**
+     * Gets the name of this command sender (usually username, but possibly "Rcon")
+     */
+    public String getCommandSenderName()
+    {
         return "Result";
     }
-    
-    @Override
-    public boolean hasCustomName() {
+
+    /**
+     * Returns true if this thing is named
+     */
+    public boolean hasCustomName()
+    {
         return false;
     }
-    
-    @Override
-    public IChatComponent getDisplayName() {
-        return this.hasCustomName() ? new ChatComponentText(this.getName()) : new ChatComponentTranslation(this.getName(), new Object[0]);
+
+    /**
+     * Get the formatted ChatComponent that will be used for the sender's username in chat
+     */
+    public IChatComponent getDisplayName()
+    {
+        return (IChatComponent)(this.hasCustomName() ? new ChatComponentText(this.getCommandSenderName()) : new ChatComponentTranslation(this.getCommandSenderName(), new Object[0]));
     }
-    
-    @Override
-    public ItemStack decrStackSize(final int index, final int count) {
-        if (this.stackResult[0] != null) {
-            final ItemStack itemstack = this.stackResult[0];
+
+    /**
+     * Removes up to a specified number of items from an inventory slot and returns them in a new stack.
+     *  
+     * @param index The slot to remove from.
+     * @param count The maximum amount of items to remove.
+     */
+    public ItemStack decrStackSize(int index, int count)
+    {
+        if (this.stackResult[0] != null)
+        {
+            ItemStack itemstack = this.stackResult[0];
             this.stackResult[0] = null;
             return itemstack;
         }
-        return null;
+        else
+        {
+            return null;
+        }
     }
-    
-    @Override
-    public ItemStack removeStackFromSlot(final int index) {
-        if (this.stackResult[0] != null) {
-            final ItemStack itemstack = this.stackResult[0];
+
+    /**
+     * Removes a stack from the given slot and returns it.
+     *  
+     * @param index The slot to remove a stack from.
+     */
+    public ItemStack getStackInSlotOnClosing(int index)
+    {
+        if (this.stackResult[0] != null)
+        {
+            ItemStack itemstack = this.stackResult[0];
             this.stackResult[0] = null;
             return itemstack;
         }
-        return null;
+        else
+        {
+            return null;
+        }
     }
-    
-    @Override
-    public void setInventorySlotContents(final int index, final ItemStack stack) {
+
+    /**
+     * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
+     */
+    public void setInventorySlotContents(int index, ItemStack stack)
+    {
         this.stackResult[0] = stack;
     }
-    
-    @Override
-    public int getInventoryStackLimit() {
+
+    /**
+     * Returns the maximum stack size for a inventory slot. Seems to always be 64, possibly will be extended.
+     */
+    public int getInventoryStackLimit()
+    {
         return 64;
     }
-    
-    @Override
-    public void markDirty() {
+
+    /**
+     * For tile entities, ensures the chunk containing the tile entity is saved to disk later - the game won't think it
+     * hasn't changed and skip it.
+     */
+    public void markDirty()
+    {
     }
-    
-    @Override
-    public boolean isUseableByPlayer(final EntityPlayer player) {
+
+    /**
+     * Do not make give this method the name canInteractWith because it clashes with Container
+     */
+    public boolean isUseableByPlayer(EntityPlayer player)
+    {
         return true;
     }
-    
-    @Override
-    public void openInventory(final EntityPlayer player) {
+
+    public void openInventory(EntityPlayer player)
+    {
     }
-    
-    @Override
-    public void closeInventory(final EntityPlayer player) {
+
+    public void closeInventory(EntityPlayer player)
+    {
     }
-    
-    @Override
-    public boolean isItemValidForSlot(final int index, final ItemStack stack) {
+
+    /**
+     * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
+     */
+    public boolean isItemValidForSlot(int index, ItemStack stack)
+    {
         return true;
     }
-    
-    @Override
-    public int getField(final int id) {
+
+    public int getField(int id)
+    {
         return 0;
     }
-    
-    @Override
-    public void setField(final int id, final int value) {
+
+    public void setField(int id, int value)
+    {
     }
-    
-    @Override
-    public int getFieldCount() {
+
+    public int getFieldCount()
+    {
         return 0;
     }
-    
-    @Override
-    public void clear() {
-        for (int i = 0; i < this.stackResult.length; ++i) {
+
+    public void clear()
+    {
+        for (int i = 0; i < this.stackResult.length; ++i)
+        {
             this.stackResult[i] = null;
         }
     }

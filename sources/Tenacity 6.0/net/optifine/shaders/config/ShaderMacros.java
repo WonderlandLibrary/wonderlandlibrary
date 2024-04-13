@@ -1,16 +1,12 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.shaders.config;
 
-import net.optifine.shaders.Shaders;
 import net.minecraft.src.Config;
 import net.minecraft.util.Util;
+import net.optifine.shaders.Shaders;
 
 public class ShaderMacros
 {
-    private static String PREFIX_MACRO;
+    private static String PREFIX_MACRO = "MC_";
     public static final String MC_VERSION = "MC_VERSION";
     public static final String MC_GL_VERSION = "MC_GL_VERSION";
     public static final String MC_GLSL_VERSION = "MC_GLSL_VERSION";
@@ -39,61 +35,83 @@ public class ShaderMacros
     public static final String MC_OLD_HAND_LIGHT = "MC_OLD_HAND_LIGHT";
     public static final String MC_OLD_LIGHTING = "MC_OLD_LIGHTING";
     private static ShaderMacro[] extensionMacros;
-    
-    public static String getOs() {
-        final Util.EnumOS util$enumos = Util.getOSType();
-        switch (util$enumos) {
-            case WINDOWS: {
+
+    public static String getOs()
+    {
+        Util.EnumOS util$enumos = Util.getOSType();
+
+        switch (util$enumos)
+        {
+            case WINDOWS:
                 return "MC_OS_WINDOWS";
-            }
-            case OSX: {
+
+            case OSX:
                 return "MC_OS_MAC";
-            }
-            case LINUX: {
+
+            case LINUX:
                 return "MC_OS_LINUX";
-            }
-            default: {
+
+            default:
                 return "MC_OS_OTHER";
-            }
         }
     }
-    
-    public static String getVendor() {
+
+    public static String getVendor()
+    {
         String s = Config.openGlVendor;
-        if (s == null) {
+
+        if (s == null)
+        {
             return "MC_GL_VENDOR_OTHER";
         }
-        s = s.toLowerCase();
-        return s.startsWith("ati") ? "MC_GL_VENDOR_ATI" : (s.startsWith("intel") ? "MC_GL_VENDOR_INTEL" : (s.startsWith("nvidia") ? "MC_GL_VENDOR_NVIDIA" : (s.startsWith("x.org") ? "MC_GL_VENDOR_XORG" : "MC_GL_VENDOR_OTHER")));
+        else
+        {
+            s = s.toLowerCase();
+            return s.startsWith("ati") ? "MC_GL_VENDOR_ATI" : (s.startsWith("intel") ? "MC_GL_VENDOR_INTEL" : (s.startsWith("nvidia") ? "MC_GL_VENDOR_NVIDIA" : (s.startsWith("x.org") ? "MC_GL_VENDOR_XORG" : "MC_GL_VENDOR_OTHER")));
+        }
     }
-    
-    public static String getRenderer() {
+
+    public static String getRenderer()
+    {
         String s = Config.openGlRenderer;
-        if (s == null) {
+
+        if (s == null)
+        {
             return "MC_GL_RENDERER_OTHER";
         }
-        s = s.toLowerCase();
-        return s.startsWith("amd") ? "MC_GL_RENDERER_RADEON" : (s.startsWith("ati") ? "MC_GL_RENDERER_RADEON" : (s.startsWith("radeon") ? "MC_GL_RENDERER_RADEON" : (s.startsWith("gallium") ? "MC_GL_RENDERER_GALLIUM" : (s.startsWith("intel") ? "MC_GL_RENDERER_INTEL" : (s.startsWith("geforce") ? "MC_GL_RENDERER_GEFORCE" : (s.startsWith("nvidia") ? "MC_GL_RENDERER_GEFORCE" : (s.startsWith("quadro") ? "MC_GL_RENDERER_QUADRO" : (s.startsWith("nvs") ? "MC_GL_RENDERER_QUADRO" : (s.startsWith("mesa") ? "MC_GL_RENDERER_MESA" : "MC_GL_RENDERER_OTHER")))))))));
-    }
-    
-    public static String getPrefixMacro() {
-        return ShaderMacros.PREFIX_MACRO;
-    }
-    
-    public static ShaderMacro[] getExtensions() {
-        if (ShaderMacros.extensionMacros == null) {
-            final String[] astring = Config.getOpenGlExtensions();
-            final ShaderMacro[] ashadermacro = new ShaderMacro[astring.length];
-            for (int i = 0; i < astring.length; ++i) {
-                ashadermacro[i] = new ShaderMacro(ShaderMacros.PREFIX_MACRO + astring[i], "");
-            }
-            ShaderMacros.extensionMacros = ashadermacro;
+        else
+        {
+            s = s.toLowerCase();
+            return s.startsWith("amd") ? "MC_GL_RENDERER_RADEON" : (s.startsWith("ati") ? "MC_GL_RENDERER_RADEON" : (s.startsWith("radeon") ? "MC_GL_RENDERER_RADEON" : (s.startsWith("gallium") ? "MC_GL_RENDERER_GALLIUM" : (s.startsWith("intel") ? "MC_GL_RENDERER_INTEL" : (s.startsWith("geforce") ? "MC_GL_RENDERER_GEFORCE" : (s.startsWith("nvidia") ? "MC_GL_RENDERER_GEFORCE" : (s.startsWith("quadro") ? "MC_GL_RENDERER_QUADRO" : (s.startsWith("nvs") ? "MC_GL_RENDERER_QUADRO" : (s.startsWith("mesa") ? "MC_GL_RENDERER_MESA" : "MC_GL_RENDERER_OTHER")))))))));
         }
-        return ShaderMacros.extensionMacros;
     }
-    
-    public static String getFixedMacroLines() {
-        final StringBuilder stringbuilder = new StringBuilder();
+
+    public static String getPrefixMacro()
+    {
+        return PREFIX_MACRO;
+    }
+
+    public static ShaderMacro[] getExtensions()
+    {
+        if (extensionMacros == null)
+        {
+            String[] astring = Config.getOpenGlExtensions();
+            ShaderMacro[] ashadermacro = new ShaderMacro[astring.length];
+
+            for (int i = 0; i < astring.length; ++i)
+            {
+                ashadermacro[i] = new ShaderMacro(PREFIX_MACRO + astring[i], "");
+            }
+
+            extensionMacros = ashadermacro;
+        }
+
+        return extensionMacros;
+    }
+
+    public static String getFixedMacroLines()
+    {
+        StringBuilder stringbuilder = new StringBuilder();
         addMacroLine(stringbuilder, "MC_VERSION", Config.getMinecraftVersionInt());
         addMacroLine(stringbuilder, "MC_GL_VERSION " + Config.getGlVersion().toInt());
         addMacroLine(stringbuilder, "MC_GLSL_VERSION " + Config.getGlslVersion().toInt());
@@ -102,53 +120,65 @@ public class ShaderMacros
         addMacroLine(stringbuilder, getRenderer());
         return stringbuilder.toString();
     }
-    
-    public static String getOptionMacroLines() {
-        final StringBuilder stringbuilder = new StringBuilder();
-        if (Shaders.configAntialiasingLevel > 0) {
+
+    public static String getOptionMacroLines()
+    {
+        StringBuilder stringbuilder = new StringBuilder();
+
+        if (Shaders.configAntialiasingLevel > 0)
+        {
             addMacroLine(stringbuilder, "MC_FXAA_LEVEL", Shaders.configAntialiasingLevel);
         }
-        if (Shaders.configNormalMap) {
+
+        if (Shaders.configNormalMap)
+        {
             addMacroLine(stringbuilder, "MC_NORMAL_MAP");
         }
-        if (Shaders.configSpecularMap) {
+
+        if (Shaders.configSpecularMap)
+        {
             addMacroLine(stringbuilder, "MC_SPECULAR_MAP");
         }
+
         addMacroLine(stringbuilder, "MC_RENDER_QUALITY", Shaders.configRenderResMul);
         addMacroLine(stringbuilder, "MC_SHADOW_QUALITY", Shaders.configShadowResMul);
         addMacroLine(stringbuilder, "MC_HAND_DEPTH", Shaders.configHandDepthMul);
-        if (Shaders.isOldHandLight()) {
+
+        if (Shaders.isOldHandLight())
+        {
             addMacroLine(stringbuilder, "MC_OLD_HAND_LIGHT");
         }
-        if (Shaders.isOldLighting()) {
+
+        if (Shaders.isOldLighting())
+        {
             addMacroLine(stringbuilder, "MC_OLD_LIGHTING");
         }
+
         return stringbuilder.toString();
     }
-    
-    private static void addMacroLine(final StringBuilder sb, final String name, final int value) {
+
+    private static void addMacroLine(StringBuilder sb, String name, int value)
+    {
         sb.append("#define ");
         sb.append(name);
         sb.append(" ");
         sb.append(value);
         sb.append("\n");
     }
-    
-    private static void addMacroLine(final StringBuilder sb, final String name, final float value) {
+
+    private static void addMacroLine(StringBuilder sb, String name, float value)
+    {
         sb.append("#define ");
         sb.append(name);
         sb.append(" ");
         sb.append(value);
         sb.append("\n");
     }
-    
-    private static void addMacroLine(final StringBuilder sb, final String name) {
+
+    private static void addMacroLine(StringBuilder sb, String name)
+    {
         sb.append("#define ");
         sb.append(name);
         sb.append("\n");
-    }
-    
-    static {
-        ShaderMacros.PREFIX_MACRO = "MC_";
     }
 }

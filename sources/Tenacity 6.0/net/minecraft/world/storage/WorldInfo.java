@@ -1,123 +1,151 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.world.storage;
 
 import java.util.concurrent.Callable;
 import net.minecraft.crash.CrashReportCategory;
-import net.minecraft.util.BlockPos;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.WorldSettings;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldType;
-import net.minecraft.world.EnumDifficulty;
 
 public class WorldInfo
 {
-    public static final EnumDifficulty DEFAULT_DIFFICULTY;
+    public static final EnumDifficulty DEFAULT_DIFFICULTY = EnumDifficulty.NORMAL;
+
+    /** Holds the seed of the currently world. */
     private long randomSeed;
-    private WorldType terrainType;
-    private String generatorOptions;
+    private WorldType terrainType = WorldType.DEFAULT;
+    private String generatorOptions = "";
+
+    /** The spawn zone position X coordinate. */
     private int spawnX;
+
+    /** The spawn zone position Y coordinate. */
     private int spawnY;
+
+    /** The spawn zone position Z coordinate. */
     private int spawnZ;
+
+    /** Total time for this world. */
     private long totalTime;
+
+    /** The current world time in ticks, ranging from 0 to 23999. */
     private long worldTime;
+
+    /** The last time the player was in this world. */
     private long lastTimePlayed;
+
+    /** The size of entire save of current world on the disk, isn't exactly. */
     private long sizeOnDisk;
     private NBTTagCompound playerTag;
     private int dimension;
+
+    /** The name of the save defined at world creation. */
     private String levelName;
+
+    /** Introduced in beta 1.3, is the save version for future control. */
     private int saveVersion;
     private int cleanWeatherTime;
+
+    /** True if it's raining, false otherwise. */
     private boolean raining;
+
+    /** Number of ticks until next rain. */
     private int rainTime;
+
+    /** Is thunderbolts failing now? */
     private boolean thundering;
+
+    /** Number of ticks untils next thunderbolt. */
     private int thunderTime;
+
+    /** The Game Type. */
     private WorldSettings.GameType theGameType;
+
+    /**
+     * Whether the map features (e.g. strongholds) generation is enabled or disabled.
+     */
     private boolean mapFeaturesEnabled;
+
+    /** Hardcore mode flag */
     private boolean hardcore;
     private boolean allowCommands;
     private boolean initialized;
     private EnumDifficulty difficulty;
     private boolean difficultyLocked;
-    private double borderCenterX;
-    private double borderCenterZ;
-    private double borderSize;
-    private long borderSizeLerpTime;
-    private double borderSizeLerpTarget;
-    private double borderSafeZone;
-    private double borderDamagePerBlock;
-    private int borderWarningDistance;
-    private int borderWarningTime;
-    private GameRules theGameRules;
-    
-    protected WorldInfo() {
-        this.terrainType = WorldType.DEFAULT;
-        this.generatorOptions = "";
-        this.borderCenterX = 0.0;
-        this.borderCenterZ = 0.0;
-        this.borderSize = 6.0E7;
-        this.borderSizeLerpTime = 0L;
-        this.borderSizeLerpTarget = 0.0;
-        this.borderSafeZone = 5.0;
-        this.borderDamagePerBlock = 0.2;
-        this.borderWarningDistance = 5;
-        this.borderWarningTime = 15;
-        this.theGameRules = new GameRules();
+    private double borderCenterX = 0.0D;
+    private double borderCenterZ = 0.0D;
+    private double borderSize = 6.0E7D;
+    private long borderSizeLerpTime = 0L;
+    private double borderSizeLerpTarget = 0.0D;
+    private double borderSafeZone = 5.0D;
+    private double borderDamagePerBlock = 0.2D;
+    private int borderWarningDistance = 5;
+    private int borderWarningTime = 15;
+    private GameRules theGameRules = new GameRules();
+
+    protected WorldInfo()
+    {
     }
-    
-    public WorldInfo(final NBTTagCompound nbt) {
-        this.terrainType = WorldType.DEFAULT;
-        this.generatorOptions = "";
-        this.borderCenterX = 0.0;
-        this.borderCenterZ = 0.0;
-        this.borderSize = 6.0E7;
-        this.borderSizeLerpTime = 0L;
-        this.borderSizeLerpTarget = 0.0;
-        this.borderSafeZone = 5.0;
-        this.borderDamagePerBlock = 0.2;
-        this.borderWarningDistance = 5;
-        this.borderWarningTime = 15;
-        this.theGameRules = new GameRules();
+
+    public WorldInfo(NBTTagCompound nbt)
+    {
         this.randomSeed = nbt.getLong("RandomSeed");
-        if (nbt.hasKey("generatorName", 8)) {
-            final String s = nbt.getString("generatorName");
+
+        if (nbt.hasKey("generatorName", 8))
+        {
+            String s = nbt.getString("generatorName");
             this.terrainType = WorldType.parseWorldType(s);
-            if (this.terrainType == null) {
+
+            if (this.terrainType == null)
+            {
                 this.terrainType = WorldType.DEFAULT;
             }
-            else if (this.terrainType.isVersioned()) {
+            else if (this.terrainType.isVersioned())
+            {
                 int i = 0;
-                if (nbt.hasKey("generatorVersion", 99)) {
+
+                if (nbt.hasKey("generatorVersion", 99))
+                {
                     i = nbt.getInteger("generatorVersion");
                 }
+
                 this.terrainType = this.terrainType.getWorldTypeForGeneratorVersion(i);
             }
-            if (nbt.hasKey("generatorOptions", 8)) {
+
+            if (nbt.hasKey("generatorOptions", 8))
+            {
                 this.generatorOptions = nbt.getString("generatorOptions");
             }
         }
+
         this.theGameType = WorldSettings.GameType.getByID(nbt.getInteger("GameType"));
-        if (nbt.hasKey("MapFeatures", 99)) {
+
+        if (nbt.hasKey("MapFeatures", 99))
+        {
             this.mapFeaturesEnabled = nbt.getBoolean("MapFeatures");
         }
-        else {
+        else
+        {
             this.mapFeaturesEnabled = true;
         }
+
         this.spawnX = nbt.getInteger("SpawnX");
         this.spawnY = nbt.getInteger("SpawnY");
         this.spawnZ = nbt.getInteger("SpawnZ");
         this.totalTime = nbt.getLong("Time");
-        if (nbt.hasKey("DayTime", 99)) {
+
+        if (nbt.hasKey("DayTime", 99))
+        {
             this.worldTime = nbt.getLong("DayTime");
         }
-        else {
+        else
+        {
             this.worldTime = this.totalTime;
         }
+
         this.lastTimePlayed = nbt.getLong("LastPlayed");
         this.sizeOnDisk = nbt.getLong("SizeOnDisk");
         this.levelName = nbt.getString("LevelName");
@@ -128,80 +156,102 @@ public class WorldInfo
         this.thunderTime = nbt.getInteger("thunderTime");
         this.thundering = nbt.getBoolean("thundering");
         this.hardcore = nbt.getBoolean("hardcore");
-        if (nbt.hasKey("initialized", 99)) {
+
+        if (nbt.hasKey("initialized", 99))
+        {
             this.initialized = nbt.getBoolean("initialized");
         }
-        else {
+        else
+        {
             this.initialized = true;
         }
-        if (nbt.hasKey("allowCommands", 99)) {
+
+        if (nbt.hasKey("allowCommands", 99))
+        {
             this.allowCommands = nbt.getBoolean("allowCommands");
         }
-        else {
-            this.allowCommands = (this.theGameType == WorldSettings.GameType.CREATIVE);
+        else
+        {
+            this.allowCommands = this.theGameType == WorldSettings.GameType.CREATIVE;
         }
-        if (nbt.hasKey("Player", 10)) {
+
+        if (nbt.hasKey("Player", 10))
+        {
             this.playerTag = nbt.getCompoundTag("Player");
             this.dimension = this.playerTag.getInteger("Dimension");
         }
-        if (nbt.hasKey("GameRules", 10)) {
+
+        if (nbt.hasKey("GameRules", 10))
+        {
             this.theGameRules.readFromNBT(nbt.getCompoundTag("GameRules"));
         }
-        if (nbt.hasKey("Difficulty", 99)) {
+
+        if (nbt.hasKey("Difficulty", 99))
+        {
             this.difficulty = EnumDifficulty.getDifficultyEnum(nbt.getByte("Difficulty"));
         }
-        if (nbt.hasKey("DifficultyLocked", 1)) {
+
+        if (nbt.hasKey("DifficultyLocked", 1))
+        {
             this.difficultyLocked = nbt.getBoolean("DifficultyLocked");
         }
-        if (nbt.hasKey("BorderCenterX", 99)) {
+
+        if (nbt.hasKey("BorderCenterX", 99))
+        {
             this.borderCenterX = nbt.getDouble("BorderCenterX");
         }
-        if (nbt.hasKey("BorderCenterZ", 99)) {
+
+        if (nbt.hasKey("BorderCenterZ", 99))
+        {
             this.borderCenterZ = nbt.getDouble("BorderCenterZ");
         }
-        if (nbt.hasKey("BorderSize", 99)) {
+
+        if (nbt.hasKey("BorderSize", 99))
+        {
             this.borderSize = nbt.getDouble("BorderSize");
         }
-        if (nbt.hasKey("BorderSizeLerpTime", 99)) {
+
+        if (nbt.hasKey("BorderSizeLerpTime", 99))
+        {
             this.borderSizeLerpTime = nbt.getLong("BorderSizeLerpTime");
         }
-        if (nbt.hasKey("BorderSizeLerpTarget", 99)) {
+
+        if (nbt.hasKey("BorderSizeLerpTarget", 99))
+        {
             this.borderSizeLerpTarget = nbt.getDouble("BorderSizeLerpTarget");
         }
-        if (nbt.hasKey("BorderSafeZone", 99)) {
+
+        if (nbt.hasKey("BorderSafeZone", 99))
+        {
             this.borderSafeZone = nbt.getDouble("BorderSafeZone");
         }
-        if (nbt.hasKey("BorderDamagePerBlock", 99)) {
+
+        if (nbt.hasKey("BorderDamagePerBlock", 99))
+        {
             this.borderDamagePerBlock = nbt.getDouble("BorderDamagePerBlock");
         }
-        if (nbt.hasKey("BorderWarningBlocks", 99)) {
+
+        if (nbt.hasKey("BorderWarningBlocks", 99))
+        {
             this.borderWarningDistance = nbt.getInteger("BorderWarningBlocks");
         }
-        if (nbt.hasKey("BorderWarningTime", 99)) {
+
+        if (nbt.hasKey("BorderWarningTime", 99))
+        {
             this.borderWarningTime = nbt.getInteger("BorderWarningTime");
         }
     }
-    
-    public WorldInfo(final WorldSettings settings, final String name) {
-        this.terrainType = WorldType.DEFAULT;
-        this.generatorOptions = "";
-        this.borderCenterX = 0.0;
-        this.borderCenterZ = 0.0;
-        this.borderSize = 6.0E7;
-        this.borderSizeLerpTime = 0L;
-        this.borderSizeLerpTarget = 0.0;
-        this.borderSafeZone = 5.0;
-        this.borderDamagePerBlock = 0.2;
-        this.borderWarningDistance = 5;
-        this.borderWarningTime = 15;
-        this.theGameRules = new GameRules();
+
+    public WorldInfo(WorldSettings settings, String name)
+    {
         this.populateFromWorldSettings(settings);
         this.levelName = name;
-        this.difficulty = WorldInfo.DEFAULT_DIFFICULTY;
+        this.difficulty = DEFAULT_DIFFICULTY;
         this.initialized = false;
     }
-    
-    public void populateFromWorldSettings(final WorldSettings settings) {
+
+    public void populateFromWorldSettings(WorldSettings settings)
+    {
         this.randomSeed = settings.getSeed();
         this.theGameType = settings.getGameType();
         this.mapFeaturesEnabled = settings.isMapFeaturesEnabled();
@@ -210,20 +260,9 @@ public class WorldInfo
         this.generatorOptions = settings.getWorldName();
         this.allowCommands = settings.areCommandsAllowed();
     }
-    
-    public WorldInfo(final WorldInfo worldInformation) {
-        this.terrainType = WorldType.DEFAULT;
-        this.generatorOptions = "";
-        this.borderCenterX = 0.0;
-        this.borderCenterZ = 0.0;
-        this.borderSize = 6.0E7;
-        this.borderSizeLerpTime = 0L;
-        this.borderSizeLerpTarget = 0.0;
-        this.borderSafeZone = 5.0;
-        this.borderDamagePerBlock = 0.2;
-        this.borderWarningDistance = 5;
-        this.borderWarningTime = 15;
-        this.theGameRules = new GameRules();
+
+    public WorldInfo(WorldInfo worldInformation)
+    {
         this.randomSeed = worldInformation.randomSeed;
         this.terrainType = worldInformation.terrainType;
         this.generatorOptions = worldInformation.generatorOptions;
@@ -260,20 +299,29 @@ public class WorldInfo
         this.borderWarningTime = worldInformation.borderWarningTime;
         this.borderWarningDistance = worldInformation.borderWarningDistance;
     }
-    
-    public NBTTagCompound getNBTTagCompound() {
-        final NBTTagCompound nbttagcompound = new NBTTagCompound();
+
+    /**
+     * Gets the NBTTagCompound for the worldInfo
+     */
+    public NBTTagCompound getNBTTagCompound()
+    {
+        NBTTagCompound nbttagcompound = new NBTTagCompound();
         this.updateTagCompound(nbttagcompound, this.playerTag);
         return nbttagcompound;
     }
-    
-    public NBTTagCompound cloneNBTCompound(final NBTTagCompound nbt) {
-        final NBTTagCompound nbttagcompound = new NBTTagCompound();
+
+    /**
+     * Creates a new NBTTagCompound for the world, with the given NBTTag as the "Player"
+     */
+    public NBTTagCompound cloneNBTCompound(NBTTagCompound nbt)
+    {
+        NBTTagCompound nbttagcompound = new NBTTagCompound();
         this.updateTagCompound(nbttagcompound, nbt);
         return nbttagcompound;
     }
-    
-    private void updateTagCompound(final NBTTagCompound nbt, final NBTTagCompound playerNbt) {
+
+    private void updateTagCompound(NBTTagCompound nbt, NBTTagCompound playerNbt)
+    {
         nbt.setLong("RandomSeed", this.randomSeed);
         nbt.setString("generatorName", this.terrainType.getWorldTypeName());
         nbt.setInteger("generatorVersion", this.terrainType.getGeneratorVersion());
@@ -304,352 +352,577 @@ public class WorldInfo
         nbt.setDouble("BorderSafeZone", this.borderSafeZone);
         nbt.setDouble("BorderDamagePerBlock", this.borderDamagePerBlock);
         nbt.setDouble("BorderSizeLerpTarget", this.borderSizeLerpTarget);
-        nbt.setDouble("BorderWarningBlocks", this.borderWarningDistance);
-        nbt.setDouble("BorderWarningTime", this.borderWarningTime);
-        if (this.difficulty != null) {
+        nbt.setDouble("BorderWarningBlocks", (double)this.borderWarningDistance);
+        nbt.setDouble("BorderWarningTime", (double)this.borderWarningTime);
+
+        if (this.difficulty != null)
+        {
             nbt.setByte("Difficulty", (byte)this.difficulty.getDifficultyId());
         }
+
         nbt.setBoolean("DifficultyLocked", this.difficultyLocked);
         nbt.setTag("GameRules", this.theGameRules.writeToNBT());
-        if (playerNbt != null) {
+
+        if (playerNbt != null)
+        {
             nbt.setTag("Player", playerNbt);
         }
     }
-    
-    public long getSeed() {
+
+    /**
+     * Returns the seed of current world.
+     */
+    public long getSeed()
+    {
         return this.randomSeed;
     }
-    
-    public int getSpawnX() {
+
+    /**
+     * Returns the x spawn position
+     */
+    public int getSpawnX()
+    {
         return this.spawnX;
     }
-    
-    public int getSpawnY() {
+
+    /**
+     * Return the Y axis spawning point of the player.
+     */
+    public int getSpawnY()
+    {
         return this.spawnY;
     }
-    
-    public int getSpawnZ() {
+
+    /**
+     * Returns the z spawn position
+     */
+    public int getSpawnZ()
+    {
         return this.spawnZ;
     }
-    
-    public long getWorldTotalTime() {
+
+    public long getWorldTotalTime()
+    {
         return this.totalTime;
     }
-    
-    public long getWorldTime() {
+
+    /**
+     * Get current world time
+     */
+    public long getWorldTime()
+    {
         return this.worldTime;
     }
-    
-    public long getSizeOnDisk() {
+
+    public long getSizeOnDisk()
+    {
         return this.sizeOnDisk;
     }
-    
-    public NBTTagCompound getPlayerNBTTagCompound() {
+
+    /**
+     * Returns the player's NBTTagCompound to be loaded
+     */
+    public NBTTagCompound getPlayerNBTTagCompound()
+    {
         return this.playerTag;
     }
-    
-    public void setSpawnX(final int x) {
+
+    /**
+     * Set the x spawn position to the passed in value
+     */
+    public void setSpawnX(int x)
+    {
         this.spawnX = x;
     }
-    
-    public void setSpawnY(final int y) {
+
+    /**
+     * Sets the y spawn position
+     */
+    public void setSpawnY(int y)
+    {
         this.spawnY = y;
     }
-    
-    public void setSpawnZ(final int z) {
+
+    /**
+     * Set the z spawn position to the passed in value
+     */
+    public void setSpawnZ(int z)
+    {
         this.spawnZ = z;
     }
-    
-    public void setWorldTotalTime(final long time) {
+
+    public void setWorldTotalTime(long time)
+    {
         this.totalTime = time;
     }
-    
-    public void setWorldTime(final long time) {
+
+    /**
+     * Set current world time
+     */
+    public void setWorldTime(long time)
+    {
         this.worldTime = time;
     }
-    
-    public void setSpawn(final BlockPos spawnPoint) {
+
+    public void setSpawn(BlockPos spawnPoint)
+    {
         this.spawnX = spawnPoint.getX();
         this.spawnY = spawnPoint.getY();
         this.spawnZ = spawnPoint.getZ();
     }
-    
-    public String getWorldName() {
+
+    /**
+     * Get current world name
+     */
+    public String getWorldName()
+    {
         return this.levelName;
     }
-    
-    public void setWorldName(final String worldName) {
+
+    public void setWorldName(String worldName)
+    {
         this.levelName = worldName;
     }
-    
-    public int getSaveVersion() {
+
+    /**
+     * Returns the save version of this world
+     */
+    public int getSaveVersion()
+    {
         return this.saveVersion;
     }
-    
-    public void setSaveVersion(final int version) {
+
+    /**
+     * Sets the save version of the world
+     */
+    public void setSaveVersion(int version)
+    {
         this.saveVersion = version;
     }
-    
-    public long getLastTimePlayed() {
+
+    /**
+     * Return the last time the player was in this world.
+     */
+    public long getLastTimePlayed()
+    {
         return this.lastTimePlayed;
     }
-    
-    public int getCleanWeatherTime() {
+
+    public int getCleanWeatherTime()
+    {
         return this.cleanWeatherTime;
     }
-    
-    public void setCleanWeatherTime(final int cleanWeatherTimeIn) {
+
+    public void setCleanWeatherTime(int cleanWeatherTimeIn)
+    {
         this.cleanWeatherTime = cleanWeatherTimeIn;
     }
-    
-    public boolean isThundering() {
+
+    /**
+     * Returns true if it is thundering, false otherwise.
+     */
+    public boolean isThundering()
+    {
         return this.thundering;
     }
-    
-    public void setThundering(final boolean thunderingIn) {
+
+    /**
+     * Sets whether it is thundering or not.
+     */
+    public void setThundering(boolean thunderingIn)
+    {
         this.thundering = thunderingIn;
     }
-    
-    public int getThunderTime() {
+
+    /**
+     * Returns the number of ticks until next thunderbolt.
+     */
+    public int getThunderTime()
+    {
         return this.thunderTime;
     }
-    
-    public void setThunderTime(final int time) {
+
+    /**
+     * Defines the number of ticks until next thunderbolt.
+     */
+    public void setThunderTime(int time)
+    {
         this.thunderTime = time;
     }
-    
-    public boolean isRaining() {
+
+    /**
+     * Returns true if it is raining, false otherwise.
+     */
+    public boolean isRaining()
+    {
         return this.raining;
     }
-    
-    public void setRaining(final boolean isRaining) {
+
+    /**
+     * Sets whether it is raining or not.
+     */
+    public void setRaining(boolean isRaining)
+    {
         this.raining = isRaining;
     }
-    
-    public int getRainTime() {
+
+    /**
+     * Return the number of ticks until rain.
+     */
+    public int getRainTime()
+    {
         return this.rainTime;
     }
-    
-    public void setRainTime(final int time) {
+
+    /**
+     * Sets the number of ticks until rain.
+     */
+    public void setRainTime(int time)
+    {
         this.rainTime = time;
     }
-    
-    public WorldSettings.GameType getGameType() {
+
+    /**
+     * Gets the GameType.
+     */
+    public WorldSettings.GameType getGameType()
+    {
         return this.theGameType;
     }
-    
-    public boolean isMapFeaturesEnabled() {
+
+    /**
+     * Get whether the map features (e.g. strongholds) generation is enabled or disabled.
+     */
+    public boolean isMapFeaturesEnabled()
+    {
         return this.mapFeaturesEnabled;
     }
-    
-    public void setMapFeaturesEnabled(final boolean enabled) {
+
+    public void setMapFeaturesEnabled(boolean enabled)
+    {
         this.mapFeaturesEnabled = enabled;
     }
-    
-    public void setGameType(final WorldSettings.GameType type) {
+
+    /**
+     * Sets the GameType.
+     */
+    public void setGameType(WorldSettings.GameType type)
+    {
         this.theGameType = type;
     }
-    
-    public boolean isHardcoreModeEnabled() {
+
+    /**
+     * Returns true if hardcore mode is enabled, otherwise false
+     */
+    public boolean isHardcoreModeEnabled()
+    {
         return this.hardcore;
     }
-    
-    public void setHardcore(final boolean hardcoreIn) {
+
+    public void setHardcore(boolean hardcoreIn)
+    {
         this.hardcore = hardcoreIn;
     }
-    
-    public WorldType getTerrainType() {
+
+    public WorldType getTerrainType()
+    {
         return this.terrainType;
     }
-    
-    public void setTerrainType(final WorldType type) {
+
+    public void setTerrainType(WorldType type)
+    {
         this.terrainType = type;
     }
-    
-    public String getGeneratorOptions() {
+
+    public String getGeneratorOptions()
+    {
         return this.generatorOptions;
     }
-    
-    public boolean areCommandsAllowed() {
+
+    /**
+     * Returns true if commands are allowed on this World.
+     */
+    public boolean areCommandsAllowed()
+    {
         return this.allowCommands;
     }
-    
-    public void setAllowCommands(final boolean allow) {
+
+    public void setAllowCommands(boolean allow)
+    {
         this.allowCommands = allow;
     }
-    
-    public boolean isInitialized() {
+
+    /**
+     * Returns true if the World is initialized.
+     */
+    public boolean isInitialized()
+    {
         return this.initialized;
     }
-    
-    public void setServerInitialized(final boolean initializedIn) {
+
+    /**
+     * Sets the initialization status of the World.
+     */
+    public void setServerInitialized(boolean initializedIn)
+    {
         this.initialized = initializedIn;
     }
-    
-    public GameRules getGameRulesInstance() {
+
+    /**
+     * Gets the GameRules class Instance.
+     */
+    public GameRules getGameRulesInstance()
+    {
         return this.theGameRules;
     }
-    
-    public double getBorderCenterX() {
+
+    /**
+     * Returns the border center X position
+     */
+    public double getBorderCenterX()
+    {
         return this.borderCenterX;
     }
-    
-    public double getBorderCenterZ() {
+
+    /**
+     * Returns the border center Z position
+     */
+    public double getBorderCenterZ()
+    {
         return this.borderCenterZ;
     }
-    
-    public double getBorderSize() {
+
+    public double getBorderSize()
+    {
         return this.borderSize;
     }
-    
-    public void setBorderSize(final double size) {
+
+    /**
+     * Sets the border size
+     */
+    public void setBorderSize(double size)
+    {
         this.borderSize = size;
     }
-    
-    public long getBorderLerpTime() {
+
+    /**
+     * Returns the border lerp time
+     */
+    public long getBorderLerpTime()
+    {
         return this.borderSizeLerpTime;
     }
-    
-    public void setBorderLerpTime(final long time) {
+
+    /**
+     * Sets the border lerp time
+     */
+    public void setBorderLerpTime(long time)
+    {
         this.borderSizeLerpTime = time;
     }
-    
-    public double getBorderLerpTarget() {
+
+    /**
+     * Returns the border lerp target
+     */
+    public double getBorderLerpTarget()
+    {
         return this.borderSizeLerpTarget;
     }
-    
-    public void setBorderLerpTarget(final double lerpSize) {
+
+    /**
+     * Sets the border lerp target
+     */
+    public void setBorderLerpTarget(double lerpSize)
+    {
         this.borderSizeLerpTarget = lerpSize;
     }
-    
-    public void getBorderCenterZ(final double posZ) {
+
+    /**
+     * Sets the border center Z position
+     */
+    public void getBorderCenterZ(double posZ)
+    {
         this.borderCenterZ = posZ;
     }
-    
-    public void getBorderCenterX(final double posX) {
+
+    /**
+     * Sets the border center X position
+     */
+    public void getBorderCenterX(double posX)
+    {
         this.borderCenterX = posX;
     }
-    
-    public double getBorderSafeZone() {
+
+    /**
+     * Returns the border safe zone
+     */
+    public double getBorderSafeZone()
+    {
         return this.borderSafeZone;
     }
-    
-    public void setBorderSafeZone(final double amount) {
+
+    /**
+     * Sets the border safe zone
+     */
+    public void setBorderSafeZone(double amount)
+    {
         this.borderSafeZone = amount;
     }
-    
-    public double getBorderDamagePerBlock() {
+
+    /**
+     * Returns the border damage per block
+     */
+    public double getBorderDamagePerBlock()
+    {
         return this.borderDamagePerBlock;
     }
-    
-    public void setBorderDamagePerBlock(final double damage) {
+
+    /**
+     * Sets the border damage per block
+     */
+    public void setBorderDamagePerBlock(double damage)
+    {
         this.borderDamagePerBlock = damage;
     }
-    
-    public int getBorderWarningDistance() {
+
+    /**
+     * Returns the border warning distance
+     */
+    public int getBorderWarningDistance()
+    {
         return this.borderWarningDistance;
     }
-    
-    public int getBorderWarningTime() {
+
+    /**
+     * Returns the border warning time
+     */
+    public int getBorderWarningTime()
+    {
         return this.borderWarningTime;
     }
-    
-    public void setBorderWarningDistance(final int amountOfBlocks) {
+
+    /**
+     * Sets the border warning distance
+     */
+    public void setBorderWarningDistance(int amountOfBlocks)
+    {
         this.borderWarningDistance = amountOfBlocks;
     }
-    
-    public void setBorderWarningTime(final int ticks) {
+
+    /**
+     * Sets the border warning time
+     */
+    public void setBorderWarningTime(int ticks)
+    {
         this.borderWarningTime = ticks;
     }
-    
-    public EnumDifficulty getDifficulty() {
+
+    public EnumDifficulty getDifficulty()
+    {
         return this.difficulty;
     }
-    
-    public void setDifficulty(final EnumDifficulty newDifficulty) {
+
+    public void setDifficulty(EnumDifficulty newDifficulty)
+    {
         this.difficulty = newDifficulty;
     }
-    
-    public boolean isDifficultyLocked() {
+
+    public boolean isDifficultyLocked()
+    {
         return this.difficultyLocked;
     }
-    
-    public void setDifficultyLocked(final boolean locked) {
+
+    public void setDifficultyLocked(boolean locked)
+    {
         this.difficultyLocked = locked;
     }
-    
-    public void addToCrashReport(final CrashReportCategory category) {
-        category.addCrashSectionCallable("Level seed", new Callable<String>() {
-            @Override
-            public String call() throws Exception {
+
+    /**
+     * Adds this WorldInfo instance to the crash report.
+     */
+    public void addToCrashReport(CrashReportCategory category)
+    {
+        category.addCrashSectionCallable("Level seed", new Callable<String>()
+        {
+            public String call() throws Exception
+            {
                 return String.valueOf(WorldInfo.this.getSeed());
             }
         });
-        category.addCrashSectionCallable("Level generator", new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return String.format("ID %02d - %s, ver %d. Features enabled: %b", WorldInfo.this.terrainType.getWorldTypeID(), WorldInfo.this.terrainType.getWorldTypeName(), WorldInfo.this.terrainType.getGeneratorVersion(), WorldInfo.this.mapFeaturesEnabled);
+        category.addCrashSectionCallable("Level generator", new Callable<String>()
+        {
+            public String call() throws Exception
+            {
+                return String.format("ID %02d - %s, ver %d. Features enabled: %b", new Object[] {Integer.valueOf(WorldInfo.this.terrainType.getWorldTypeID()), WorldInfo.this.terrainType.getWorldTypeName(), Integer.valueOf(WorldInfo.this.terrainType.getGeneratorVersion()), Boolean.valueOf(WorldInfo.this.mapFeaturesEnabled)});
             }
         });
-        category.addCrashSectionCallable("Level generator options", new Callable<String>() {
-            @Override
-            public String call() throws Exception {
+        category.addCrashSectionCallable("Level generator options", new Callable<String>()
+        {
+            public String call() throws Exception
+            {
                 return WorldInfo.this.generatorOptions;
             }
         });
-        category.addCrashSectionCallable("Level spawn location", new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return CrashReportCategory.getCoordinateInfo(WorldInfo.this.spawnX, WorldInfo.this.spawnY, WorldInfo.this.spawnZ);
+        category.addCrashSectionCallable("Level spawn location", new Callable<String>()
+        {
+            public String call() throws Exception
+            {
+                return CrashReportCategory.getCoordinateInfo((double)WorldInfo.this.spawnX, (double)WorldInfo.this.spawnY, (double)WorldInfo.this.spawnZ);
             }
         });
-        category.addCrashSectionCallable("Level time", new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return String.format("%d game time, %d day time", WorldInfo.this.totalTime, WorldInfo.this.worldTime);
+        category.addCrashSectionCallable("Level time", new Callable<String>()
+        {
+            public String call() throws Exception
+            {
+                return String.format("%d game time, %d day time", new Object[] {Long.valueOf(WorldInfo.this.totalTime), Long.valueOf(WorldInfo.this.worldTime)});
             }
         });
-        category.addCrashSectionCallable("Level dimension", new Callable<String>() {
-            @Override
-            public String call() throws Exception {
+        category.addCrashSectionCallable("Level dimension", new Callable<String>()
+        {
+            public String call() throws Exception
+            {
                 return String.valueOf(WorldInfo.this.dimension);
             }
         });
-        category.addCrashSectionCallable("Level storage version", new Callable<String>() {
-            @Override
-            public String call() throws Exception {
+        category.addCrashSectionCallable("Level storage version", new Callable<String>()
+        {
+            public String call() throws Exception
+            {
                 String s = "Unknown?";
-                try {
-                    switch (WorldInfo.this.saveVersion) {
-                        case 19132: {
+
+                try
+                {
+                    switch (WorldInfo.this.saveVersion)
+                    {
+                        case 19132:
                             s = "McRegion";
                             break;
-                        }
-                        case 19133: {
+
+                        case 19133:
                             s = "Anvil";
-                            break;
-                        }
                     }
                 }
-                catch (Throwable t) {}
-                return String.format("0x%05X - %s", WorldInfo.this.saveVersion, s);
+                catch (Throwable var3)
+                {
+                    ;
+                }
+
+                return String.format("0x%05X - %s", new Object[] {Integer.valueOf(WorldInfo.this.saveVersion), s});
             }
         });
-        category.addCrashSectionCallable("Level weather", new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return String.format("Rain time: %d (now: %b), thunder time: %d (now: %b)", WorldInfo.this.rainTime, WorldInfo.this.raining, WorldInfo.this.thunderTime, WorldInfo.this.thundering);
+        category.addCrashSectionCallable("Level weather", new Callable<String>()
+        {
+            public String call() throws Exception
+            {
+                return String.format("Rain time: %d (now: %b), thunder time: %d (now: %b)", new Object[] {Integer.valueOf(WorldInfo.this.rainTime), Boolean.valueOf(WorldInfo.this.raining), Integer.valueOf(WorldInfo.this.thunderTime), Boolean.valueOf(WorldInfo.this.thundering)});
             }
         });
-        category.addCrashSectionCallable("Level game mode", new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return String.format("Game mode: %s (ID %d). Hardcore: %b. Cheats: %b", WorldInfo.this.theGameType.getName(), WorldInfo.this.theGameType.getID(), WorldInfo.this.hardcore, WorldInfo.this.allowCommands);
+        category.addCrashSectionCallable("Level game mode", new Callable<String>()
+        {
+            public String call() throws Exception
+            {
+                return String.format("Game mode: %s (ID %d). Hardcore: %b. Cheats: %b", new Object[] {WorldInfo.this.theGameType.getName(), Integer.valueOf(WorldInfo.this.theGameType.getID()), Boolean.valueOf(WorldInfo.this.hardcore), Boolean.valueOf(WorldInfo.this.allowCommands)});
             }
         });
-    }
-    
-    static {
-        DEFAULT_DIFFICULTY = EnumDifficulty.NORMAL;
     }
 }

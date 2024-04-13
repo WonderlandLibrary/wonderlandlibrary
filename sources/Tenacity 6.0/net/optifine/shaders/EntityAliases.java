@@ -1,138 +1,186 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.shaders;
 
-import java.util.Iterator;
-import java.util.Properties;
-import net.optifine.util.StrUtils;
-import net.optifine.config.ConnectedParser;
-import net.optifine.util.PropertiesOrdered;
-import net.optifine.shaders.config.MacroProcessor;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 import net.minecraft.src.Config;
 import net.minecraft.util.ResourceLocation;
+import net.optifine.config.ConnectedParser;
+import net.optifine.reflect.Reflector;
 import net.optifine.reflect.ReflectorForge;
-import java.io.InputStream;
-import java.util.List;
-import java.util.ArrayList;
+import net.optifine.shaders.config.MacroProcessor;
+import net.optifine.util.PropertiesOrdered;
+import net.optifine.util.StrUtils;
 
 public class EntityAliases
 {
-    private static int[] entityAliases;
+    private static int[] entityAliases = null;
     private static boolean updateOnResourcesReloaded;
-    
-    public static int getEntityAliasId(final int entityId) {
-        if (EntityAliases.entityAliases == null) {
+
+    public static int getEntityAliasId(int entityId)
+    {
+        if (entityAliases == null)
+        {
             return -1;
         }
-        if (entityId >= 0 && entityId < EntityAliases.entityAliases.length) {
-            final int i = EntityAliases.entityAliases[entityId];
+        else if (entityId >= 0 && entityId < entityAliases.length)
+        {
+            int i = entityAliases[entityId];
             return i;
         }
-        return -1;
+        else
+        {
+            return -1;
+        }
     }
-    
-    public static void resourcesReloaded() {
-        if (EntityAliases.updateOnResourcesReloaded) {
-            EntityAliases.updateOnResourcesReloaded = false;
+
+    public static void resourcesReloaded()
+    {
+        if (updateOnResourcesReloaded)
+        {
+            updateOnResourcesReloaded = false;
             update(Shaders.getShaderPack());
         }
     }
-    
-    public static void update(final IShaderPack shaderPack) {
+
+    public static void update(IShaderPack shaderPack)
+    {
         reset();
-        if (shaderPack != null) {
-            final List<Integer> list = new ArrayList<Integer>();
-            final String s = "/shaders/entity.properties";
-            final InputStream inputstream = shaderPack.getResourceAsStream(s);
-            if (inputstream != null) {
-                loadEntityAliases(inputstream, s, list);
+
+        if (shaderPack != null)
+        {
+            if (Reflector.Loader_getActiveModList.exists() && Config.getResourceManager() == null)
+            {
+                Config.dbg("[Shaders] Delayed loading of entity mappings after resources are loaded");
+                updateOnResourcesReloaded = true;
             }
-            loadModEntityAliases(list);
-            if (list.size() > 0) {
-                EntityAliases.entityAliases = toArray(list);
+            else
+            {
+                List<Integer> list = new ArrayList();
+                String s = "/shaders/entity.properties";
+                InputStream inputstream = shaderPack.getResourceAsStream(s);
+
+                if (inputstream != null)
+                {
+                    loadEntityAliases(inputstream, s, list);
+                }
+
+                loadModEntityAliases(list);
+
+                if (((List)list).size() > 0)
+                {
+                    entityAliases = toArray(list);
+                }
             }
         }
     }
-    
-    private static void loadModEntityAliases(final List<Integer> listEntityAliases) {
-        final String[] astring = ReflectorForge.getForgeModIds();
-        for (int i = 0; i < astring.length; ++i) {
-            final String s = astring[i];
-            try {
-                final ResourceLocation resourcelocation = new ResourceLocation(s, "shaders/entity.properties");
-                final InputStream inputstream = Config.getResourceStream(resourcelocation);
+
+    private static void loadModEntityAliases(List<Integer> listEntityAliases)
+    {
+        String[] astring = ReflectorForge.getForgeModIds();
+
+        for (int i = 0; i < astring.length; ++i)
+        {
+            String s = astring[i];
+
+            try
+            {
+                ResourceLocation resourcelocation = new ResourceLocation(s, "shaders/entity.properties");
+                InputStream inputstream = Config.getResourceStream(resourcelocation);
                 loadEntityAliases(inputstream, resourcelocation.toString(), listEntityAliases);
             }
-            catch (IOException ex) {}
+            catch (IOException var6)
+            {
+                ;
+            }
         }
     }
-    
-    private static void loadEntityAliases(InputStream in, final String path, final List<Integer> listEntityAliases) {
-        if (in != null) {
-            try {
+
+    private static void loadEntityAliases(InputStream in, String path, List<Integer> listEntityAliases)
+    {
+        if (in != null)
+        {
+            try
+            {
                 in = MacroProcessor.process(in, path);
-                final Properties properties = new PropertiesOrdered();
+                Properties properties = new PropertiesOrdered();
                 properties.load(in);
                 in.close();
                 Config.dbg("[Shaders] Parsing entity mappings: " + path);
-                final ConnectedParser connectedparser = new ConnectedParser("Shaders");
-                for (final Object s0 : properties.keySet()) {
-                    final String s2 = (String)s0;
-                    final String s3 = properties.getProperty(s2);
-                    final String s4 = "entity.";
-                    if (!s2.startsWith(s4)) {
-                        Config.warn("[Shaders] Invalid entity ID: " + s2);
+                ConnectedParser connectedparser = new ConnectedParser("Shaders");
+
+                for (Object e : properties.keySet())
+                {
+                    String s = (String) e;
+                    String s1 = properties.getProperty(s);
+                    String s2 = "entity.";
+
+                    if (!s.startsWith(s2))
+                    {
+                        Config.warn("[Shaders] Invalid entity ID: " + s);
                     }
-                    else {
-                        final String s5 = StrUtils.removePrefix(s2, s4);
-                        final int i = Config.parseInt(s5, -1);
-                        if (i < 0) {
+                    else
+                    {
+                        String s3 = StrUtils.removePrefix(s, s2);
+                        int i = Config.parseInt(s3, -1);
+
+                        if (i < 0)
+                        {
                             Config.warn("[Shaders] Invalid entity alias ID: " + i);
                         }
-                        else {
-                            final int[] aint = connectedparser.parseEntities(s3);
-                            if (aint != null && aint.length >= 1) {
-                                for (int j = 0; j < aint.length; ++j) {
-                                    final int k = aint[j];
+                        else
+                        {
+                            int[] aint = connectedparser.parseEntities(s1);
+
+                            if (aint != null && aint.length >= 1)
+                            {
+                                for (int j = 0; j < aint.length; ++j)
+                                {
+                                    int k = aint[j];
                                     addToList(listEntityAliases, k, i);
                                 }
                             }
-                            else {
-                                Config.warn("[Shaders] Invalid entity ID mapping: " + s2 + "=" + s3);
+                            else
+                            {
+                                Config.warn("[Shaders] Invalid entity ID mapping: " + s + "=" + s1);
                             }
                         }
                     }
                 }
             }
-            catch (IOException var15) {
+            catch (IOException var15)
+            {
                 Config.warn("[Shaders] Error reading: " + path);
             }
         }
     }
-    
-    private static void addToList(final List<Integer> list, final int index, final int val) {
-        while (list.size() <= index) {
-            list.add(-1);
+
+    private static void addToList(List<Integer> list, int index, int val)
+    {
+        while (list.size() <= index)
+        {
+            list.add(Integer.valueOf(-1));
         }
-        list.set(index, val);
+
+        list.set(index, Integer.valueOf(val));
     }
-    
-    private static int[] toArray(final List<Integer> list) {
-        final int[] aint = new int[list.size()];
-        for (int i = 0; i < aint.length; ++i) {
-            aint[i] = list.get(i);
+
+    private static int[] toArray(List<Integer> list)
+    {
+        int[] aint = new int[list.size()];
+
+        for (int i = 0; i < aint.length; ++i)
+        {
+            aint[i] = ((Integer)list.get(i)).intValue();
         }
+
         return aint;
     }
-    
-    public static void reset() {
-        EntityAliases.entityAliases = null;
-    }
-    
-    static {
-        EntityAliases.entityAliases = null;
+
+    public static void reset()
+    {
+        entityAliases = null;
     }
 }

@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.client.renderer.block.model;
 
 import net.minecraft.util.EnumFacing;
@@ -13,8 +9,9 @@ public class BlockPartRotation
     public final EnumFacing.Axis axis;
     public final float angle;
     public final boolean rescale;
-    
-    public BlockPartRotation(final Vector3f originIn, final EnumFacing.Axis axisIn, final float angleIn, final boolean rescaleIn) {
+
+    public BlockPartRotation(Vector3f originIn, EnumFacing.Axis axisIn, float angleIn, boolean rescaleIn)
+    {
         this.origin = originIn;
         this.axis = axisIn;
         this.angle = angleIn;

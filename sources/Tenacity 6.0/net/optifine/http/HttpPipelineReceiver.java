@@ -1,140 +1,184 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.http;
 
-import java.io.EOFException;
 import java.io.ByteArrayOutputStream;
-import java.util.Map;
-import java.util.LinkedHashMap;
+import java.io.EOFException;
 import java.io.IOException;
-import net.minecraft.src.Config;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import net.minecraft.src.Config;
 
 public class HttpPipelineReceiver extends Thread
 {
-    private HttpPipelineConnection httpPipelineConnection;
-    private static final Charset ASCII;
+    private HttpPipelineConnection httpPipelineConnection = null;
+    private static final Charset ASCII = Charset.forName("ASCII");
     private static final String HEADER_CONTENT_LENGTH = "Content-Length";
     private static final char CR = '\r';
     private static final char LF = '\n';
-    
-    public HttpPipelineReceiver(final HttpPipelineConnection httpPipelineConnection) {
+
+    public HttpPipelineReceiver(HttpPipelineConnection httpPipelineConnection)
+    {
         super("HttpPipelineReceiver");
-        this.httpPipelineConnection = null;
         this.httpPipelineConnection = httpPipelineConnection;
     }
-    
-    @Override
-    public void run() {
-        while (!Thread.interrupted()) {
+
+    public void run()
+    {
+        while (!Thread.interrupted())
+        {
             HttpPipelineRequest httppipelinerequest = null;
-            try {
+
+            try
+            {
                 httppipelinerequest = this.httpPipelineConnection.getNextRequestReceive();
-                final InputStream inputstream = this.httpPipelineConnection.getInputStream();
-                final HttpResponse httpresponse = this.readResponse(inputstream);
+                InputStream inputstream = this.httpPipelineConnection.getInputStream();
+                HttpResponse httpresponse = this.readResponse(inputstream);
                 this.httpPipelineConnection.onResponseReceived(httppipelinerequest, httpresponse);
             }
-            catch (InterruptedException var4) {}
-            catch (Exception exception) {
+            catch (InterruptedException var4)
+            {
+                return;
+            }
+            catch (Exception exception)
+            {
                 this.httpPipelineConnection.onExceptionReceive(httppipelinerequest, exception);
             }
         }
     }
-    
-    private HttpResponse readResponse(final InputStream in) throws IOException {
-        final String s = this.readLine(in);
-        final String[] astring = Config.tokenize(s, " ");
-        if (astring.length < 3) {
+
+    private HttpResponse readResponse(InputStream in) throws IOException
+    {
+        String s = this.readLine(in);
+        String[] astring = Config.tokenize(s, " ");
+
+        if (astring.length < 3)
+        {
             throw new IOException("Invalid status line: " + s);
         }
-        final String s2 = astring[0];
-        final int i = Config.parseInt(astring[1], 0);
-        final String s3 = astring[2];
-        final Map<String, String> map = new LinkedHashMap<String, String>();
-        while (true) {
-            final String s4 = this.readLine(in);
-            if (s4.length() <= 0) {
-                break;
+        else
+        {
+            String s1 = astring[0];
+            int i = Config.parseInt(astring[1], 0);
+            String s2 = astring[2];
+            Map<String, String> map = new LinkedHashMap();
+
+            while (true)
+            {
+                String s3 = this.readLine(in);
+
+                if (s3.length() <= 0)
+                {
+                    byte[] abyte = null;
+                    String s6 = (String)map.get("Content-Length");
+
+                    if (s6 != null)
+                    {
+                        int k = Config.parseInt(s6, -1);
+
+                        if (k > 0)
+                        {
+                            abyte = new byte[k];
+                            this.readFull(abyte, in);
+                        }
+                    }
+                    else
+                    {
+                        String s7 = (String)map.get("Transfer-Encoding");
+
+                        if (Config.equals(s7, "chunked"))
+                        {
+                            abyte = this.readContentChunked(in);
+                        }
+                    }
+
+                    return new HttpResponse(i, s, map, abyte);
+                }
+
+                int j = s3.indexOf(":");
+
+                if (j > 0)
+                {
+                    String s4 = s3.substring(0, j).trim();
+                    String s5 = s3.substring(j + 1).trim();
+                    map.put(s4, s5);
+                }
             }
-            final int j = s4.indexOf(":");
-            if (j <= 0) {
-                continue;
-            }
-            final String s5 = s4.substring(0, j).trim();
-            final String s6 = s4.substring(j + 1).trim();
-            map.put(s5, s6);
         }
-        byte[] abyte = null;
-        final String s7 = map.get("Content-Length");
-        if (s7 != null) {
-            final int k = Config.parseInt(s7, -1);
-            if (k > 0) {
-                abyte = new byte[k];
-                this.readFull(abyte, in);
-            }
-        }
-        else {
-            final String s8 = map.get("Transfer-Encoding");
-            if (Config.equals(s8, "chunked")) {
-                abyte = this.readContentChunked(in);
-            }
-        }
-        return new HttpResponse(i, s, map, abyte);
     }
-    
-    private byte[] readContentChunked(final InputStream in) throws IOException {
-        final ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
-        int i;
-        do {
-            final String s = this.readLine(in);
-            final String[] astring = Config.tokenize(s, "; ");
-            i = Integer.parseInt(astring[0], 16);
-            final byte[] abyte = new byte[i];
+
+    private byte[] readContentChunked(InputStream in) throws IOException
+    {
+        ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+
+        while (true)
+        {
+            String s = this.readLine(in);
+            String[] astring = Config.tokenize(s, "; ");
+            int i = Integer.parseInt(astring[0], 16);
+            byte[] abyte = new byte[i];
             this.readFull(abyte, in);
             bytearrayoutputstream.write(abyte);
             this.readLine(in);
-        } while (i != 0);
+
+            if (i == 0)
+            {
+                break;
+            }
+        }
+
         return bytearrayoutputstream.toByteArray();
     }
-    
-    private void readFull(final byte[] buf, final InputStream in) throws IOException {
+
+    private void readFull(byte[] buf, InputStream in) throws IOException
+    {
         int j;
-        for (int i = 0; i < buf.length; i += j) {
+
+        for (int i = 0; i < buf.length; i += j)
+        {
             j = in.read(buf, i, buf.length - i);
-            if (j < 0) {
+
+            if (j < 0)
+            {
                 throw new EOFException();
             }
         }
     }
-    
-    private String readLine(final InputStream in) throws IOException {
-        final ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+
+    private String readLine(InputStream in) throws IOException
+    {
+        ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
         int i = -1;
         boolean flag = false;
-        while (true) {
-            final int j = in.read();
-            if (j < 0) {
+
+        while (true)
+        {
+            int j = in.read();
+
+            if (j < 0)
+            {
                 break;
             }
+
             bytearrayoutputstream.write(j);
-            if (i == 13 && j == 10) {
+
+            if (i == 13 && j == 10)
+            {
                 flag = true;
                 break;
             }
+
             i = j;
         }
-        final byte[] abyte = bytearrayoutputstream.toByteArray();
-        String s = new String(abyte, HttpPipelineReceiver.ASCII);
-        if (flag) {
+
+        byte[] abyte = bytearrayoutputstream.toByteArray();
+        String s = new String(abyte, ASCII);
+
+        if (flag)
+        {
             s = s.substring(0, s.length() - 2);
         }
+
         return s;
-    }
-    
-    static {
-        ASCII = Charset.forName("ASCII");
     }
 }

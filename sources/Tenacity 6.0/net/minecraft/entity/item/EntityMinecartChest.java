@@ -1,69 +1,69 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.minecraft.entity.item;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ContainerChest;
-import net.minecraft.inventory.Container;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerChest;
+import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 public class EntityMinecartChest extends EntityMinecartContainer
 {
-    public EntityMinecartChest(final World worldIn) {
+    public EntityMinecartChest(World worldIn)
+    {
         super(worldIn);
     }
-    
-    public EntityMinecartChest(final World worldIn, final double x, final double y, final double z) {
-        super(worldIn, x, y, z);
+
+    public EntityMinecartChest(World worldIn, double p_i1715_2_, double p_i1715_4_, double p_i1715_6_)
+    {
+        super(worldIn, p_i1715_2_, p_i1715_4_, p_i1715_6_);
     }
-    
-    @Override
-    public void killMinecart(final DamageSource source) {
-        super.killMinecart(source);
-        if (this.worldObj.getGameRules().getBoolean("doEntityDrops")) {
-            this.dropItemWithOffset(Item.getItemFromBlock(Blocks.chest), 1, 0.0f);
+
+    public void killMinecart(DamageSource p_94095_1_)
+    {
+        super.killMinecart(p_94095_1_);
+
+        if (this.worldObj.getGameRules().getGameRuleBooleanValue("doEntityDrops"))
+        {
+            this.dropItemWithOffset(Item.getItemFromBlock(Blocks.chest), 1, 0.0F);
         }
     }
-    
-    @Override
-    public int getSizeInventory() {
+
+    /**
+     * Returns the number of slots in the inventory.
+     */
+    public int getSizeInventory()
+    {
         return 27;
     }
-    
-    @Override
-    public EnumMinecartType getMinecartType() {
-        return EnumMinecartType.CHEST;
+
+    public EntityMinecart.EnumMinecartType getMinecartType()
+    {
+        return EntityMinecart.EnumMinecartType.CHEST;
     }
-    
-    @Override
-    public IBlockState getDefaultDisplayTile() {
-        return Blocks.chest.getDefaultState().withProperty((IProperty<Comparable>)BlockChest.FACING, EnumFacing.NORTH);
+
+    public IBlockState getDefaultDisplayTile()
+    {
+        return Blocks.chest.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.NORTH);
     }
-    
-    @Override
-    public int getDefaultDisplayTileOffset() {
+
+    public int getDefaultDisplayTileOffset()
+    {
         return 8;
     }
-    
-    @Override
-    public String getGuiID() {
+
+    public String getGuiID()
+    {
         return "minecraft:chest";
     }
-    
-    @Override
-    public Container createContainer(final InventoryPlayer playerInventory, final EntityPlayer playerIn) {
+
+    public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
+    {
         return new ContainerChest(playerInventory, this, playerIn);
     }
 }

@@ -1,14 +1,25 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package dev.tenacity.event.impl.network;
 
+import dev.tenacity.event.Event;
 import net.minecraft.network.Packet;
 
-public class PacketSendEvent extends PacketEvent
-{
-    public PacketSendEvent(final Packet<?> packet) {
-        super(packet);
+
+public class PacketSendEvent extends Event {
+
+    private Packet<?> packet;
+
+    public PacketSendEvent(Packet<?> packet) {
+        this.packet = packet;
     }
+
+
+    public Packet<?> getPacket() {
+        return packet;
+    }
+
+
+    public void setPacket(Packet<?> packet) {
+        this.packet = packet;
+    }
+
 }

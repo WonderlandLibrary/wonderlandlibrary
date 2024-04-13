@@ -1,7 +1,3 @@
-// 
-// Decompiled by Procyon v0.5.36
-// 
-
 package net.optifine.shaders;
 
 import java.nio.ByteBuffer;
@@ -11,72 +7,80 @@ import org.lwjgl.opengl.GL11;
 
 public class HFNoiseTexture implements ICustomTexture
 {
-    private int texID;
-    private int textureUnit;
-    
-    public HFNoiseTexture(final int width, final int height) {
-        this.texID = GL11.glGenTextures();
-        this.textureUnit = 15;
-        final byte[] abyte = this.genHFNoiseImage(width, height);
-        final ByteBuffer bytebuffer = BufferUtils.createByteBuffer(abyte.length);
+    private int texID = GL11.glGenTextures();
+    private int textureUnit = 15;
+
+    public HFNoiseTexture(int width, int height)
+    {
+        byte[] abyte = this.genHFNoiseImage(width, height);
+        ByteBuffer bytebuffer = BufferUtils.createByteBuffer(abyte.length);
         bytebuffer.put(abyte);
         bytebuffer.flip();
         GlStateManager.bindTexture(this.texID);
-        GL11.glTexImage2D(3553, 0, 6407, width, height, 0, 6407, 5121, bytebuffer);
-        GL11.glTexParameteri(3553, 10242, 10497);
-        GL11.glTexParameteri(3553, 10243, 10497);
-        GL11.glTexParameteri(3553, 10240, 9729);
-        GL11.glTexParameteri(3553, 10241, 9729);
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, width, height, 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, (ByteBuffer)bytebuffer);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
         GlStateManager.bindTexture(0);
     }
-    
-    public int getID() {
+
+    public int getID()
+    {
         return this.texID;
     }
-    
-    @Override
-    public void deleteTexture() {
+
+    public void deleteTexture()
+    {
         GlStateManager.deleteTexture(this.texID);
         this.texID = 0;
     }
-    
-    private int random(int seed) {
-        seed ^= seed << 13;
-        seed ^= seed >> 17;
-        seed ^= seed << 5;
+
+    private int random(int seed)
+    {
+        seed = seed ^ seed << 13;
+        seed = seed ^ seed >> 17;
+        seed = seed ^ seed << 5;
         return seed;
     }
-    
-    private byte random(final int x, final int y, final int z) {
-        final int i = (this.random(x) + this.random(y * 19)) * this.random(z * 23) - z;
+
+    private byte random(int x, int y, int z)
+    {
+        int i = (this.random(x) + this.random(y * 19)) * this.random(z * 23) - z;
         return (byte)(this.random(i) % 128);
     }
-    
-    private byte[] genHFNoiseImage(final int width, final int height) {
-        final byte[] abyte = new byte[width * height * 3];
+
+    private byte[] genHFNoiseImage(int width, int height)
+    {
+        byte[] abyte = new byte[width * height * 3];
         int i = 0;
-        for (int j = 0; j < height; ++j) {
-            for (int k = 0; k < width; ++k) {
-                for (int l = 1; l < 4; ++l) {
+
+        for (int j = 0; j < height; ++j)
+        {
+            for (int k = 0; k < width; ++k)
+            {
+                for (int l = 1; l < 4; ++l)
+                {
                     abyte[i++] = this.random(k, j, l);
                 }
             }
         }
+
         return abyte;
     }
-    
-    @Override
-    public int getTextureId() {
+
+    public int getTextureId()
+    {
         return this.texID;
     }
-    
-    @Override
-    public int getTextureUnit() {
+
+    public int getTextureUnit()
+    {
         return this.textureUnit;
     }
-    
-    @Override
-    public int getTarget() {
+
+    public int getTarget()
+    {
         return 3553;
     }
 }

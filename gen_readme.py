@@ -29,12 +29,6 @@ out += "## [Jars](/jars)\n"
 
 for jarName in os.listdir("jars"):
     out += "- " + jarName + "\n";
-    
-# Leaks
-out += "## [Leaks](/leaks)\n"
-
-for jarName in os.listdir("leaks"):
-    out += "- " + jarName + "\n";
 
 
 # Writing

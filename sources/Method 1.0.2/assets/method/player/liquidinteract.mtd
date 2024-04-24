@@ -1,0 +1,43 @@
+{
+  "1417349150": {
+    "Instance": "SettingObject",
+    "settingmode": "Screen",
+    "Name": "Edit Module",
+    "onlyint": false,
+    "bval": false,
+    "dval": 0.0,
+    "min": 0.0,
+    "max": 0.0,
+    "blocktype": "Null",
+    "nicecolor": -10819897,
+    "thisblock": "Edit Module",
+    "X": 300,
+    "Y": 1000,
+    "minimized": false,
+    "isplaced": false,
+    "currentblock": 1417349150
+  },
+  "128360667": {
+    "Instance": "Header",
+    "blocktype": "Header",
+    "nicecolor": -4725201,
+    "thisblock": "Liquidvisitor",
+    "X": 332,
+    "Y": 149,
+    "minimized": false,
+    "isplaced": false,
+    "nextblock": 124510731,
+    "currentblock": 128360667
+  },
+  "124510731": {
+    "Instance": "Default",
+    "blocktype": "Default",
+    "nicecolor": -7674291,
+    "thisblock": "EventCancel",
+    "X": 342,
+    "Y": 170,
+    "minimized": false,
+    "isplaced": true,
+    "currentblock": 124510731
+  }
+}

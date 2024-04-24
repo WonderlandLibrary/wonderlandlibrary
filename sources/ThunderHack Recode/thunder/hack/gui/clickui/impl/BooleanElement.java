@@ -1,0 +1,59 @@
+package thunder.hack.gui.clickui.impl;
+
+import net.minecraft.client.gui.DrawContext;
+import org.lwjgl.glfw.GLFW;
+import thunder.hack.ThunderHack;
+import thunder.hack.core.impl.ModuleManager;
+import thunder.hack.gui.clickui.AbstractElement;
+import thunder.hack.gui.clickui.ClickGUI;
+import thunder.hack.gui.font.FontRenderers;
+import thunder.hack.modules.client.HudEditor;
+import thunder.hack.modules.client.SoundFX;
+import thunder.hack.setting.Setting;
+import thunder.hack.utility.render.Render2DEngine;
+
+import java.awt.*;
+
+import static thunder.hack.core.IManager.mc;
+import static thunder.hack.utility.render.animation.AnimationUtility.fast;
+
+public class BooleanElement extends AbstractElement {
+    public BooleanElement(Setting setting, boolean small) {
+        super(setting, small);
+    }
+
+    float animation = 0f;
+
+    @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
+        animation = fast(animation, (boolean) setting.getValue() ? 1 : 0, 15f);
+
+        Render2DEngine.drawRound(context.getMatrices(), x + width - 21, y + height / 2 - 4, 15, 8, 1, 7f * animation > 4 ? HudEditor.getColor(0) : new Color(0x28FFFFFF, true));
+        Render2DEngine.drawRound(context.getMatrices(), x + width - 20 + 7f * animation, y + height / 2 - 3, 6, 6, 1, new Color(-1));
+
+        if (7f * animation > 4) {
+            FontRenderers.sf_medium_mini.drawString(context.getMatrices(), "v", x + width - 18.5f, y + height / 2 - 1f, new Color(-1).getRGB());
+        } else {
+            FontRenderers.sf_medium_mini.drawString(context.getMatrices(), "x", x + width - 11f, y + height / 2 - 1f, new Color(-1).getRGB());
+        }
+
+        if(Render2DEngine.isHovered(mouseX, mouseY, x + width - 21, y + height / 2 - 4, 15, 8)) {
+            GLFW.glfwSetCursor(mc.getWindow().getHandle(),
+                    GLFW.glfwCreateStandardCursor(GLFW.GLFW_HAND_CURSOR));
+            ClickGUI.anyHovered = true;
+        }
+
+        FontRenderers.sf_medium_mini.drawString(context.getMatrices(), setting.getName(), (setting.parent != null ? 2f : 0f) + (x + 6), (y + height / 2 - 3) + 2, new Color(-1).getRGB());
+    }
+
+    @Override
+    public void mouseClicked(int mouseX, int mouseY, int button) {
+        if (hovered && button == 0) {
+            setting.setValue(!((Boolean) setting.getValue()));
+            ThunderHack.soundManager.playBoolean();
+        }
+
+        super.mouseClicked(mouseX, mouseY, button);
+    }
+}

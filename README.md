@@ -200,6 +200,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Ares 2.9
 - Ascension beta 1.0
 - Asteria.rip
+- Astolfo
 - Astomero
 - Astroline
 - Asyncware
@@ -391,6 +392,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - ThunderHack Deluxe b0.0.7
 - ThunderHack Plus v2.41
 - ThunderHack Recode v1.4
+- Thunderware Reloaded 911
 - Tifality
 - Tomato
 - Triton B7

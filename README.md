@@ -242,6 +242,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Checkz 1.7.10
 - Checkz 1.8.9
 - ChenlunBounce
+- Chill 1.2
 - Chimera
 - ChristmasAce
 - Claudius 1.0

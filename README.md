@@ -192,7 +192,8 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Xulu 1.5.2
 
 ## [Jars](/jars)
-- Air Client
+- Air Client 1.0
+- Air Client 1.3
 - Akrien B14
 - Alien
 - Ancient
@@ -228,7 +229,9 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Cookie Client
 - Crass B2
 - Crystalware b10
+- Crystalware Reloaded (Time Traveller II)
 - Crystalware Reloaded b8
+- Crystalware Reloaded Latest
 - Cyanit
 - Dark
 - Def
@@ -236,6 +239,8 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Devil b10
 - Diablo 1.3.2
 - Dog
+- Dortware 1.2.1
+- Dortware 1.4.0
 - Dortware 1.5.0
 - Drunk
 - Eject 4.3.1
@@ -306,6 +311,8 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - LiquidBounce++
 - LiquidX 3.1
 - LiquidX 3.2 Pre2
+- Lite 1.6
+- Lite 1.7
 - Lynx 0.9
 - Matix B1.5.2
 - Meteor 0.5.5
@@ -359,7 +366,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Remix 1.4
 - Reverse b24
 - Rich Free 1.3
-- Rise 5.100
+- Rise 5.100r1
 - Rise 5.100r3
 - Rise 5.90
 - Rise 5.98

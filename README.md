@@ -341,7 +341,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Kami Blue 2.04.21
 - Kawaii
 - Ketamine Free
-- Kevin
+- Kevin Reborn
 - Kinky
 - Klientus 1.0
 - Koala

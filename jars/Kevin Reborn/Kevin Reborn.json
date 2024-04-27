@@ -7,7 +7,7 @@
         "url": "https://launchermeta.mojang.com/v1/packages/f6ad102bcaa53b1a58358f16e376d548d44933ec/1.8.json"
     },
     "assets": "1.8",
-    "id": "KevinClient-Reborn",
+    "id": "Kevin Reborn",
     "javaVersion": {
         "component": "jre-legacy",
         "majorVersion": 8

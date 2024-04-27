@@ -1,0 +1,3 @@
+public class EntityUtils {
+	// Failed to decompile, took too long to decompile: net/ccbluex/liquidbounce/utils/EntityUtils
+}

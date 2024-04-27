@@ -1,0 +1,3 @@
+public class ItemBlockImpl {
+	// Failed to decompile, took too long to decompile: net/ccbluex/liquidbounce/injection/backend/ItemBlockImpl
+}

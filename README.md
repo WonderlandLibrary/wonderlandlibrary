@@ -94,6 +94,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Kami Blue
 - Ket
 - Ketamine Public
+- Kevin Reborn
 - Koks v3
 - Koks v4
 - KyinoSense

@@ -1,0 +1,26 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.client.renderer.chunk.VisGraph
+ */
+package net.dev.important.injection.forge.mixins.render;
+
+import net.dev.important.Client;
+import net.dev.important.modules.module.modules.render.XRay;
+import net.minecraft.client.renderer.chunk.VisGraph;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(value={VisGraph.class})
+public class MixinVisGraph {
+    @Inject(method={"func_178606_a"}, at={@At(value="HEAD")}, cancellable=true)
+    private void func_178606_a(CallbackInfo callbackInfo) {
+        if (Client.moduleManager.getModule(XRay.class).getState()) {
+            callbackInfo.cancel();
+        }
+    }
+}
+

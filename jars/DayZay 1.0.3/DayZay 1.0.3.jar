@@ -1,0 +1,107 @@
+<html>
+  <head>
+    <title>workupload - Are you a human?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <script src="/js/39b9ad5.js?v=KUUBLAOP"></script>
+        
+                <link rel="stylesheet" type="text/css" href="/css/4280ebd.css?v=KUUBLAOP"/>
+        
+      <link rel="preconnect" href="https://fundingchoicesmessages.google.com" />
+      <link rel="preconnect" href="https://googleads.g.doubleclick.net" />
+      <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+
+      <!-- Matomo -->
+      <script>
+        var _paq = window._paq = window._paq || [];
+        _paq.push(["disableCookies"]);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+          var u="//t.workupload.com/";
+          _paq.push(['setTrackerUrl', u+'matomo.php']);
+          _paq.push(['setSiteId', '1']);
+          var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+          g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+      </script>
+      <!-- End Matomo Code -->
+
+  </head>
+  <body>
+
+    <div class="container pt-5">
+      <div class="row" style="margin-top: 20%;">
+        <div class="col-md-8 col-md-offset-2">
+          <center>
+            <i class="fa fa-shield-check"></i>
+            <img src="/bundles/app/img/workupload_logo_medium.svg" alt="workupload logo" style="max-width: 300px; display: block;">
+            Security Check
+            <h1 style="color: black;">Checking that you are not a robot.</h1>
+            <h2 style="color: black;">This process is performed automatically. You will be redirected shortly.</h2>
+          </center>
+        </div>
+      </div>
+    </div>
+
+        <input id="captcha_45865" type="hidden" id="ddos_recaptcha" name="ddos[recaptcha]" required="required" class="form-control" disabled="disabled" /><script>
+            async function sha256(message, find, i) {
+                const msgBuffer = new TextEncoder().encode(message); 
+                const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+                if(find.includes(hashHex)){
+                    return i;
+                }
+            }
+
+            $(document).ready(function () {
+                let solvePuzzle = function(){
+                    $.ajax({
+                        url: "/puzzle",
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(res) {
+                            let found = 0;
+                            let i = 0;
+                            while (i < res.data.range) {
+                                sha256(res.data.puzzle + i, res.data.find, i).then(function(s){
+                                    if(typeof s !== "undefined"){
+                                        $('#captcha_45865').val($('#captcha_45865').val() + s + ' ');
+                                        found++;
+                                        if(found == res.data.find.length){
+                                            $.ajax({
+                                                url: "/captcha",
+                                                type: 'POST',
+                                                dataType: "json",
+                                                data: {
+                                                    captcha: $('#captcha_45865').val()
+                                                }
+                                            }).always(function(data, textStatus, xhr){
+                                                $('#captcha_45865').val('');
+                                                if(typeof window.captchaCallback !== "undefined"){
+                                                    window.captchaCallback();
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                                i++;
+                            }
+                        }
+                    });
+                };
+                solvePuzzle();
+                setInterval(solvePuzzle, 20000);
+            });
+
+        </script>
+
+    <script>
+      window.captchaCallback = function(){
+        location.reload();
+      }
+    </script>
+
+  </body>
+</html>

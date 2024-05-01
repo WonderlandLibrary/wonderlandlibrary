@@ -1,0 +1,34 @@
+{
+  "assets":"1.8",
+  "libraries": [
+    {
+      "name": "java3d:vecmath:1.5.2",
+      "downloads": {
+          "artifact": {
+              "size": 318956,
+              "sha1": "79846ba34cbd89e2422d74d53752f993dcc2ccaf",
+              "path": "java3d/vecmath/1.5.2/vecmath-1.5.2.jar",
+              "url": "https://libraries.minecraft.net/java3d/vecmath/1.5.2/vecmath-1.5.2.jar"
+          }
+      }
+    },
+    {
+      "name": "net.sf.trove4j:trove4j:3.0.3",
+      "downloads": {
+          "artifact": {
+            "size": 2523218,
+            "sha1": "42ccaf4761f0dfdfa805c9e340d99a755907e2dd",
+            "url": "https://libraries.minecraft.net/net/sf/trove4j/trove4j/3.0.3/trove4j-3.0.3.jar"
+          }
+      }
+    }
+  ],
+  "id": "Amera",
+  "inheritsFrom": "1.8.9",
+  "mainClass":"net.minecraft.client.main.Main",
+  "minecraftArguments":"--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type}",
+  "minimumLauncherVersion":14,
+  "releaseTime":"2014-09-02T10:24:35+02:00",
+  "time":"2014-09-02T10:24:35+02:00",
+  "type":"release"
+}

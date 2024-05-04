@@ -1,7 +1,7 @@
 {
   "tlauncherVersion": 0,
   "releaseTime": "2014-09-02T14:24:35+06:00",
-  "mainClass": "net.minecraft.launchwrapper.Launch",
+  "mainClass": "net.minecraft.client.main.Main",
   "libraries": [
     {
       "name": "java3d:vecmath:1.5.2"
@@ -234,7 +234,7 @@
     }
   ],
   "type": "release",
-  "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type} --tweakClass misc.tweaker.Tweaker --flMainClass net.minecraft.client.main.Main",
+  "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type}",
   "assets": "1.8",
   "minimumLauncherVersion": 14,
   "assetIndex": {

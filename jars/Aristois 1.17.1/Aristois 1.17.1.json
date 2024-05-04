@@ -1,0 +1,81 @@
+{
+  "inheritsFrom": "1.17.1",
+  "id": "1.17.1-Aristois",
+  "time": "2021-07-06T16:35:13+02:00",
+  "releaseTime": "2021-07-06T16:35:13+02:00",
+  "type": "Aristois 1.17.1",
+  "mainClass": "me.deftware.client.framework.main.Main",
+  "arguments": {
+    "game": []
+  },
+  "libraries": [
+    {
+      "name": "me.deftware:aristois:loader",
+      "url": "https://maven.aristois.net/"
+    },
+    {
+      "name": "me.deftware:EMC-F-v2:latest-1.17.1",
+      "url": "https://gitlab.com/EMC-Framework/maven/raw/master/"
+    },
+    {
+      "name": "me.deftware:subsystem:0.10.6",
+      "url": "https://gitlab.com/EMC-Framework/maven/raw/master/"
+    },
+    {
+      "name": "net.fabricmc:sponge-mixin:0.9.2+mixin.0.8.2",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "net.fabricmc:tiny-remapper:0.3.0.70",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "net.fabricmc:tiny-mappings-parser:0.2.2.14",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "net.fabricmc:fabric-loader-sat4j:2.3.5.4",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "net.fabricmc:access-widener:1.0.0",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "com.google.jimfs:jimfs:1.2-fabric",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "org.ow2.asm:asm:9.0",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "org.ow2.asm:asm-analysis:9.0",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "org.ow2.asm:asm-commons:9.0",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "org.ow2.asm:asm-tree:9.0",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "org.ow2.asm:asm-util:9.0",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "com.google.guava:guava:21.0",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "net.fabricmc:yarn:1.17.1+build.1",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "com.thealtening.auth:auth:3.0.2-j9",
+      "url": "https://repo.maven.apache.org/maven2/"
+    }
+  ]
+}

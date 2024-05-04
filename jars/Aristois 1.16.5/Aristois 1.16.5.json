@@ -1,0 +1,77 @@
+{
+  "id": "Aristois 1.16.5",
+  "time": "2021-01-17T20:34:34+01:00",
+  "releaseTime": "2021-01-17T20:34:34+01:00",
+  "type": "release",
+  "mainClass": "me.deftware.client.framework.main.Main",
+  "inheritsFrom": "1.16.5",
+  "arguments": {
+    "game": []
+  },
+  "libraries": [
+    {
+      "name": "me.deftware:aristois:loader",
+      "url": "https://maven.aristois.net/"
+    },
+    {
+      "name": "me.deftware:EMC-F-v2:latest-1.16.5",
+      "url": "https://gitlab.com/EMC-Framework/maven/raw/master/"
+    },
+    {
+      "name": "me.deftware:subsystem:0.10.6",
+      "url": "https://gitlab.com/EMC-Framework/maven/raw/master/"
+    },
+    {
+      "name": "net.fabricmc:sponge-mixin:0.8.2+build.24",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "net.fabricmc:tiny-remapper:0.3.0.70",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "net.fabricmc:tiny-mappings-parser:0.2.2.14",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "net.fabricmc:fabric-loader-sat4j:2.3.5.4",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "net.fabricmc:access-widener:1.0.0",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "com.google.jimfs:jimfs:1.2-fabric",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "org.ow2.asm:asm:9.0",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "org.ow2.asm:asm-analysis:9.0",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "org.ow2.asm:asm-commons:9.0",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "org.ow2.asm:asm-tree:9.0",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "org.ow2.asm:asm-util:9.0",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "com.google.guava:guava:21.0",
+      "url": "https://maven.fabricmc.net/"
+    },
+    {
+      "name": "net.fabricmc:yarn:1.16.5+build.1",
+      "url": "https://maven.fabricmc.net/"
+    }
+  ]
+}

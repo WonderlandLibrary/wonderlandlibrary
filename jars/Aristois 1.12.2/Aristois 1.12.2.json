@@ -1,0 +1,41 @@
+{
+  "inheritsFrom": "1.12.2",
+  "id": "Aristois 1.12.2",
+  "time": "2020-01-23T04:12:48+03:00",
+  "releaseTime": "2020-01-23T04:12:48+03:00",
+  "type": "release",
+  "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userType ${user_type}",
+  "mainClass": "me.deftware.launch.Launcher",
+  "arguments": {
+    "game": []
+  },
+  "libraries": [
+    {
+      "name": "me.deftware:aristois:loader",
+      "url": "https://maven.aristois.net/"
+    },
+    {
+      "name": "me.deftware:EMC:13.9.5-1.12.2",
+      "url": "https://gitlab.com/EMC-Framework/maven/raw/master/"
+    },
+    {
+      "name": "net.minecraft:launchwrapper:1.12"
+    },
+    {
+      "name": "org.dimdev:mixin:0.7.11-SNAPSHOT",
+      "url": "https://www.dimdev.org/maven/"
+    },
+    {
+      "name": "net.jodah:typetools:0.5.0",
+      "url": "https://repo.maven.apache.org/maven2/"
+    },
+    {
+      "name": "org.ow2.asm:asm-all:5.2",
+      "url": "https://repo1.maven.org/maven2/"
+    },
+    {
+      "name": "com.mojang:brigadier:1.0.17",
+      "url": "https://libraries.minecraft.net/"
+    }
+  ]
+}

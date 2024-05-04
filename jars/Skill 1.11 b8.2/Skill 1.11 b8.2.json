@@ -1,0 +1,21 @@
+{
+  "id": "Skill 1.11 b8.21",
+  "time": "2016-11-16T15:39:37+01:00",
+  "releaseTime": "2016-11-14T15:34:40+01:00",
+  "type": "release",
+  "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userType ${user_type} --versionType ${version_type}",
+  "mainClass": "net.minecraft.client.main.Main",
+  "minimumLauncherVersion": 18,
+  "assets": "1.11",
+  "downloads": {
+    "server": {
+      "url": "https://launcher.mojang.com/mc/game/1.11/server/48820c84cb1ed502cb5b2fe23b8153d5e4fa61c0/server.jar",
+      "sha1": "48820c84cb1ed502cb5b2fe23b8153d5e4fa61c0",
+      "size": 9713666
+    }
+  },
+  "assetIndex": {
+    "id": "1.11",
+    "known": true
+  }
+}

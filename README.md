@@ -49,7 +49,8 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Deluge 0.23
 - Diablo 2.1
 - DineTire 2
-- Dortware
+- Dortware 1.0
+- Dortware 1.5.0
 - DrainWalk
 - DreamCore b161021
 - Echo
@@ -115,6 +116,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - LoseBypass
 - LRQ
 - Lucid 0.89
+- Luna 13.0.7
 - Massacre
 - Memeware 7.3
 - Method 1.0.2
@@ -227,11 +229,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Ares 2.9
 - Argon
 - Arion
-- Aristois 1.12.2
-- Aristois 1.16.5
-- Aristois 1.17
-- Aristois 1.17.1
-- Aristois Free
+- Aristois
 - Artix
 - Ascension beta 1.0
 - Asteria.rip
@@ -342,11 +340,12 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Fall [DEV 2.5]
 - Fan 3.1-beta
 - Fantasy
-- Fatal
+- Fatal 3.1
 - Faurax 3.6 Release 2
 - Flare 3.7
 - Floon
 - Flow 1.1
+- Flux B11
 - Flux B12
 - Flux B13
 - Flux B15
@@ -357,6 +356,8 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Flux B4
 - Flux B5
 - Flux B6
+- Flux B7
+- Flux B8
 - ForgeHax 3.3.1
 - Francium 1.20.4
 - Francium Reborn
@@ -469,10 +470,11 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Luna Z
 - Lyfe
 - Lynx 0.9
-- Matix 1.11.2
-- Matix 1.12
-- Matix 1.12.2
-- Matix B1.5.2
+- Matix 1.0B
+- Matix 1.5.2B
+- Matix 1.8.3B
+- Matix 1.8.4B
+- Matix 1.9.2B
 - Matrix
 - Memestar 1.21
 - Meteor 0.4.5
@@ -585,11 +587,22 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - SharkMod
 - Sight b191
 - Sigma 1.45
+- Sigma 1.5
+- Sigma 2.0
+- Sigma 2.07
+- Sigma 2.2
+- Sigma 3.9
+- Sigma 3.9.1
+- Sigma 3.9.2
+- Sigma 3.99
+- Sigma 4.0
+- Sigma 4.1
 - Sigma 4.11
 - Sigma 4.12
 - Sigma 4.13
 - Sigma 4.14
 - Sigma 5
+- Sigma dev
 - Sigma NextGen b7
 - Sigma Remake
 - Skash
@@ -600,6 +613,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Skill 1.11 b8.2
 - Skill 1.13.1
 - Skill 1.8
+- Skill 1.9
 - Skill b12.0
 - Skilled v3
 - Skush
@@ -635,6 +649,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Tempest 10
 - Tenacity 2.0
 - Tenacity 5.1
+- Tenacity Unknown Ver
 - TheBoys
 - ThunderHack Deluxe b0.0.7
 - ThunderHack Plus v2.41
@@ -684,7 +699,9 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Warrior 0612
 - Warrior 527
 - Water b6
-- Weepcraft
+- Weepcraft 1.11.2
+- Weepcraft 1.12.2
+- Weepcraft 1.8
 - WindX b9
 - WindX Old
 - WindX z1
@@ -699,6 +716,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Xena
 - Xenza Recode B1
 - Xenza Recode B2
+- Xero 1.8
 - XiaodaBounce
 - XiaodaSense 221003
 - Xulu 1.5.2
@@ -710,8 +728,8 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Zamorozka 1.1
 - Zane
 - Zephyr
-- ZeroDay (leak)
 - ZeroDay b20.6
+- ZeroDay b22.2 (leak)
 - ZeroDay b9.5
 - Zerum B15
 - Zues

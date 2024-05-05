@@ -1,8 +1,7 @@
 {
-  "id": "Ancient",
-  "family": "unknown",
-  "time": "2019-09-02T16:24:35+08:00",
-  "releaseTime": "2019-09-02T16:24:35+08:00",
+  "id": "BrainFreeze v1.1",
+  "time": "2015-12-03T11:24:39+02:00",
+  "releaseTime": "2015-12-03T11:24:39+02:00",
   "type": "release",
   "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type}",
   "mainClass": "net.minecraft.client.main.Main",
@@ -10,10 +9,13 @@
   "assets": "1.8",
   "libraries": [
     {
-      "name": "java3d:vecmath:1.5.2"
+      "name": "oshi-project:oshi-core:1.1"
     },
     {
-      "name": "net.sf.trove4j:trove4j:3.0.3"
+      "name": "net.java.dev.jna:jna:3.4.0"
+    },
+    {
+      "name": "net.java.dev.jna:platform:3.4.0"
     },
     {
       "name": "com.ibm.icu:icu4j-core-mojang:51.2"
@@ -37,7 +39,7 @@
       "name": "com.paulscode:soundsystem:20120107"
     },
     {
-      "name": "io.netty:netty-all:4.0.15.Final"
+      "name": "io.netty:netty-all:4.0.23.Final"
     },
     {
       "name": "com.google.guava:guava:17.0"
@@ -64,7 +66,7 @@
       "name": "com.mojang:authlib:1.5.21"
     },
     {
-      "name": "com.mojang:realms:1.6.1"
+      "name": "com.mojang:realms:1.7.48"
     },
     {
       "name": "org.apache.commons:commons-compress:1.8.1"
@@ -85,7 +87,7 @@
       "name": "org.apache.logging.log4j:log4j-core:2.0-beta9"
     },
     {
-      "name": "org.lwjgl.lwjgl:lwjgl:2.9.1",
+      "name": "org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209",
       "rules": [
         {
           "action": "allow"
@@ -99,7 +101,7 @@
       ]
     },
     {
-      "name": "org.lwjgl.lwjgl:lwjgl_util:2.9.1",
+      "name": "org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209",
       "rules": [
         {
           "action": "allow"
@@ -113,7 +115,7 @@
       ]
     },
     {
-      "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.1",
+      "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209",
       "rules": [
         {
           "action": "allow"
@@ -127,8 +129,8 @@
       ],
       "natives": {
         "linux": "natives-linux",
-        "windows": "natives-windows",
-        "osx": "natives-osx"
+        "osx": "natives-osx",
+        "windows": "natives-windows"
       },
       "extract": {
         "exclude": [
@@ -170,8 +172,8 @@
       ],
       "natives": {
         "linux": "natives-linux",
-        "windows": "natives-windows",
-        "osx": "natives-osx"
+        "osx": "natives-osx",
+        "windows": "natives-windows"
       },
       "extract": {
         "exclude": [
@@ -183,8 +185,8 @@
       "name": "net.java.jinput:jinput-platform:2.0.5",
       "natives": {
         "linux": "natives-linux",
-        "windows": "natives-windows",
-        "osx": "natives-osx"
+        "osx": "natives-osx",
+        "windows": "natives-windows"
       },
       "extract": {
         "exclude": [
@@ -210,8 +212,8 @@
       ],
       "natives": {
         "linux": "natives-linux",
-        "windows": "natives-windows-${arch}",
-        "osx": "natives-osx"
+        "osx": "natives-osx",
+        "windows": "natives-windows-${arch}"
       },
       "extract": {
         "exclude": [
@@ -239,10 +241,16 @@
       }
     }
   ],
-  "assetIndex": {
-    "id": "1.8",
-    "known": false,
-    "size": 0,
-    "totalSize": 0
+  "logging": {
+    "client": {
+      "argument": "-Dlog4j.configurationFile=${path}",
+      "file": {
+        "id": "client-1.7.xml",
+        "sha1": "14fedd49897b3f6160975bdf3a53e1e7eab71d29",
+        "size": 962,
+        "url": "https://launcher.mojang.com/v1/objects/14fedd49897b3f6160975bdf3a53e1e7eab71d29/client-1.7.xml"
+      },
+      "type": "log4j2-xml"
+    }
   }
 }

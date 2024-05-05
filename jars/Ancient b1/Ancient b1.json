@@ -1,9 +1,13 @@
 {
-  "id": "Atlas-Rel",
-  "time": "2014-09-02T01:24:35-07:00",
-  "releaseTime": "2014-09-02T01:24:35-07:00",
+  "id": "Ancient b1",
+  "family": "unknown",
+  "time": "2019-09-02T16:24:35+08:00",
+  "releaseTime": "2019-09-02T16:24:35+08:00",
   "type": "release",
   "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type}",
+  "mainClass": "net.minecraft.client.main.Main",
+  "minimumLauncherVersion": 14,
+  "assets": "1.8",
   "libraries": [
     {
       "name": "java3d:vecmath:1.5.2"
@@ -235,8 +239,10 @@
       }
     }
   ],
-  "mainClass": "net.minecraft.client.main.Main",
-  "minimumLauncherVersion": 14,
-  "assets": "1.8",
-  "downloads": {}
+  "assetIndex": {
+    "id": "1.8",
+    "known": false,
+    "size": 0,
+    "totalSize": 0
+  }
 }

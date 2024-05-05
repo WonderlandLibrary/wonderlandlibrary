@@ -207,17 +207,17 @@ Wonderland library is a world wide library for minecraft clients and mods.
 ## [Jars](/jars)
 - Aeon v2
 - Aero
-- Aether
+- Aether b1
 - Air Client 1.0
 - Air Client 1.3
 - Akrien B14
 - Alien
 - Amd-a1.1
-- Amera
+- Amera v2.0
 - Amplitude
-- AmusementOwO
+- Amusement B2
 - Anakonda B2
-- Ancient
+- Ancient b1
 - Apinity 1.1.2
 - Apple
 - Aqua
@@ -225,9 +225,9 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Ares 2.7.4
 - Ares 2.9
 - Argon
-- Arion
+- Arion v2.6
 - Aristois
-- Artix
+- Artix 4.0
 - Ascension beta 1.0
 - Asteria.rip
 - Astolfo
@@ -236,8 +236,8 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Asyncware
 - Atani 0.0.3
 - AtField 1.3
-- Atlas-Rel
-- Atmosphere
+- Atlas 1.5
+- Atmosphere b3.1
 - Atom B7
 - Augustus b2.5
 - Augustus b2.6
@@ -245,7 +245,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Aurora b3.1
 - Autumn 1.0.0
 - Auxentity
-- Aware
+- Aware v8.4
 - Azura
 - Azura X 1.3.1
 - Backstab
@@ -258,7 +258,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Blossom
 - Blueberry
 - BlueZenith
-- BrainFreeze
+- BrainFreeze v1.1
 - Breakcraft
 - CatBounce 1.0.6.5
 - Celsum
@@ -279,7 +279,11 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Colgate
 - ColorByte 1.5
 - ColorByte 1.7
-- Cookie
+- Cookie 1.00
+- Cookie 1.01
+- Cookie 1.02
+- Cookie 1.03
+- Cookie 1.04
 - Crass B2
 - CrazyBounce
 - CrossSine B22
@@ -297,7 +301,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Def
 - Deluge
 - Demon 0.2
-- depression
+- Depression v1.0
 - Depression v1.6
 - Destroy 0.8
 - Detail 0.2
@@ -311,7 +315,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Dortware 1.4.0
 - Dortware 1.5.0
 - DramaAlert
-- Drastix
+- Drastix v2.3A
 - Drunk
 - Dusksense
 - EaZy

@@ -1,16 +1,12 @@
 {
   "assets": "1.8",
-  "downloads": {},
-  "id": "Atmosphere",
+  "id": "Alien b12",
   "libraries": [
     {
-      "name": "oshi-project:oshi-core:1.1"
+      "name": "java3d:vecmath:1.5.2"
     },
     {
-      "name": "net.java.dev.jna:jna:3.4.0"
-    },
-    {
-      "name": "net.java.dev.jna:platform:3.4.0"
+      "name": "net.sf.trove4j:trove4j:3.0.3"
     },
     {
       "name": "com.ibm.icu:icu4j-core-mojang:51.2"
@@ -34,7 +30,7 @@
       "name": "com.paulscode:soundsystem:20120107"
     },
     {
-      "name": "io.netty:netty-all:4.0.23.Final"
+      "name": "io.netty:netty-all:4.0.15.Final"
     },
     {
       "name": "com.google.guava:guava:17.0"
@@ -61,7 +57,7 @@
       "name": "com.mojang:authlib:1.5.21"
     },
     {
-      "name": "com.mojang:realms:1.7.48"
+      "name": "com.mojang:realms:1.6.1"
     },
     {
       "name": "org.apache.commons:commons-compress:1.8.1"
@@ -82,7 +78,7 @@
       "name": "org.apache.logging.log4j:log4j-core:2.0-beta9"
     },
     {
-      "name": "org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209",
+      "name": "org.lwjgl.lwjgl:lwjgl:2.9.1",
       "rules": [
         {
           "action": "allow"
@@ -96,7 +92,7 @@
       ]
     },
     {
-      "name": "org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209",
+      "name": "org.lwjgl.lwjgl:lwjgl_util:2.9.1",
       "rules": [
         {
           "action": "allow"
@@ -115,7 +111,7 @@
           "META-INF/"
         ]
       },
-      "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209",
+      "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.1",
       "natives": {
         "linux": "natives-linux",
         "osx": "natives-osx",
@@ -239,7 +235,7 @@
   "mainClass": "net.minecraft.client.main.Main",
   "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type}",
   "minimumLauncherVersion": 14,
-  "releaseTime": "2015-12-03T10:24:39+01:00",
-  "time": "2015-12-03T10:24:39+01:00",
+  "releaseTime": "2014-09-02T04:24:35-04:00",
+  "time": "2014-09-02T04:24:35-04:00",
   "type": "release"
 }

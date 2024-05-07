@@ -6,7 +6,7 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - allah.himself
 - .idk1.
 - .stormingmoon
-- coccocoahelper
+- thatonecoder
 - kellohyllyy
 - TrilliumHQ
 - HCU (Former)
@@ -189,10 +189,11 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Tomato 0.2
 - Trivia B1
 - Umbrella 1.3
+- Vanity
 - Venus Recode 0.2.0
 - Vestige 2.0
 - Vestige 3.0
-- Vika
+- vika
 - Violence b1.26
 - Virgin b0.9.5
 - Virtue 5.5
@@ -212,14 +213,14 @@ Wonderland library is a world wide library for minecraft clients and mods.
 - Air Client 1.3
 - Akrien B14
 - Alien
-- Amd-a1.1
+- amd-a1.1
 - Amera v2.0
 - Amplitude
 - Amusement B2
 - Anakonda B2
 - Ancient b1
 - Apinity 1.1.2
-- Apple
+- apple
 - Aqua
 - Ares 2.4.2
 - Ares 2.7.4

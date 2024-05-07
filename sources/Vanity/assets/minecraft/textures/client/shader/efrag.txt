@@ -1,0 +1,30 @@
+#version 120
+
+uniform sampler2D diffuseSampler;
+uniform vec2 texel;
+uniform float ChamsAlpha;
+uniform vec3 OutlineColor;
+
+void main() {
+    vec2 texCoord = gl_TexCoord[0].st;
+    vec4 center = texture2D(diffuseSampler, texCoord);
+    if(center.a != 0.0F) {
+        gl_FragColor = vec4(center.rgb, alpha);
+        return;
+    }
+    vec4 left = texture2D(diffuseSampler, texCoord - vec2(texel.x, 0.0));
+    vec4 right = texture2D(diffuseSampler, texCoord + vec2(texel.x, 0.0));
+    vec4 up = texture2D(diffuseSampler, texCoord - vec2(0.0, texel.y));
+    vec4 down = texture2D(diffuseSampler, texCoord + vec2(0.0, texel.y));
+    left.rgb = OutlineColor;
+    right.rgb = OutlineColor;
+    up.rgb = OutlineColor;
+    down.rgb = OutlineColor;
+    float leftDiff  = abs(center.a - left.a);
+    float rightDiff = abs(center.a - right.a);
+    float upDiff    = abs(center.a - up.a);
+    float downDiff  = abs(center.a - down.a);
+    float total = clamp(leftDiff + rightDiff + upDiff + downDiff, 0.0, 1.0);
+    vec3 outColor = center.rgb * center.a + left.rgb * left.a + right.rgb * right.a + up.rgb * up.a + down.rgb * down.a;
+    gl_FragColor = vec4(outColor, total);
+}

@@ -1,0 +1,30 @@
+uniform sampler2D diffuseSampler; //current texture
+uniform vec2 texelSize; //size of one texel (1 / displayWidth, 1 / displayHeight)
+
+uniform vec3 col; //out-color without alpha value (red, green, blue)
+
+uniform bool chams; //a simple boolean for chams
+
+uniform float sampleRadius; //radius
+uniform float divider; //divide the alpha
+
+void main() {
+    vec4 color = texture2D(diffuseSampler, gl_TexCoord[0].xy);
+     if(color.a != 0) { //query whether the alpha isn't 0
+     gl_FragColor = vec4(color.rgb, chams ? .4 : 0); //makes players visible through the wall with a low alpha
+     return; //it returns if the alpha of our entity isn't 0 so that the shader isn't rendered over the entire entity, but only "around" the entity
+     }
+     float alpha = 0, maxSample = 8; //max. value of my radius value
+    for(float x = -sampleRadius; x <= sampleRadius; x++) {
+        for(float y = -sampleRadius; y <= sampleRadius; y++) {
+            vec4 currentColor = texture2D(diffuseSampler, gl_TexCoord[0].xy + vec2(texelSize.x * x, texelSize.y * y)); //to get the color from the texel
+            if(currentColor.a != 0) //query whether the alpha isn't 0
+             alpha += divider > 0 ? max(0, (maxSample - sqrt(pow(x, 2) + pow(y, 2))) / divider) : 1; //calculates the alpha by distance to the center texel
+                // pow(x, 2) is like x * x
+        }
+    }
+     gl_FragColor = vec4(col, alpha);
+}
+
+//info: the swizzle st has the same effect as xy
+//info: it's a vector of the current texels

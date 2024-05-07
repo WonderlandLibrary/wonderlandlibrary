@@ -1,0 +1,8 @@
+        shaderToyShader = shaderToyShader.replace("iTime", "time");
+        shaderToyShader = shaderToyShader.replace("iResolution", "resolution");
+        shaderToyShader = shaderToyShader.replace("vec3 resolution", "vec2 resolution");
+        shaderToyShader = shaderToyShader.replace("iMouse", "mouse");
+        shaderToyShader = shaderToyShader.replace("vec4 mouse", "vec2 mouse");
+        shaderToyShader = shaderToyShader.replace("mainImage(out vec4 fragColor, in vec2 fragCoord)", "main");
+        shaderToyShader = shaderToyShader.replace("fragCoord", "gl_FragCoord.xy");
+        shaderToyShader = shaderToyShader.replace("fragColor", "gl_FragColor");

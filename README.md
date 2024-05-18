@@ -1,3 +1,6 @@
+# Moved
+### We moved to a new repository [here](https://github.com/WonderlandLibrary/wonderland-library).
+
 # Wonderland Library
 Wonderland library is a world wide library for minecraft clients and mods.
 
